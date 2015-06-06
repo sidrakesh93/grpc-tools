@@ -1,0 +1,5 @@
+#!/bin/bash
+# failing_protoc is used in tests. It exits.
+
+echo 'this a test - testing protoc failure'
+exit 1

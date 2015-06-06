@@ -1,3 +1,6 @@
+# Ignore backup files
+*~
+
 # Logs
 logs
 *.log

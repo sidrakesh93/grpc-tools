@@ -1,0 +1,34 @@
+"""A setup module for the GRPC {{api.name}} service.
+
+See:
+https://packaging.python.org/en/latest/distributing.html
+https://github.com/pypa/sampleproject
+"""
+
+import setuptools
+
+from setuptools import setup, find_packages
+
+install_requires = [
+  'oauth2client>={{dependencies.auth.python.version}}',
+  'grpc>={{dependencies.grpc.python.version}}'
+]
+
+setuptools.setup(
+  name='{{api.name}}',
+  version='{{api.semantic_version}}',
+
+  author='{{api.author}}',
+  author_email='{{api.email}}',
+  classifiers=[
+    'Development Status :: 3 - Alpha',
+    'Intended Audience :: Developers',
+    'Topic :: Software Development :: APIs',
+    'Programming Language :: Python :: 2.7'
+  ],
+  description='GRPC library for service {{api.name}}',
+  install_requires=install_requires,
+  license='{{api.license}}',
+  packages=find_packages(),
+  url='{{{api.homepage}}}'
+)

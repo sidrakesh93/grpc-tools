@@ -1,0 +1,9 @@
+# Provides default values used as metadata when constructing various packages.
+
+author: Google Inc
+description: a grpc-based api
+email: googleapis-packages@google.com
+github_user_uri: https://github.com/google
+homepage: https://github.com/google/googleapis
+license: Apache
+semantic_version: '1.0.0'
