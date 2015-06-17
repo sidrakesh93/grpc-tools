@@ -41,21 +41,36 @@
 namespace grpc{
 namespace testing{
 
+//Class to interact with the database
 class DatabaseManager{
   public:
     DatabaseManager();
     ~DatabaseManager();
+
+    //To set and initialize database
     void setDatabase(std::string database);
+    
+    //To record a single user's record
     void recordSingleUserData(const SingleUserRecordRequest* request);
+    
+    //To retrieve a single user's records
     SingleUserRetrieveReply retrieveSingleUserData(const SingleUserRetrieveRequest* request);
+    
+    //To retrieve all user's records
     AllUsersRetrieveReply retrieveAllUsersData(const AllUsersRetrieveRequest* request);
     
   private:
-    leveldb::DB* db;
-    std::string database_;
-    std::unique_ptr<leveldb::Cache> memory_cache_;
+    leveldb::DB* db;  //database pointer
+    std::string database_;  //database name
+    std::unique_ptr<leveldb::Cache> memory_cache_;  //memory cache
+    
+    //Returns current datetime string
     const std::string currentDateTime();
+    
+    //Returns user details
     UserDetails getUserData(std::string accessToken);
+    
+    //Clears sensitive fields from stored data before sending
     void clearAddressFields(SingleUserDetails* singleUserDetails);
 };
 

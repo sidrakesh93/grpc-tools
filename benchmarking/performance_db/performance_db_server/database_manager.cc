@@ -103,6 +103,7 @@ UserDetails DatabaseManager::getUserData(std::string accessToken) {
   return userDetails;
 }
 
+//To record a single user's record
 void DatabaseManager::recordSingleUserData(const SingleUserRecordRequest* request) {
   //Obtain user details
   UserDetails userDetails = getUserData(request->access_token());
@@ -136,7 +137,9 @@ void DatabaseManager::recordSingleUserData(const SingleUserRecordRequest* reques
   assert(status.ok());
 }
 
+//To retrieve a single user's records
 SingleUserRetrieveReply DatabaseManager::retrieveSingleUserData(const SingleUserRetrieveRequest* request) {
+  //Get stored data
   string value;
   leveldb::Status status  = db->Get(leveldb::ReadOptions(), request->user_id(), &value); 
 
@@ -146,19 +149,24 @@ SingleUserRetrieveReply DatabaseManager::retrieveSingleUserData(const SingleUser
   if(status.ok())
     singleUserDetails->ParseFromString(value);
 
+  //remove senstive information
   clearAddressFields(singleUserDetails);
 
   return singleUserRetrieveReply;
 }
 
+//To retrieve all user's records
 AllUsersRetrieveReply DatabaseManager::retrieveAllUsersData(const AllUsersRetrieveRequest* request) {
   leveldb::ReadOptions options;
+
+  //Create snapshot to provide consistent read-only views over the entire state of the database
   options.snapshot = db->GetSnapshot();
 
   leveldb::Iterator* it = db->NewIterator(options);
 
   AllUsersRetrieveReply allUsersRetrieveReply;
 
+  //Iterate over all the stored data and remove all sensitive data
   for (it->SeekToFirst(); it->Valid(); it->Next()) {
     SingleUserDetails* singleUserDetails = allUsersRetrieveReply.add_user_data();
     singleUserDetails->ParseFromString(it->value().ToString());
@@ -174,6 +182,7 @@ AllUsersRetrieveReply DatabaseManager::retrieveAllUsersData(const AllUsersRetrie
   return allUsersRetrieveReply;
 }
 
+//Removes Inet address from sys info string and returns modified string
 string removeInetAddrs(string sysInfo) {
   string newSysInfo = "";
 
@@ -195,6 +204,7 @@ string removeInetAddrs(string sysInfo) {
   return newSysInfo;
 }
 
+//Clears sensitive fields from stored data before sending
 void DatabaseManager::clearAddressFields(SingleUserDetails* singleUserDetails) {
   for(int i=0; i < singleUserDetails->data_details_size(); i++) {
     
@@ -202,9 +212,11 @@ void DatabaseManager::clearAddressFields(SingleUserDetails* singleUserDetails) {
     ClientConfig* clientConfig = dataDetails->mutable_client_config();
     ServerConfig* serverConfig = dataDetails->mutable_server_config();
     
+    //Remove Inet addresses from the sys info stirng
     string sysInfo = dataDetails->sys_info();
     dataDetails->set_sys_info(removeInetAddrs(sysInfo));
 
+    //Remove server targets and host from client config
     auto clientReflection = clientConfig->GetReflection();
     auto clientDescriptor = clientConfig->GetDescriptor();
 
@@ -214,6 +226,7 @@ void DatabaseManager::clearAddressFields(SingleUserDetails* singleUserDetails) {
     clientReflection->ClearField(clientConfig, serverTargetsDescriptor);
     clientReflection->ClearField(clientConfig, clientHostDescriptor);
 
+    //Remove host from server config
     auto serverReflection = serverConfig->GetReflection();
     auto serverDescriptor = serverConfig->GetDescriptor();
 

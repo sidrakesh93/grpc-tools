@@ -331,6 +331,7 @@
         latOptions.title = 'Percentile Latencies';
         latOptions.legend.position = 'right';
         latOptions.vAxis.title = 'Percentile Latencies (in \u03BCs)';
+        latOptions.explorer = { maxZoomIn:'0.001', maxZoomOut:'10', };
 
         //Draw latencies chart
         var chart = new google.visualization.LineChart(document.getElementById('chart-div-percentile-latencies'));

@@ -47,6 +47,7 @@
 #include <gflags/gflags.h>
 
 DEFINE_string(address, "", "Address of server in Hostname:Port format");
+DEFINE_string(database, "/usr/local/clientmetricsdb", "Location of the database");
 
 // In some distros, gflags is in the namespace google, and in some others,
 // in gflags. This hack is enabling us to find both.
@@ -61,28 +62,31 @@ namespace testing{
 class UserDataTransferServiceImpl final : public UserDataTransfer::Service {
 public:
   UserDataTransferServiceImpl() {
-    dbManager.setDatabase("/tmp/clientmetricsdb");
+    //Set and initialize database
+    dbManager.setDatabase(FLAGS_database);
   }
 
   Status RecordSingleClientData(ServerContext* context, const SingleUserRecordRequest* request,
                   SingleUserRecordReply* reply) override {
+    //record single user's data to database
     dbManager.recordSingleUserData(request);
     return Status::OK;
   }
 
   Status RetrieveSingleUserData(ServerContext* context, const SingleUserRetrieveRequest* request,
-                  SingleUserRetrieveReply* reply) override { 
+                  SingleUserRetrieveReply* reply) override {
+    //retrieve single user's records from database                   
     *reply = dbManager.retrieveSingleUserData(request);
     return Status::OK;
   }
 
   Status RetrieveAllUsersData(ServerContext* context, const AllUsersRetrieveRequest* request,
                   AllUsersRetrieveReply* reply) override {
+    //retrieve all users' records from database
     *reply = dbManager.retrieveAllUsersData(request);
     return Status::OK;
   }
 private:
-  //Database manager 
   DatabaseManager dbManager;
 };
 
@@ -90,6 +94,7 @@ void RunServer() {
   UserDataTransferServiceImpl service;
   ServerBuilder builder;
 
+  //Terminate if address not provided
   if(FLAGS_address.empty()) {
     std::cout << "No address provided. Terminating.\n";
     exit(1);

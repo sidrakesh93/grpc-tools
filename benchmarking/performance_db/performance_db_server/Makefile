@@ -41,7 +41,7 @@ PROTOS_PATH = ../protos
 
 vpath %.proto $(PROTOS_PATH)
 
-all: system-check qpstest.pb.cc user_data.grpc.pb.cc user_data.pb.cc user_data_server
+all: system-check database_location qpstest.pb.cc user_data.grpc.pb.cc user_data.pb.cc user_data_server
 
 user_data_server: qpstest.pb.o user_data.pb.o user_data.grpc.pb.o pbjson/pbjson.o user_data_server.o database_manager.o
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
@@ -74,6 +74,10 @@ ifeq ($(HAS_PLUGIN),true)
 SYSTEM_OK = true
 endif
 endif
+
+database_location:
+	sudo mkdir -p /usr/local/clientmetricsdb
+	sudo chmod a+rw /usr/local/clientmetricsdb
 
 system-check:
 ifneq ($(HAS_VALID_PROTOC),true)
