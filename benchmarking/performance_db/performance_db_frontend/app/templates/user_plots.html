@@ -1,0 +1,522 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body { 
+        padding-top: 70px;
+      } 
+    </style>
+    <title>
+      User Statistics
+    </title>
+    <link rel="shortcut icon" type="image/png" href="../static/images/favicon.png">
+
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="User plots">
+    <meta name="keywords" content="User QPS and Percentile latencies plots">
+
+    <!-- Latest compiled and minified CSS -->
+    <link href="../static/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <!-- Date Range picker CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/css/daterangepicker-bs3.min.css" />
+
+    <!-- JQuery core javascript  -->
+    <script type="text/javascript" src="../static/jQuery/jquery-1.11.3.min.js"></script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+    <!-- Moment Javascript -->
+    <script type="text/javascript" src="../static/js/moment.min.js"></script>
+    <!-- Google jsapi -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <!-- Date Range picker Javascript -->
+    <script type="text/javascript" src="../static/js/daterangepicker.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li id="leaderboard_item" class=""><a href="/dataTable">Performance Database</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Statistical Plots<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li id="plotQPS" class=""><a href="/plotGeneral/QPS">QPS statistics</a></li>
+                <li id="plotQPSPerCore" class=""><a href="/plotGeneral/qpsPerCore">QPS Per Core statistics</a></li>
+                <li id="plotPercentile50" class=""><a href="/plotGeneral/p50">50<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile90" class=""><a href="/plotGeneral/p90">90<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile95" class=""><a href="/plotGeneral/p95">95<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile99" class=""><a href="/plotGeneral/p99">99<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile99Point9" class=""><a href="/plotGeneral/p99point9">99.9<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotServerSysTime" class=""><a href="/plotGeneral/serverSysTime">Server System Time</a></li>
+                <li id="plotServerUserTime" class=""><a href="/plotGeneral/serverUserTime">Server User Time</a></li>
+                <li id="plotClientSysTime" class=""><a href="/plotGeneral/clientSysTime">Client System Time</a></li>
+                <li id="plotClientUserTime" class=""><a href="/plotGeneral/clientUserTime">Client User Time</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li id="contact_item" class=""><a id="about" onclick="$('#aboutModal').modal()" href="#">Contact</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="aboutModalLabel">Contact Us</h4>
+          </div>
+          <div class="modal-body">
+            <b>For any issues related to this leaderboard, please reach out at: grpc-io@googlegroups.com</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Label containing name of the user -->
+    <div class="container">
+      <div id="user-label"><h1 align="center">User: <a target="_blank" href="{{ user_link }}">{{ user_name }}</a></h1></div>
+    </div>
+    <!-- Date range selector -->
+    
+    
+    <div class="container" style="width: 90%">
+      <div class="container">
+        <div id="qps-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+          <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+          <span></span> <b class="caret"></b>
+        </div>
+      </div>
+      <!-- QPS chart -->
+      <div id="chart-div-qps" style="height: 700px;"></div>
+
+      <div class="container">
+        <div id="qps-per-core-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+          <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+          <span></span> <b class="caret"></b>
+        </div>
+      </div>
+      <!-- QPS Per Core chart -->
+      <div id="chart-div-qps-per-core" style="height: 700px;"></div>
+      
+      <div class="container">
+        <div id="perc-lat-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+          <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+          <span></span> <b class="caret"></b>
+        </div>
+      </div>
+      <!-- Latency chart -->
+      <div id="chart-div-percentile-latencies" style="height: 700px;"></div>
+      
+      <div class="container">
+        <div id="server-times-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+          <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+          <span></span> <b class="caret"></b>
+        </div>
+      </div>
+      <!-- Server Times chart -->
+      <div id="chart-div-server-times" style="height: 700px;"></div>
+      
+      <div class="container">
+        <div id="client-times-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+          <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+          <span></span> <b class="caret"></b>
+        </div>
+      </div>
+      <!-- Client Times chart -->
+      <div id="chart-div-client-times" style="height: 700px;"></div>
+    </div>
+    <!-- Javascript functionality for charts and date range selector -->
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChartsOnLoad);
+
+      //Called on loading of chart
+      function drawChartsOnLoad() {
+        drawQpsChart(moment().subtract(1000, 'years'), moment());
+        drawQpsPerCoreChart(moment().subtract(1000, 'years'), moment());
+        drawLatChart(moment().subtract(1000, 'years'), moment());
+        drawServerTimesChart(moment().subtract(1000, 'years'), moment());
+        drawClientTimesChart(moment().subtract(1000, 'years'), moment());
+      }
+
+      //Options for charts
+      var baseOptions = {
+        pointSize: 7,
+        titleTextStyle: {
+            fontSize: 30,
+          },
+        legend: { position: 'none' },
+        curveType: 'function',
+        hAxis: {
+          title: 'Time',
+          titleTextStyle: {
+            fontSize: 25,
+          },
+        },
+        vAxis: {
+          titleTextStyle: {
+            fontSize: 25,
+          },
+        },
+        explorer: { 
+          axis:'horizontal',
+          maxZoomIn:'0.001',
+          maxZoomOut:'10',
+        },
+      };
+
+      function configOpener(chart, configs) {
+        var selection = chart.getSelection();
+        chart.setSelection([]);
+        var row = selection[0].row;
+        if(row != null) {
+          window.open('/configs/'+configs[row][0]+'%'+configs[row][1].replace(/&#39;/g,'\'')+'%'+configs[row][2].replace(/&#39;/g,'\'')+'%'+configs[row][3].replace(/&#39;/g,'\''), '_blank');
+        }
+      }
+
+      //Function for rendering the chart
+      function drawQpsChart(start, end) {
+        var qpsArgs = [[{label: 'Time'}, {type: 'number', label:'QPS'}]];
+
+        var startDate = moment();
+        var endDate = moment().subtract(1000,'years');
+
+        var configs = []
+
+        {% if userdata %}
+          {% for item in userdata.qpsData %}
+            var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
+            if(start <= metricDate && end >= metricDate) {
+              qpsArgs.push([metricDate, {{ item.qps }}]);
+              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              if(metricDate < startDate) {
+                startDate = metricDate;
+              }
+              if(metricDate > endDate) {
+                endDate = metricDate;
+              }
+            }
+          {% endfor %}
+        {% endif %}
+
+        //Data for the QPS chart
+        var qpsData = google.visualization.arrayToDataTable(
+          qpsArgs
+        );
+
+        var qpsOptions = jQuery.extend(true, {}, baseOptions);
+        qpsOptions.title = 'Queries Per Second';
+        qpsOptions.vAxis.title = 'Queries Per Second';
+
+        //Draw QPS chart
+        var chart = new google.visualization.LineChart(document.getElementById('chart-div-qps'));
+        chart.draw(qpsData, qpsOptions);
+
+        google.visualization.events.addListener(chart, 'select', function() {
+          configOpener(chart, configs);
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseover', function() {
+          $('#chart-div-qps').css('cursor','pointer');
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseout', function() {
+          $('#chart-div-qps').css('cursor','auto');
+        });
+
+        if(qpsArgs.length != 1) {
+          //Update date range field
+          $('#qps-report-range span').html(moment(startDate).format('MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format('MM/DD/YYYY, HH:mm:ss'));
+        }
+      }
+
+      //Function for rendering the chart
+      function drawQpsPerCoreChart(start, end) {
+        var qpsPerCoreArgs = [[{label: 'Time'}, {type: 'number', label:'QPS Per Core'}]];
+
+        var startDate = moment();
+        var endDate = moment().subtract(1000,'years');
+
+        var configs = []
+
+        {% if userdata %}
+          {% for item in userdata.qpsPerCoreData %}
+            var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
+            if(start <= metricDate && end >= metricDate) {
+              qpsPerCoreArgs.push([metricDate, {{ item.qps_per_core }}]);
+              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              if(metricDate < startDate) {
+                startDate = metricDate;
+              }
+              if(metricDate > endDate) {
+                endDate = metricDate;
+              }
+            }
+          {% endfor %}
+        {% endif %}
+
+        //Data for QPS per core chart
+        var qpsPerCoreData = google.visualization.arrayToDataTable(
+          qpsPerCoreArgs
+        );
+
+        var qpsPerCoreOptions = jQuery.extend(true, {}, baseOptions);
+        qpsPerCoreOptions.title = 'QPS Per Core';
+        qpsPerCoreOptions.vAxis.title = 'QPS Per Core';
+
+        //Draw QPS per core chart
+        var chart = new google.visualization.LineChart(document.getElementById('chart-div-qps-per-core'));
+        chart.draw(qpsPerCoreData, qpsPerCoreOptions);
+
+        google.visualization.events.addListener(chart, 'select', function() {
+          configOpener(chart, configs);
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseover', function() {
+          $('#chart-div-qps-per-core').css('cursor','pointer');
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseout', function() {
+          $('#chart-div-qps-per-core').css('cursor','auto');
+        });
+
+        if(qpsPerCoreArgs.length != 1) {
+          //Update date range field
+          $('#qps-per-core-report-range span').html(moment(startDate).format('MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format('MM/DD/YYYY, HH:mm:ss'));
+        }
+      }
+
+      //Function for rendering the chart
+      function drawLatChart(start, end) {
+        var latArgs = [[{label: 'Time'}, {type: 'number', label:'50th Percentile Latency'}, {type: 'number', label:'90th Percentile Latency'}, {type: 'number', label:'95th Percentile Latency'}, {type: 'number', label:'99th Percentile Latency'}, {type: 'number', label:'99.9th Percentile Latency'}]];
+
+        var startDate = moment();
+        var endDate = moment().subtract(1000,'years');
+
+        var configs = []
+
+        {% if userdata %}
+          {% for item in userdata.latData %}
+            var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
+            if(start <= metricDate && end >= metricDate) {
+              latArgs.push([metricDate, {{ item.lat.perc_lat_50 }}, {{ item.lat.perc_lat_90 }}, {{ item.lat.perc_lat_95 }}, {{ item.lat.perc_lat_99 }}, {{ item.lat.perc_lat_99_point_9 }}]);
+              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              if(metricDate < startDate) {
+                startDate = metricDate;
+              }
+              if(metricDate > endDate) {
+                endDate = metricDate;
+              }
+            }
+          {% endfor %}
+        {% endif %}
+
+        //Data for the latencies chart
+        var latData = google.visualization.arrayToDataTable(
+          latArgs
+        );
+
+        var latOptions = jQuery.extend(true, {}, baseOptions);
+        latOptions.title = 'Percentile Latencies';
+        latOptions.legend.position = 'right';
+        latOptions.vAxis.title = 'Percentile Latencies (in \u03BCs)';
+
+        //Draw latencies chart
+        var chart = new google.visualization.LineChart(document.getElementById('chart-div-percentile-latencies'));
+        chart.draw(latData, latOptions);
+
+        google.visualization.events.addListener(chart, 'select', function() {
+          configOpener(chart, configs);
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseover', function() {
+          $('#chart-div-percentile-latencies').css('cursor','pointer');
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseout', function() {
+          $('#chart-div-percentile-latencies').css('cursor','auto');
+        });
+
+        if(latArgs.length != 1) {
+          //Update date range field
+          $('#perc-lat-report-range span').html(moment(startDate).format('MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format('MM/DD/YYYY, HH:mm:ss'));
+        }
+      }
+
+      var timesOptions = jQuery.extend(true, {}, baseOptions);
+      timesOptions.legend.position = 'right';
+      timesOptions.vAxis.title = 'Percentage Time';
+      timesOptions.vAxis.format = '0.0%';
+
+      var configs = []
+
+      //Function for rendering the chart
+      function drawServerTimesChart(start, end) {
+        var serverTimesArgs = [[{label: 'Time'}, {type: 'number', label:'Server System Time'}, {type: 'number', label:'Server User Time'}]];
+
+        var startDate = moment();
+        var endDate = moment().subtract(1000,'years');
+
+        {% if userdata %}
+          {% for item in userdata.timesData %}
+            var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
+            if(start <= metricDate && end >= metricDate) {
+              serverTimesArgs.push([metricDate, {{ item.times.server_system_time }}/100.0, {{ item.times.server_user_time }}/100.0]);
+              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              if(metricDate < startDate) {
+                startDate = metricDate;
+              }
+              if(metricDate > endDate) {
+                endDate = metricDate;
+              }
+            }
+          {% endfor %}
+        {% endif %}
+
+        //Data for server times chart
+        var serverTimesData = google.visualization.arrayToDataTable(
+          serverTimesArgs
+        );
+
+        var serverTimesOptions = jQuery.extend(true, {}, timesOptions);
+        serverTimesOptions.title = 'Server Times';
+
+        var formatter = new google.visualization.NumberFormat({pattern: '0.0%'});
+        formatter.format(serverTimesData, 1);
+        formatter.format(serverTimesData, 2);
+
+        //Draw server times chart
+        var chart = new google.visualization.LineChart(document.getElementById('chart-div-server-times'));
+        chart.draw(serverTimesData, serverTimesOptions);
+
+        google.visualization.events.addListener(chart, 'select', function() {
+          configOpener(chart, configs);
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseover', function() {
+          $('#chart-div-server-times').css('cursor','pointer');
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseout', function() {
+          $('#chart-div-server-times').css('cursor','auto');
+        });
+
+        if(serverTimesArgs.length != 1) {
+          //Update date range field
+          $('#server-times-report-range span').html(moment(startDate).format('MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format('MM/DD/YYYY, HH:mm:ss'));
+        }
+      }
+
+      //Function for rendering the chart
+      function drawClientTimesChart(start, end) {
+        var clientTimesArgs = [[{label: 'Time'}, {type: 'number', label:'Client System Time'}, {type: 'number', label:'Client User Time'}]];
+
+        var startDate = moment();
+        var endDate = moment().subtract(1000,'years');
+
+        var configs = []
+
+        {% if userdata %}
+          {% for item in userdata.timesData %}
+            var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
+            if(start <= metricDate && end >= metricDate) {
+              clientTimesArgs.push([metricDate, {{ item.times.client_system_time }}/100.0, {{ item.times.client_user_time }}/100.0]);
+              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              if(metricDate < startDate) {
+                startDate = metricDate;
+              }
+              if(metricDate > endDate) {
+                endDate = metricDate;
+              }
+            }
+          {% endfor %}
+        {% endif %}
+
+        //Data for client times chart
+        var clientTimesData = google.visualization.arrayToDataTable(
+          clientTimesArgs
+        );
+
+        var clientTimesOptions = jQuery.extend(true, {}, timesOptions);
+        clientTimesOptions.title = 'Client Times';
+
+        var formatter = new google.visualization.NumberFormat({pattern: '0.0%'});
+        formatter.format(clientTimesData, 1);
+        formatter.format(clientTimesData, 2);
+
+        //Draw client times chart
+        var chart = new google.visualization.LineChart(document.getElementById('chart-div-client-times'));
+        chart.draw(clientTimesData, clientTimesOptions);
+
+        google.visualization.events.addListener(chart, 'select', function() {
+          configOpener(chart, configs);
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseover', function() {
+          $('#chart-div-client-times').css('cursor','pointer');
+        });
+
+        google.visualization.events.addListener(chart, 'onmouseout', function() {
+          $('#chart-div-client-times').css('cursor','auto');
+        });
+
+        if(clientTimesArgs.length != 1) {
+          //Update date range field
+          $('#client-times-report-range span').html(moment(startDate).format('MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format('MM/DD/YYYY, HH:mm:ss'));
+        }
+      }
+
+      var dateRangePickerSettings = {
+        format: 'MM/DD/YYYY, HH:mm:ss',
+        showDropdowns: true,
+        timePicker: true,
+        timePickerIncrement: 1,
+        timePicker12Hour: false,
+        timePickerSeconds: true,
+        ranges: {
+          'Today': [moment().startOf('day'), moment()],
+          'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+          'This Month': [moment().startOf('month'), moment().endOf('month')],
+          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+          'All Time': [moment().subtract(29, 'days'), moment()]
+        },
+        opens: 'left',
+        drops: 'down',
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-primary',
+        cancelClass: 'btn-default',
+        separator: ' to ',
+      };
+
+      //Date range picker functionality
+      $('#qps-report-range').daterangepicker(dateRangePickerSettings, function(start, end, label) {
+        drawQpsChart(start, end);
+      });
+      $('#qps-per-core-report-range').daterangepicker(dateRangePickerSettings, function(start, end, label) {
+        drawQpsPerCoreChart(start, end);
+      });
+      $('#perc-lat-report-range').daterangepicker(dateRangePickerSettings, function(start, end, label) {
+        drawLatChart(start, end);
+      });
+      $('#server-times-report-range').daterangepicker(dateRangePickerSettings, function(start, end, label) {
+        drawServerTimesChart(start, end);
+      });
+      $('#client-times-report-range').daterangepicker(dateRangePickerSettings, function(start, end, label) {
+        drawClientTimesChart(start, end);
+      });
+    </script>
+  </body>
+</html>

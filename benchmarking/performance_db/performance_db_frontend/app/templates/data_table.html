@@ -1,0 +1,275 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body { 
+        padding-top: 70px;
+      } 
+    </style>
+    <title>
+      Performance Database
+    </title>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <link rel="shortcut icon" type="image/png" href="../static/images/favicon.png">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Performance Database">
+    <meta name="keywords" content="Performance Database, GRPC">
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap table CSS -->
+    <link href="../static/css/bootstrap-table.min.css">
+    <!-- Date Range picker CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/css/daterangepicker-bs3.min.css" />
+
+    <!-- JQuery core javascript  -->
+    <script type="text/javascript" src="../static/jQuery/jquery-1.11.3.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="../static/js/bootstrap.min.js"></script>
+    <!-- Bootstrap table javascript -->
+    <script src="../static/js/bootstrap-table.min.js"></script>
+    <!-- Moment Javascript -->
+    <script type="text/javascript" src="../static/js/moment.min.js"></script>
+    <!-- Date Range picker Javascript -->
+    <script type="text/javascript" src="../static/js/daterangepicker.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Statistical Plots<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li id="plotQPS" class=""><a href="/plotGeneral/QPS">QPS statistics</a></li>
+                <li id="plotQPSPerCore" class=""><a href="/plotGeneral/qpsPerCore">QPS Per Core statistics</a></li>
+                <li id="plotPercentile50" class=""><a href="/plotGeneral/p50">50<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile90" class=""><a href="/plotGeneral/p90">90<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile95" class=""><a href="/plotGeneral/p95">95<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile99" class=""><a href="/plotGeneral/p99">99<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile99Point9" class=""><a href="/plotGeneral/p99point9">99.9<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotServerSysTime" class=""><a href="/plotGeneral/serverSysTime">Server System Time</a></li>
+                <li id="plotServerUserTime" class=""><a href="/plotGeneral/serverUserTime">Server User Time</a></li>
+                <li id="plotClientSysTime" class=""><a href="/plotGeneral/clientSysTime">Client System Time</a></li>
+                <li id="plotClientUserTime" class=""><a href="/plotGeneral/clientUserTime">Client User Time</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+          <li id="about_item" class=""><a id="about" onclick="$('#aboutModal').modal()" href="#">Contact</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="aboutModalLabel">Contact Us</h4>
+          </div>
+          <div class="modal-body">
+            <b>For any issues related to this leaderboard, please reach out at: grpc-io@googlegroups.com</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="width:99%;">
+      <!-- Title -->
+      <h2 align="center">Performance Database</h2> 
+      <hr>
+      <!-- Date range picker -->
+      <div id="report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; margin-left:10px">
+        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+        <span></span> <b class="caret"></b>
+      </div>
+      <div>
+        <!-- Performance database table search, sorting by timestamp on load, data toggle and pagination activated -->
+        <table id='metrics-table'
+              class="table table-striped"
+              data-toggle="table"
+              data-search="true"
+              data-pagination="true"
+              data-show-columns="true"
+              data-sort-name="timestamp"
+              data-sort-order="desc">
+          <thead id='metrics-table-head'>
+            <tr>
+              <!-- User id -->
+              <th data-field="userid"
+                  data-sortable="true"
+                  data-align="center"
+                  data-switchable="false">User</th>
+              <!-- Data record timestamp -->
+              <th data-field="timestamp"
+                  data-sortable="true"
+                  data-align="center"
+                  data-switchable="false"
+                  data-sorter="timeSorter">Timestamp</th>
+              <!-- Name of the test corresponding to the record -->
+              <th data-field="testName"
+                  data-sortable="true"
+                  data-align="center"
+                  data-switchable="false">Test</th>
+              <!-- QPS -->
+              <th data-field="QPS"
+                  data-sortable="true"
+                  data-align="center">Queries Per Second</th>
+              <!-- QPS per core -->
+              <th data-field="QPSPerCore"
+                  data-sortable="true"
+                  data-align="center">QPS Per Core</th>
+              <!-- 50th percentile latency  -->
+              <th data-field="p50"
+                  data-sortable="true"
+                  data-align="center">50<sup>th</sup> %ile latency (&micros)</th>
+              <!-- 50th percentile latency  -->
+              <th data-field="p90"
+                  data-sortable="true"
+                  data-align="center">90<sup>th</sup> %ile latency (&micros)</th>
+              <!-- 50th percentile latency  -->
+              <th data-field="p95"
+                  data-sortable="true"
+                  data-align="center">95<sup>th</sup> %ile latency (&micros)</th>
+              <!-- 50th percentile latency  -->
+              <th data-field="p99"
+                  data-sortable="true"
+                  data-align="center">99<sup>th</sup> %ile latency (&micros)</th>
+              <!-- 50th percentile latency  -->
+              <th data-field="p99point9"
+                  data-sortable="true"
+                  data-align="center">99.9<sup>th</sup> %ile latency (&micros)</th>
+              <!-- Server system time  -->
+              <th data-field="serverSystemTime"
+                  data-sortable="true"
+                  data-align="center"
+                  data-visible="false">Server System Time %</th>
+              <!-- Server user time  -->
+              <th data-field="serverUserTime"
+                  data-sortable="true"
+                  data-align="center"
+                  data-visible="false">Server User Time %</th>
+              <!-- Client system time  -->
+              <th data-field="clientSystemTime"
+                  data-sortable="true"
+                  data-align="center"
+                  data-visible="false">Client System Time %</th>
+              <!-- Client user time  -->
+              <th data-field="clientUserTime"
+                  data-sortable="true"
+                  data-align="center"
+                  data-visible="false">Client User Time %</th>
+            </tr>
+          </thead>
+          <tbody id="metrics-table-body">
+          </tbody>
+        </table>
+      </div>    
+    </div><!-- /.container -->
+    <script type="text/javascript">
+      //Add data to table on load
+      addDataToTable(moment().subtract(1000,'years'), moment());
+
+      //Function to add data to table
+      function addDataToTable(start, end) {
+        $('#metrics-table').bootstrapTable({});
+
+        data = getData(start, end);
+        $('#metrics-table').bootstrapTable("load", data);
+      }
+
+      //Custom sorter for time
+      function timeSorter(a, b) {
+        var timeArr1 = a.split(/[ :\/]+/);
+        var timeArr2 = b.split(/[ :\/]+/);
+
+        var time1 = new Date(timeArr1[2], timeArr1[0], timeArr1[1], timeArr1[3], timeArr1[4], timeArr1[5], 0);
+        var time2 = new Date(timeArr2[2], timeArr2[0], timeArr2[1], timeArr2[3], timeArr2[4], timeArr2[5], 0);
+
+        if(time1 > time2) {
+          return 1;
+        }
+        if(time1 < time2) {
+          return -1;
+        }
+        return 0;
+      }
+
+      //Returns user records array
+      function getData(start, end) {
+        var dataArr = [];
+
+        var startDate = moment();  //earliest data date in given time range
+        var endDate = moment().subtract(1000,'years');  //latest data date in given time range
+
+        {% for row in request.session.metricstable %}
+          rowDate = new Date({{ row.timestamp.year }}, {{ row.timestamp.month }}-1, {{ row.timestamp.day }}, {{ row.timestamp.hour }}, {{ row.timestamp.min }}, {{ row.timestamp.sec }}, 0);
+
+          //If in valid time range
+          if(rowDate > start && rowDate < end) {
+            dataArr.push({
+              userid: '<a href="/plotUser/{{ row.id }}">{{ row.name }}</a>',
+              timestamp: '{{ row.timestamp.month }}/{{ row.timestamp.day }}/{{ row.timestamp.year }} {{ row.timestamp.hour }}:{{ row.timestamp.min }}:{{ row.timestamp.sec }}',
+              testName: '<a id="config" href="/configs/{{ row.test_name }}%{{ row.client_config }}%{{ row.server_config }}%{{ row.sys_info }}" target="_blank">{{ row.test_name }}</a>',
+              QPS: '{{ row.qps }}',
+              QPSPerCore: '{{ row.qps_per_core }}',
+              p50: '{{ row.perc_lat_50 }}',
+              p90: '{{ row.perc_lat_90 }}',
+              p95: '{{ row.perc_lat_95 }}',
+              p99: '{{ row.perc_lat_99 }}',
+              p99point9: '{{ row.perc_lat_99_point_9 }}',
+              serverSystemTime: '{{ row.server_system_time }}',
+              serverUserTime: '{{ row.server_user_time }}',
+              clientSystemTime: '{{ row.client_system_time }}',
+              clientUserTime: '{{ row.client_user_time }}'
+            });
+            if(rowDate < startDate) {
+              startDate = rowDate;
+            }
+            if(rowDate > endDate) {
+              endDate = rowDate;
+            }
+          }
+        {% endfor %}
+
+        //Update date range in date range picker
+        $('#report-range span').html(moment(startDate).format('MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format('MM/DD/YYYY, HH:mm:ss'));
+
+        return dataArr;
+      }
+
+      //Initializing date range picker
+      $('#report-range').daterangepicker({
+        format: 'MM/DD/YYYY, HH:mm:ss',
+        showDropdowns: true,
+        timePicker: true,
+        timePickerIncrement: 1,
+        timePicker12Hour: false,
+        timePickerSeconds: true,
+        ranges: {
+          'Today': [moment().startOf('day'), moment()],
+          'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+          'This Month': [moment().startOf('month'), moment().endOf('month')],
+          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+          'All Time': [moment().subtract(29, 'days'), moment()]
+        },
+        opens: 'left',
+        drops: 'down',
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-primary',
+        cancelClass: 'btn-default',
+        separator: ' to ',
+      }, function(start, end, label) {
+        addDataToTable(start, end);
+      });
+    </script>
+  </body>
+</html>

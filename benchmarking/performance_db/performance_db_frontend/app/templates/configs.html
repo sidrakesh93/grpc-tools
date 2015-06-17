@@ -1,0 +1,161 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body { 
+        padding-top: 70px;
+      } 
+    </style>
+    <title>
+      Configurations
+    </title>
+    <link rel="shortcut icon" type="image/png" href="../static/images/favicon.png">
+      <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li id="leaderboard_item" class=""><a href="/dataTable">Performance Database</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Statistical Plots<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li id="plotQPS" class=""><a href="/plotGeneral/QPS">QPS statistics</a></li>
+                <li id="plotQPSPerCore" class=""><a href="/plotGeneral/qpsPerCore">QPS Per Core statistics</a></li>
+                <li id="plotPercentile50" class=""><a href="/plotGeneral/p50">50<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile90" class=""><a href="/plotGeneral/p90">90<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile95" class=""><a href="/plotGeneral/p95">95<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile99" class=""><a href="/plotGeneral/p99">99<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotPercentile99Point9" class=""><a href="/plotGeneral/p99point9">99.9<sup>th</sup> %ile Latency statistics</a></li>
+                <li id="plotServerSysTime" class=""><a href="/plotGeneral/serverSysTime">Server System Time</a></li>
+                <li id="plotServerUserTime" class=""><a href="/plotGeneral/serverUserTime">Server User Time</a></li>
+                <li id="plotClientSysTime" class=""><a href="/plotGeneral/clientSysTime">Client System Time</a></li>
+                <li id="plotClientUserTime" class=""><a href="/plotGeneral/clientUserTime">Client User Time</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li id="contact_item" class=""><a id="about" onclick="$('#aboutModal').modal()" href="#">Contact</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="aboutModalLabel">Contact Us</h4>
+          </div>
+          <div class="modal-body">
+            <b>For any issues related to this leaderboard, please reach out at: grpc-io@googlegroups.com</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2 id='test-name' align="center"></h2>
+      <hr>
+      <h3 align="center">Client Configuration</h3>
+      <hr>
+      <div id="client_configs">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="text-align:center; width:50%">Field</th>
+              <th style="text-align:center; width:50%">Value</th>
+            </tr>
+          </thead>
+          <tbody id="client-configs-table">
+          </tbody>
+        </table>
+      </div>
+      <hr>
+      <h3 align="center">Server Configuration</h3>
+      <hr>
+      <div id="server_configs">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="text-align:center; width:50%">Field</th>
+              <th style="text-align:center; width:50%">Value</th>
+            </tr>
+          </thead>
+          <tbody id="server-configs-table">
+          </tbody>
+        </table>
+      </div>
+      <hr>
+      <h3 align="center">System Configuration</h3>
+      <div id="sys_info">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="text-align:center; width:50%">Field</th>
+              <th style="text-align:center; width:50%">Value</th>
+            </tr>
+          </thead>
+          <tbody id="sys-info-table">
+          </tbody>
+        </table>
+      </div>
+      <hr>
+    </div><!-- /.container -->
+
+    <!-- JQuery core javascript  -->
+    <script type="text/javascript" src="../static/jQuery/jquery-1.11.3.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script>
+      var pathName = window.location.pathname;
+
+      pathName = pathName.replace(/\/configs\//g, '');
+      pathName = pathName.replace(/%20/g, ' ');
+      pathName = pathName.replace(/%7B/g, '{');
+      pathName = pathName.replace(/%7D/g, '}');
+      pathName = pathName.replace(/\'/g, '"');
+
+      var pathNameParts = pathName.split('%');
+      
+      var testName = document.getElementById("test-name");
+      testName.innerHTML = 'Test: ' + pathNameParts[0];
+
+      var table = document.getElementById("client-configs-table");
+      fillTable(table, pathNameParts[1]);
+
+      table = document.getElementById("server-configs-table");
+      fillTable(table, pathNameParts[2]);
+      
+      table = document.getElementById("sys-info-table");
+      fillTable(table, pathNameParts[3]);
+
+      function fillTable(table, info) {
+        JSON.parse(info, function(k, v) {
+          var row = table.insertRow(-1);
+          var cell1 = row.insertCell(-1);
+          var cell2 = row.insertCell(-1);
+
+          cell1.innerHTML = k;
+          cell2.innerHTML = v;
+
+          cell1.style.textAlign = 'center';
+          cell2.style.textAlign = 'center';
+        });
+        table.deleteRow(-1);
+      }
+    </script>
+  </body>
+</html>
+  
