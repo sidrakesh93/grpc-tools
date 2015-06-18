@@ -19,6 +19,9 @@ The front end can display four types of pages, including:
   * _Client system time percentage_
   * _Client user time percentage_
 
+![alt tag](https://github.com/sidrakesh93/grpc-tools/blob/master/benchmarking/performance_db/performance_db_frontend/images/Performance%20Database%20Table.png)
+
+
 * **User statistics page**: The user statistics page can be accessed by clicking the hyperlinked name of the user in the performance database table page. The user statistics are displayed using 5 line charts, each plotting the value of particular metrics against time. The line charts are generated using the [Google charts API](https://developers.google.com/chart/interactive/docs/gallery/linechart). These line charts indicate how the different performance metrics vary for the user over time, in a specified time frame. The time frame is determined using [Date range picker](https://github.com/dangrossman/bootstrap-daterangepicker). The charts include:
   * _Queries per second (QPS) chart_
   * _QPS per core chart_
@@ -26,6 +29,14 @@ The front end can display four types of pages, including:
   * _Server times chart_: Plots the server system time and server user time.
   * _Client times chart_: Plots the client system time and client user time.
 
+![alt tag](https://github.com/sidrakesh93/grpc-tools/blob/master/benchmarking/performance_db/performance_db_frontend/images/User%20plots%20page.png)
+
+
 * **General statistics page**: The general statistics page displays the Histograms for various performance metrics, using the performance data for all the users in a given time frame. The histograms are generated using the [Google charts API](https://developers.google.com/chart/interactive/docs/gallery/histogram), while the time range is implemented using [Date range picker](https://github.com/dangrossman/bootstrap-daterangepicker). Each performance metric is displayed on a different general statistics page.
 
+![alt tag](https://github.com/sidrakesh93/grpc-tools/blob/master/benchmarking/performance_db/performance_db_frontend/images/General%20statistics%20page.png)
+
+
 * **Configurations page**: The configurations page can be accessed by clicking the hyperlinked test name in the performance database table. This page contains the test configuration information, which include the Client and Server configurations. It also contains the user system specifications, at the time of submitting the test results.
+
+![alt tag](https://github.com/sidrakesh93/grpc-tools/blob/master/benchmarking/performance_db/performance_db_frontend/images/Configs%20page.png)
