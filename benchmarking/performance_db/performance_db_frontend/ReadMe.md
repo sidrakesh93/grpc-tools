@@ -37,6 +37,6 @@ The front end can display four types of pages, including:
 ![alt tag](https://github.com/sidrakesh93/grpc-tools/blob/master/benchmarking/performance_db/images/General%20statistics%20page.png)
 
 
-* **Configurations page**: The configurations page can be accessed by clicking the hyperlinked test name in the performance database table. This page contains the test configuration information, which include the Client and Server configurations. It also contains the user system specifications, at the time of submitting the test results.
+* **Configurations page**: The configurations page can be accessed by clicking the hyperlinked test name in the performance database table, or by clicking the data points in the user plots. This page contains the test configuration information, which include the Client and Server configurations. It also contains the user system specifications, at the time of submitting the test results.
 
 ![alt tag](https://github.com/sidrakesh93/grpc-tools/blob/master/benchmarking/performance_db/images/Configs%20page.png)
