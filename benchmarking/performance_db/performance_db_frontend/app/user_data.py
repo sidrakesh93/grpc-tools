@@ -152,19 +152,12 @@ class UserData(object):
 
     serverConfigDict['Threads'] = str(serverConfig.threads)
     serverConfigDict['Enable SSL'] = str(serverConfig.enable_ssl)
-    # serverConfigDict['Host'] = str(serverConfig.host)
 
     return serverConfigDict
 
   # Returns client configuration dictionary
   def getClientConfigDict(self, clientConfig):
     clientConfigDict = {}
-
-    # serverTargets = []
-    # for serverTarget in clientConfig.server_targets:
-    #   serverTargets.append(str(serverTarget))
-    # serverTargetsStr = ', '.join(serverTargets)
-    # clientConfigDict['Server Targets'] = serverTargetsStr
 
     if clientConfig.client_type == qpstest_pb2.SYNCHRONOUS_CLIENT:
       clientConfigDict['Client Type'] = 'Synchronous'
@@ -182,7 +175,6 @@ class UserData(object):
       clientConfigDict['RPC Type'] = 'Streaming'
 
     clientConfigDict['Enable SSL'] = str(clientConfig.enable_ssl)
-    # clientConfigDict['Host'] = str(clientConfig.host)
 
     return clientConfigDict
 

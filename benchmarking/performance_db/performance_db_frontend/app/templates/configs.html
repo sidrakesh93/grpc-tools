@@ -21,6 +21,7 @@
     
   </head>
   <body>
+    <!-- Navigation bar -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -68,6 +69,7 @@
     <div class="container">
       <h2 id='test-name' align="center"></h2>
       <hr>
+      <!-- Client configuration -->
       <h3 align="center">Client Configuration</h3>
       <hr>
       <div id="client_configs">
@@ -83,6 +85,7 @@
         </table>
       </div>
       <hr>
+      <!-- Server configuration -->
       <h3 align="center">Server Configuration</h3>
       <hr>
       <div id="server_configs">
@@ -98,6 +101,7 @@
         </table>
       </div>
       <hr>
+      <!-- System configuration -->
       <h3 align="center">System Configuration</h3>
       <div id="sys_info">
         <table class="table table-striped">
@@ -130,17 +134,22 @@
       var pathNameParts = pathName.split('%');
       
       var testName = document.getElementById("test-name");
+      //first part of split url pathname is the test name
       testName.innerHTML = 'Test: ' + pathNameParts[0];
 
       var table = document.getElementById("client-configs-table");
+      //second part of split url pathname is client config
       fillTable(table, pathNameParts[1]);
 
       table = document.getElementById("server-configs-table");
+      //third part of split url pathname is server config
       fillTable(table, pathNameParts[2]);
       
       table = document.getElementById("sys-info-table");
+      //fourth part of split url pathname is sys info
       fillTable(table, pathNameParts[3]);
 
+      //function to fill table
       function fillTable(table, info) {
         JSON.parse(info, function(k, v) {
           var row = table.insertRow(-1);

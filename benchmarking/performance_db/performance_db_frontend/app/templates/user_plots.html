@@ -176,6 +176,7 @@
         },
       };
 
+      //Opens the configs page in a new tab
       function configOpener(chart, configs) {
         var selection = chart.getSelection();
         chart.setSelection([]);
@@ -194,6 +195,7 @@
 
         var configs = []
 
+        //add data
         {% if userdata %}
           {% for item in userdata.qpsData %}
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
@@ -227,6 +229,7 @@
           configOpener(chart, configs);
         });
 
+        //Adding mouse events to change cursor
         google.visualization.events.addListener(chart, 'onmouseover', function() {
           $('#chart-div-qps').css('cursor','pointer');
         });
@@ -250,6 +253,7 @@
 
         var configs = []
 
+        //add data
         {% if userdata %}
           {% for item in userdata.qpsPerCoreData %}
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
@@ -283,6 +287,7 @@
           configOpener(chart, configs);
         });
 
+        //Adding mouse events to change cursor
         google.visualization.events.addListener(chart, 'onmouseover', function() {
           $('#chart-div-qps-per-core').css('cursor','pointer');
         });
@@ -306,6 +311,7 @@
 
         var configs = []
 
+        //add data
         {% if userdata %}
           {% for item in userdata.latData %}
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
@@ -341,6 +347,7 @@
           configOpener(chart, configs);
         });
 
+        //Adding mouse events to change cursor
         google.visualization.events.addListener(chart, 'onmouseover', function() {
           $('#chart-div-percentile-latencies').css('cursor','pointer');
         });
@@ -369,6 +376,7 @@
         var startDate = moment();
         var endDate = moment().subtract(1000,'years');
 
+        //add data
         {% if userdata %}
           {% for item in userdata.timesData %}
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
@@ -405,6 +413,7 @@
           configOpener(chart, configs);
         });
 
+        //Adding mouse events to change cursor
         google.visualization.events.addListener(chart, 'onmouseover', function() {
           $('#chart-div-server-times').css('cursor','pointer');
         });
@@ -428,6 +437,7 @@
 
         var configs = []
 
+        //add data
         {% if userdata %}
           {% for item in userdata.timesData %}
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
@@ -464,6 +474,7 @@
           configOpener(chart, configs);
         });
 
+        //Adding mouse events to change cursor
         google.visualization.events.addListener(chart, 'onmouseover', function() {
           $('#chart-div-client-times').css('cursor','pointer');
         });
@@ -478,6 +489,7 @@
         }
       }
 
+      //Date range picker settings
       var dateRangePickerSettings = {
         format: 'MM/DD/YYYY, HH:mm:ss',
         showDropdowns: true,
