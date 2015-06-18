@@ -30,7 +30,7 @@
 #
 #!/usr/bin/python
 
-import user_data_pb2
+import perf_db_pb2
 import qpstest_pb2
 import re
 from collections import defaultdict
@@ -70,8 +70,8 @@ class UserData(object):
   # Returns a single user's data
   def getSingleUserData(self, userId):
     # Create Stub to communicate with performance database server
-    with user_data_pb2.early_adopter_create_UserDataTransfer_stub(self.hostname, self.port) as stub:
-      singleUserRetrieveRequest = user_data_pb2.SingleUserRetrieveRequest()
+    with perf_db_pb2.early_adopter_create_PerfDbTransfer_stub(self.hostname, self.port) as stub:
+      singleUserRetrieveRequest = perf_db_pb2.SingleUserRetrieveRequest()
       singleUserRetrieveRequest.user_id = userId
       
       _TIMEOUT_SECONDS = 10 # Max waiting time before timeout, in seconds
@@ -200,8 +200,8 @@ class UserData(object):
     metricsTable = []
 
     # Create Stub to communicate with performance database server
-    with user_data_pb2.early_adopter_create_UserDataTransfer_stub(self.hostname, self.port) as stub:
-      allUsersRetrieveRequest = user_data_pb2.AllUsersRetrieveRequest()
+    with perf_db_pb2.early_adopter_create_PerfDbTransfer_stub(self.hostname, self.port) as stub:
+      allUsersRetrieveRequest = perf_db_pb2.AllUsersRetrieveRequest()
 
       _TIMEOUT_SECONDS = 10 # Max waiting time before timeout, in seconds
 
@@ -240,8 +240,8 @@ class UserData(object):
     metricList = []
 
     # Create Stub to communicate with performance database server
-    with user_data_pb2.early_adopter_create_UserDataTransfer_stub(self.hostname, self.port) as stub:
-      allUsersRetrieveRequest = user_data_pb2.AllUsersRetrieveRequest()
+    with perf_db_pb2.early_adopter_create_PerfDbTransfer_stub(self.hostname, self.port) as stub:
+      allUsersRetrieveRequest = perf_db_pb2.AllUsersRetrieveRequest()
 
       _TIMEOUT_SECONDS = 10 # Max waiting time before timeout, in seconds
 

@@ -19,8 +19,8 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='qpstest.proto',
   package='grpc.testing',
-  syntax='proto2',
-  serialized_pb=_b('\n\rqpstest.proto\x12\x0cgrpc.testing\" \n\x0cStatsRequest\x12\x10\n\x08test_num\x18\x01 \x01(\x05\"K\n\x0bServerStats\x12\x14\n\x0ctime_elapsed\x18\x01 \x02(\x01\x12\x11\n\ttime_user\x18\x02 \x02(\x01\x12\x13\n\x0btime_system\x18\x03 \x02(\x01\"@\n\x07Payload\x12\'\n\x04type\x18\x01 \x01(\x0e\x32\x19.grpc.testing.PayloadType\x12\x0c\n\x04\x62ody\x18\x02 \x01(\x0c\"w\n\rHistogramData\x12\x0e\n\x06\x62ucket\x18\x01 \x03(\r\x12\x10\n\x08min_seen\x18\x02 \x02(\x01\x12\x10\n\x08max_seen\x18\x03 \x02(\x01\x12\x0b\n\x03sum\x18\x04 \x02(\x01\x12\x16\n\x0esum_of_squares\x18\x05 \x02(\x01\x12\r\n\x05\x63ount\x18\x06 \x02(\x01\"\xa1\x02\n\x0c\x43lientConfig\x12\x16\n\x0eserver_targets\x18\x01 \x03(\t\x12-\n\x0b\x63lient_type\x18\x02 \x02(\x0e\x32\x18.grpc.testing.ClientType\x12\x19\n\nenable_ssl\x18\x03 \x01(\x08:\x05\x66\x61lse\x12$\n\x1coutstanding_rpcs_per_channel\x18\x04 \x02(\x05\x12\x17\n\x0f\x63lient_channels\x18\x05 \x02(\x05\x12\x14\n\x0cpayload_size\x18\x06 \x02(\x05\x12\x1c\n\x14\x61sync_client_threads\x18\x07 \x01(\x05\x12.\n\x08rpc_type\x18\x08 \x01(\x0e\x32\x15.grpc.testing.RpcType:\x05UNARY\x12\x0c\n\x04host\x18\t \x01(\t\"\x06\n\x04Mark\"h\n\nClientArgs\x12+\n\x05setup\x18\x01 \x01(\x0b\x32\x1a.grpc.testing.ClientConfigH\x00\x12\"\n\x04mark\x18\x02 \x01(\x0b\x32\x12.grpc.testing.MarkH\x00\x42\t\n\x07\x61rgtype\"{\n\x0b\x43lientStats\x12.\n\tlatencies\x18\x01 \x02(\x0b\x32\x1b.grpc.testing.HistogramData\x12\x14\n\x0ctime_elapsed\x18\x03 \x02(\x01\x12\x11\n\ttime_user\x18\x04 \x02(\x01\x12\x13\n\x0btime_system\x18\x05 \x02(\x01\"8\n\x0c\x43lientStatus\x12(\n\x05stats\x18\x01 \x01(\x0b\x32\x19.grpc.testing.ClientStats\"z\n\x0cServerConfig\x12-\n\x0bserver_type\x18\x01 \x02(\x0e\x32\x18.grpc.testing.ServerType\x12\x12\n\x07threads\x18\x02 \x01(\x05:\x01\x31\x12\x19\n\nenable_ssl\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\x0c\n\x04host\x18\x04 \x01(\t\"h\n\nServerArgs\x12+\n\x05setup\x18\x01 \x01(\x0b\x32\x1a.grpc.testing.ServerConfigH\x00\x12\"\n\x04mark\x18\x02 \x01(\x0b\x32\x12.grpc.testing.MarkH\x00\x42\t\n\x07\x61rgtype\"F\n\x0cServerStatus\x12(\n\x05stats\x18\x01 \x01(\x0b\x32\x19.grpc.testing.ServerStats\x12\x0c\n\x04port\x18\x02 \x02(\x05\"\x91\x01\n\rSimpleRequest\x12>\n\rresponse_type\x18\x01 \x01(\x0e\x32\x19.grpc.testing.PayloadType:\x0c\x43OMPRESSABLE\x12\x18\n\rresponse_size\x18\x02 \x01(\x05:\x01\x30\x12&\n\x07payload\x18\x03 \x01(\x0b\x32\x15.grpc.testing.Payload\"8\n\x0eSimpleResponse\x12&\n\x07payload\x18\x01 \x01(\x0b\x32\x15.grpc.testing.Payload*?\n\x0bPayloadType\x12\x10\n\x0c\x43OMPRESSABLE\x10\x01\x12\x12\n\x0eUNCOMPRESSABLE\x10\x02\x12\n\n\x06RANDOM\x10\x03*6\n\nClientType\x12\x16\n\x12SYNCHRONOUS_CLIENT\x10\x01\x12\x10\n\x0c\x41SYNC_CLIENT\x10\x02*6\n\nServerType\x12\x16\n\x12SYNCHRONOUS_SERVER\x10\x01\x12\x10\n\x0c\x41SYNC_SERVER\x10\x02*#\n\x07RpcType\x12\t\n\x05UNARY\x10\x01\x12\r\n\tSTREAMING\x10\x02\x32\xa5\x01\n\x0bTestService\x12\x46\n\tUnaryCall\x12\x1b.grpc.testing.SimpleRequest\x1a\x1c.grpc.testing.SimpleResponse\x12N\n\rStreamingCall\x12\x1b.grpc.testing.SimpleRequest\x1a\x1c.grpc.testing.SimpleResponse(\x01\x30\x01\x32\x94\x01\n\x06Worker\x12\x43\n\x07RunTest\x12\x18.grpc.testing.ClientArgs\x1a\x1a.grpc.testing.ClientStatus(\x01\x30\x01\x12\x45\n\tRunServer\x12\x18.grpc.testing.ServerArgs\x1a\x1a.grpc.testing.ServerStatus(\x01\x30\x01')
+  syntax='proto3',
+  serialized_pb=_b('\n\rqpstest.proto\x12\x0cgrpc.testing\" \n\x0cStatsRequest\x12\x10\n\x08test_num\x18\x01 \x01(\x05\"K\n\x0bServerStats\x12\x14\n\x0ctime_elapsed\x18\x01 \x01(\x01\x12\x11\n\ttime_user\x18\x02 \x01(\x01\x12\x13\n\x0btime_system\x18\x03 \x01(\x01\"@\n\x07Payload\x12\'\n\x04type\x18\x01 \x01(\x0e\x32\x19.grpc.testing.PayloadType\x12\x0c\n\x04\x62ody\x18\x02 \x01(\x0c\"w\n\rHistogramData\x12\x0e\n\x06\x62ucket\x18\x01 \x03(\r\x12\x10\n\x08min_seen\x18\x02 \x01(\x01\x12\x10\n\x08max_seen\x18\x03 \x01(\x01\x12\x0b\n\x03sum\x18\x04 \x01(\x01\x12\x16\n\x0esum_of_squares\x18\x05 \x01(\x01\x12\r\n\x05\x63ount\x18\x06 \x01(\x01\"%\n\rPoissonParams\x12\x14\n\x0coffered_load\x18\x01 \x01(\x01\"A\n\rUniformParams\x12\x17\n\x0finterarrival_lo\x18\x01 \x01(\x01\x12\x17\n\x0finterarrival_hi\x18\x02 \x01(\x01\"+\n\x13\x44\x65terministicParams\x12\x14\n\x0coffered_load\x18\x01 \x01(\x01\"8\n\x0cParetoParams\x12\x19\n\x11interarrival_base\x18\x01 \x01(\x01\x12\r\n\x05\x61lpha\x18\x02 \x01(\x01\"\xd7\x01\n\nLoadParams\x12.\n\x07poisson\x18\x01 \x01(\x0b\x32\x1b.grpc.testing.PoissonParamsH\x00\x12.\n\x07uniform\x18\x02 \x01(\x0b\x32\x1b.grpc.testing.UniformParamsH\x00\x12\x33\n\x06\x64\x65term\x18\x03 \x01(\x0b\x32!.grpc.testing.DeterministicParamsH\x00\x12,\n\x06pareto\x18\x04 \x01(\x0b\x32\x1a.grpc.testing.ParetoParamsH\x00\x42\x06\n\x04load\"\xed\x02\n\x0c\x43lientConfig\x12\x16\n\x0eserver_targets\x18\x01 \x03(\t\x12-\n\x0b\x63lient_type\x18\x02 \x01(\x0e\x32\x18.grpc.testing.ClientType\x12\x12\n\nenable_ssl\x18\x03 \x01(\x08\x12$\n\x1coutstanding_rpcs_per_channel\x18\x04 \x01(\x05\x12\x17\n\x0f\x63lient_channels\x18\x05 \x01(\x05\x12\x14\n\x0cpayload_size\x18\x06 \x01(\x05\x12\x1c\n\x14\x61sync_client_threads\x18\x07 \x01(\x05\x12\'\n\x08rpc_type\x18\x08 \x01(\x0e\x32\x15.grpc.testing.RpcType\x12\x0c\n\x04host\x18\t \x01(\t\x12)\n\tload_type\x18\n \x01(\x0e\x32\x16.grpc.testing.LoadType\x12-\n\x0bload_params\x18\x0b \x01(\x0b\x32\x18.grpc.testing.LoadParams\"\x06\n\x04Mark\"h\n\nClientArgs\x12+\n\x05setup\x18\x01 \x01(\x0b\x32\x1a.grpc.testing.ClientConfigH\x00\x12\"\n\x04mark\x18\x02 \x01(\x0b\x32\x12.grpc.testing.MarkH\x00\x42\t\n\x07\x61rgtype\"{\n\x0b\x43lientStats\x12.\n\tlatencies\x18\x01 \x01(\x0b\x32\x1b.grpc.testing.HistogramData\x12\x14\n\x0ctime_elapsed\x18\x02 \x01(\x01\x12\x11\n\ttime_user\x18\x03 \x01(\x01\x12\x13\n\x0btime_system\x18\x04 \x01(\x01\"8\n\x0c\x43lientStatus\x12(\n\x05stats\x18\x01 \x01(\x0b\x32\x19.grpc.testing.ClientStats\"p\n\x0cServerConfig\x12-\n\x0bserver_type\x18\x01 \x01(\x0e\x32\x18.grpc.testing.ServerType\x12\x0f\n\x07threads\x18\x02 \x01(\x05\x12\x12\n\nenable_ssl\x18\x03 \x01(\x08\x12\x0c\n\x04host\x18\x04 \x01(\t\"h\n\nServerArgs\x12+\n\x05setup\x18\x01 \x01(\x0b\x32\x1a.grpc.testing.ServerConfigH\x00\x12\"\n\x04mark\x18\x02 \x01(\x0b\x32\x12.grpc.testing.MarkH\x00\x42\t\n\x07\x61rgtype\"F\n\x0cServerStatus\x12(\n\x05stats\x18\x01 \x01(\x0b\x32\x19.grpc.testing.ServerStats\x12\x0c\n\x04port\x18\x02 \x01(\x05\"\x80\x01\n\rSimpleRequest\x12\x30\n\rresponse_type\x18\x01 \x01(\x0e\x32\x19.grpc.testing.PayloadType\x12\x15\n\rresponse_size\x18\x02 \x01(\x05\x12&\n\x07payload\x18\x03 \x01(\x0b\x32\x15.grpc.testing.Payload\"8\n\x0eSimpleResponse\x12&\n\x07payload\x18\x01 \x01(\x0b\x32\x15.grpc.testing.Payload*?\n\x0bPayloadType\x12\x10\n\x0c\x43OMPRESSABLE\x10\x00\x12\x12\n\x0eUNCOMPRESSABLE\x10\x01\x12\n\n\x06RANDOM\x10\x02*6\n\nClientType\x12\x16\n\x12SYNCHRONOUS_CLIENT\x10\x00\x12\x10\n\x0c\x41SYNC_CLIENT\x10\x01*6\n\nServerType\x12\x16\n\x12SYNCHRONOUS_SERVER\x10\x00\x12\x10\n\x0c\x41SYNC_SERVER\x10\x01*#\n\x07RpcType\x12\t\n\x05UNARY\x10\x00\x12\r\n\tSTREAMING\x10\x01*T\n\x08LoadType\x12\x0f\n\x0b\x43LOSED_LOOP\x10\x00\x12\x0b\n\x07POISSON\x10\x01\x12\x0b\n\x07UNIFORM\x10\x02\x12\x11\n\rDETERMINISTIC\x10\x03\x12\n\n\x06PARETO\x10\x04\x32\xa5\x01\n\x0bTestService\x12\x46\n\tUnaryCall\x12\x1b.grpc.testing.SimpleRequest\x1a\x1c.grpc.testing.SimpleResponse\x12N\n\rStreamingCall\x12\x1b.grpc.testing.SimpleRequest\x1a\x1c.grpc.testing.SimpleResponse(\x01\x30\x01\x32\x94\x01\n\x06Worker\x12\x43\n\x07RunTest\x12\x18.grpc.testing.ClientArgs\x1a\x1a.grpc.testing.ClientStatus(\x01\x30\x01\x12\x45\n\tRunServer\x12\x18.grpc.testing.ServerArgs\x1a\x1a.grpc.testing.ServerStatus(\x01\x30\x01\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -31,22 +31,22 @@ _PAYLOADTYPE = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='COMPRESSABLE', index=0, number=1,
+      name='COMPRESSABLE', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='UNCOMPRESSABLE', index=1, number=2,
+      name='UNCOMPRESSABLE', index=1, number=1,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='RANDOM', index=2, number=3,
+      name='RANDOM', index=2, number=2,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=1426,
-  serialized_end=1489,
+  serialized_start=1902,
+  serialized_end=1965,
 )
 _sym_db.RegisterEnumDescriptor(_PAYLOADTYPE)
 
@@ -58,18 +58,18 @@ _CLIENTTYPE = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='SYNCHRONOUS_CLIENT', index=0, number=1,
+      name='SYNCHRONOUS_CLIENT', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='ASYNC_CLIENT', index=1, number=2,
+      name='ASYNC_CLIENT', index=1, number=1,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=1491,
-  serialized_end=1545,
+  serialized_start=1967,
+  serialized_end=2021,
 )
 _sym_db.RegisterEnumDescriptor(_CLIENTTYPE)
 
@@ -81,18 +81,18 @@ _SERVERTYPE = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='SYNCHRONOUS_SERVER', index=0, number=1,
+      name='SYNCHRONOUS_SERVER', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='ASYNC_SERVER', index=1, number=2,
+      name='ASYNC_SERVER', index=1, number=1,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=1547,
-  serialized_end=1601,
+  serialized_start=2023,
+  serialized_end=2077,
 )
 _sym_db.RegisterEnumDescriptor(_SERVERTYPE)
 
@@ -104,31 +104,71 @@ _RPCTYPE = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='UNARY', index=0, number=1,
+      name='UNARY', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='STREAMING', index=1, number=2,
+      name='STREAMING', index=1, number=1,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=1603,
-  serialized_end=1638,
+  serialized_start=2079,
+  serialized_end=2114,
 )
 _sym_db.RegisterEnumDescriptor(_RPCTYPE)
 
 RpcType = enum_type_wrapper.EnumTypeWrapper(_RPCTYPE)
-COMPRESSABLE = 1
-UNCOMPRESSABLE = 2
-RANDOM = 3
-SYNCHRONOUS_CLIENT = 1
-ASYNC_CLIENT = 2
-SYNCHRONOUS_SERVER = 1
-ASYNC_SERVER = 2
-UNARY = 1
-STREAMING = 2
+_LOADTYPE = _descriptor.EnumDescriptor(
+  name='LoadType',
+  full_name='grpc.testing.LoadType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='CLOSED_LOOP', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='POISSON', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UNIFORM', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DETERMINISTIC', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PARETO', index=4, number=4,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=2116,
+  serialized_end=2200,
+)
+_sym_db.RegisterEnumDescriptor(_LOADTYPE)
+
+LoadType = enum_type_wrapper.EnumTypeWrapper(_LOADTYPE)
+COMPRESSABLE = 0
+UNCOMPRESSABLE = 1
+RANDOM = 2
+SYNCHRONOUS_CLIENT = 0
+ASYNC_CLIENT = 1
+SYNCHRONOUS_SERVER = 0
+ASYNC_SERVER = 1
+UNARY = 0
+STREAMING = 1
+CLOSED_LOOP = 0
+POISSON = 1
+UNIFORM = 2
+DETERMINISTIC = 3
+PARETO = 4
 
 
 
@@ -154,7 +194,7 @@ _STATSREQUEST = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -172,21 +212,21 @@ _SERVERSTATS = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='time_elapsed', full_name='grpc.testing.ServerStats.time_elapsed', index=0,
-      number=1, type=1, cpp_type=5, label=2,
+      number=1, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='time_user', full_name='grpc.testing.ServerStats.time_user', index=1,
-      number=2, type=1, cpp_type=5, label=2,
+      number=2, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='time_system', full_name='grpc.testing.ServerStats.time_system', index=2,
-      number=3, type=1, cpp_type=5, label=2,
+      number=3, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -199,7 +239,7 @@ _SERVERSTATS = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -218,7 +258,7 @@ _PAYLOAD = _descriptor.Descriptor(
     _descriptor.FieldDescriptor(
       name='type', full_name='grpc.testing.Payload.type', index=0,
       number=1, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -237,7 +277,7 @@ _PAYLOAD = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -262,35 +302,35 @@ _HISTOGRAMDATA = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='min_seen', full_name='grpc.testing.HistogramData.min_seen', index=1,
-      number=2, type=1, cpp_type=5, label=2,
+      number=2, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='max_seen', full_name='grpc.testing.HistogramData.max_seen', index=2,
-      number=3, type=1, cpp_type=5, label=2,
+      number=3, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='sum', full_name='grpc.testing.HistogramData.sum', index=3,
-      number=4, type=1, cpp_type=5, label=2,
+      number=4, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='sum_of_squares', full_name='grpc.testing.HistogramData.sum_of_squares', index=4,
-      number=5, type=1, cpp_type=5, label=2,
+      number=5, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='count', full_name='grpc.testing.HistogramData.count', index=5,
-      number=6, type=1, cpp_type=5, label=2,
+      number=6, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -303,12 +343,205 @@ _HISTOGRAMDATA = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
   serialized_start=208,
   serialized_end=327,
+)
+
+
+_POISSONPARAMS = _descriptor.Descriptor(
+  name='PoissonParams',
+  full_name='grpc.testing.PoissonParams',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='offered_load', full_name='grpc.testing.PoissonParams.offered_load', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=329,
+  serialized_end=366,
+)
+
+
+_UNIFORMPARAMS = _descriptor.Descriptor(
+  name='UniformParams',
+  full_name='grpc.testing.UniformParams',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='interarrival_lo', full_name='grpc.testing.UniformParams.interarrival_lo', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='interarrival_hi', full_name='grpc.testing.UniformParams.interarrival_hi', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=368,
+  serialized_end=433,
+)
+
+
+_DETERMINISTICPARAMS = _descriptor.Descriptor(
+  name='DeterministicParams',
+  full_name='grpc.testing.DeterministicParams',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='offered_load', full_name='grpc.testing.DeterministicParams.offered_load', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=435,
+  serialized_end=478,
+)
+
+
+_PARETOPARAMS = _descriptor.Descriptor(
+  name='ParetoParams',
+  full_name='grpc.testing.ParetoParams',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='interarrival_base', full_name='grpc.testing.ParetoParams.interarrival_base', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='alpha', full_name='grpc.testing.ParetoParams.alpha', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=480,
+  serialized_end=536,
+)
+
+
+_LOADPARAMS = _descriptor.Descriptor(
+  name='LoadParams',
+  full_name='grpc.testing.LoadParams',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='poisson', full_name='grpc.testing.LoadParams.poisson', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='uniform', full_name='grpc.testing.LoadParams.uniform', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='determ', full_name='grpc.testing.LoadParams.determ', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='pareto', full_name='grpc.testing.LoadParams.pareto', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='load', full_name='grpc.testing.LoadParams.load',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=539,
+  serialized_end=754,
 )
 
 
@@ -328,35 +561,35 @@ _CLIENTCONFIG = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='client_type', full_name='grpc.testing.ClientConfig.client_type', index=1,
-      number=2, type=14, cpp_type=8, label=2,
-      has_default_value=False, default_value=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='enable_ssl', full_name='grpc.testing.ClientConfig.enable_ssl', index=2,
       number=3, type=8, cpp_type=7, label=1,
-      has_default_value=True, default_value=False,
+      has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='outstanding_rpcs_per_channel', full_name='grpc.testing.ClientConfig.outstanding_rpcs_per_channel', index=3,
-      number=4, type=5, cpp_type=1, label=2,
+      number=4, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='client_channels', full_name='grpc.testing.ClientConfig.client_channels', index=4,
-      number=5, type=5, cpp_type=1, label=2,
+      number=5, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='payload_size', full_name='grpc.testing.ClientConfig.payload_size', index=5,
-      number=6, type=5, cpp_type=1, label=2,
+      number=6, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -371,7 +604,7 @@ _CLIENTCONFIG = _descriptor.Descriptor(
     _descriptor.FieldDescriptor(
       name='rpc_type', full_name='grpc.testing.ClientConfig.rpc_type', index=7,
       number=8, type=14, cpp_type=8, label=1,
-      has_default_value=True, default_value=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -379,6 +612,20 @@ _CLIENTCONFIG = _descriptor.Descriptor(
       name='host', full_name='grpc.testing.ClientConfig.host', index=8,
       number=9, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='load_type', full_name='grpc.testing.ClientConfig.load_type', index=9,
+      number=10, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='load_params', full_name='grpc.testing.ClientConfig.load_params', index=10,
+      number=11, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -390,12 +637,12 @@ _CLIENTCONFIG = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=330,
-  serialized_end=619,
+  serialized_start=757,
+  serialized_end=1122,
 )
 
 
@@ -414,12 +661,12 @@ _MARK = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=621,
-  serialized_end=627,
+  serialized_start=1124,
+  serialized_end=1130,
 )
 
 
@@ -452,15 +699,15 @@ _CLIENTARGS = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
       name='argtype', full_name='grpc.testing.ClientArgs.argtype',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=629,
-  serialized_end=733,
+  serialized_start=1132,
+  serialized_end=1236,
 )
 
 
@@ -473,28 +720,28 @@ _CLIENTSTATS = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='latencies', full_name='grpc.testing.ClientStats.latencies', index=0,
-      number=1, type=11, cpp_type=10, label=2,
+      number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='time_elapsed', full_name='grpc.testing.ClientStats.time_elapsed', index=1,
-      number=3, type=1, cpp_type=5, label=2,
+      number=2, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='time_user', full_name='grpc.testing.ClientStats.time_user', index=2,
-      number=4, type=1, cpp_type=5, label=2,
+      number=3, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='time_system', full_name='grpc.testing.ClientStats.time_system', index=3,
-      number=5, type=1, cpp_type=5, label=2,
+      number=4, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -507,12 +754,12 @@ _CLIENTSTATS = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=735,
-  serialized_end=858,
+  serialized_start=1238,
+  serialized_end=1361,
 )
 
 
@@ -538,12 +785,12 @@ _CLIENTSTATUS = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=860,
-  serialized_end=916,
+  serialized_start=1363,
+  serialized_end=1419,
 )
 
 
@@ -556,22 +803,22 @@ _SERVERCONFIG = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='server_type', full_name='grpc.testing.ServerConfig.server_type', index=0,
-      number=1, type=14, cpp_type=8, label=2,
-      has_default_value=False, default_value=1,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='threads', full_name='grpc.testing.ServerConfig.threads', index=1,
       number=2, type=5, cpp_type=1, label=1,
-      has_default_value=True, default_value=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='enable_ssl', full_name='grpc.testing.ServerConfig.enable_ssl', index=2,
       number=3, type=8, cpp_type=7, label=1,
-      has_default_value=True, default_value=False,
+      has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -590,12 +837,12 @@ _SERVERCONFIG = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=918,
-  serialized_end=1040,
+  serialized_start=1421,
+  serialized_end=1533,
 )
 
 
@@ -628,15 +875,15 @@ _SERVERARGS = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
       name='argtype', full_name='grpc.testing.ServerArgs.argtype',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1042,
-  serialized_end=1146,
+  serialized_start=1535,
+  serialized_end=1639,
 )
 
 
@@ -656,7 +903,7 @@ _SERVERSTATUS = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='port', full_name='grpc.testing.ServerStatus.port', index=1,
-      number=2, type=5, cpp_type=1, label=2,
+      number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -669,12 +916,12 @@ _SERVERSTATUS = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1148,
-  serialized_end=1218,
+  serialized_start=1641,
+  serialized_end=1711,
 )
 
 
@@ -688,14 +935,14 @@ _SIMPLEREQUEST = _descriptor.Descriptor(
     _descriptor.FieldDescriptor(
       name='response_type', full_name='grpc.testing.SimpleRequest.response_type', index=0,
       number=1, type=14, cpp_type=8, label=1,
-      has_default_value=True, default_value=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='response_size', full_name='grpc.testing.SimpleRequest.response_size', index=1,
       number=2, type=5, cpp_type=1, label=1,
-      has_default_value=True, default_value=0,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -714,12 +961,12 @@ _SIMPLEREQUEST = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1221,
-  serialized_end=1366,
+  serialized_start=1714,
+  serialized_end=1842,
 )
 
 
@@ -745,17 +992,35 @@ _SIMPLERESPONSE = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1368,
-  serialized_end=1424,
+  serialized_start=1844,
+  serialized_end=1900,
 )
 
 _PAYLOAD.fields_by_name['type'].enum_type = _PAYLOADTYPE
+_LOADPARAMS.fields_by_name['poisson'].message_type = _POISSONPARAMS
+_LOADPARAMS.fields_by_name['uniform'].message_type = _UNIFORMPARAMS
+_LOADPARAMS.fields_by_name['determ'].message_type = _DETERMINISTICPARAMS
+_LOADPARAMS.fields_by_name['pareto'].message_type = _PARETOPARAMS
+_LOADPARAMS.oneofs_by_name['load'].fields.append(
+  _LOADPARAMS.fields_by_name['poisson'])
+_LOADPARAMS.fields_by_name['poisson'].containing_oneof = _LOADPARAMS.oneofs_by_name['load']
+_LOADPARAMS.oneofs_by_name['load'].fields.append(
+  _LOADPARAMS.fields_by_name['uniform'])
+_LOADPARAMS.fields_by_name['uniform'].containing_oneof = _LOADPARAMS.oneofs_by_name['load']
+_LOADPARAMS.oneofs_by_name['load'].fields.append(
+  _LOADPARAMS.fields_by_name['determ'])
+_LOADPARAMS.fields_by_name['determ'].containing_oneof = _LOADPARAMS.oneofs_by_name['load']
+_LOADPARAMS.oneofs_by_name['load'].fields.append(
+  _LOADPARAMS.fields_by_name['pareto'])
+_LOADPARAMS.fields_by_name['pareto'].containing_oneof = _LOADPARAMS.oneofs_by_name['load']
 _CLIENTCONFIG.fields_by_name['client_type'].enum_type = _CLIENTTYPE
 _CLIENTCONFIG.fields_by_name['rpc_type'].enum_type = _RPCTYPE
+_CLIENTCONFIG.fields_by_name['load_type'].enum_type = _LOADTYPE
+_CLIENTCONFIG.fields_by_name['load_params'].message_type = _LOADPARAMS
 _CLIENTARGS.fields_by_name['setup'].message_type = _CLIENTCONFIG
 _CLIENTARGS.fields_by_name['mark'].message_type = _MARK
 _CLIENTARGS.oneofs_by_name['argtype'].fields.append(
@@ -783,6 +1048,11 @@ DESCRIPTOR.message_types_by_name['StatsRequest'] = _STATSREQUEST
 DESCRIPTOR.message_types_by_name['ServerStats'] = _SERVERSTATS
 DESCRIPTOR.message_types_by_name['Payload'] = _PAYLOAD
 DESCRIPTOR.message_types_by_name['HistogramData'] = _HISTOGRAMDATA
+DESCRIPTOR.message_types_by_name['PoissonParams'] = _POISSONPARAMS
+DESCRIPTOR.message_types_by_name['UniformParams'] = _UNIFORMPARAMS
+DESCRIPTOR.message_types_by_name['DeterministicParams'] = _DETERMINISTICPARAMS
+DESCRIPTOR.message_types_by_name['ParetoParams'] = _PARETOPARAMS
+DESCRIPTOR.message_types_by_name['LoadParams'] = _LOADPARAMS
 DESCRIPTOR.message_types_by_name['ClientConfig'] = _CLIENTCONFIG
 DESCRIPTOR.message_types_by_name['Mark'] = _MARK
 DESCRIPTOR.message_types_by_name['ClientArgs'] = _CLIENTARGS
@@ -797,6 +1067,7 @@ DESCRIPTOR.enum_types_by_name['PayloadType'] = _PAYLOADTYPE
 DESCRIPTOR.enum_types_by_name['ClientType'] = _CLIENTTYPE
 DESCRIPTOR.enum_types_by_name['ServerType'] = _SERVERTYPE
 DESCRIPTOR.enum_types_by_name['RpcType'] = _RPCTYPE
+DESCRIPTOR.enum_types_by_name['LoadType'] = _LOADTYPE
 
 StatsRequest = _reflection.GeneratedProtocolMessageType('StatsRequest', (_message.Message,), dict(
   DESCRIPTOR = _STATSREQUEST,
@@ -825,6 +1096,41 @@ HistogramData = _reflection.GeneratedProtocolMessageType('HistogramData', (_mess
   # @@protoc_insertion_point(class_scope:grpc.testing.HistogramData)
   ))
 _sym_db.RegisterMessage(HistogramData)
+
+PoissonParams = _reflection.GeneratedProtocolMessageType('PoissonParams', (_message.Message,), dict(
+  DESCRIPTOR = _POISSONPARAMS,
+  __module__ = 'qpstest_pb2'
+  # @@protoc_insertion_point(class_scope:grpc.testing.PoissonParams)
+  ))
+_sym_db.RegisterMessage(PoissonParams)
+
+UniformParams = _reflection.GeneratedProtocolMessageType('UniformParams', (_message.Message,), dict(
+  DESCRIPTOR = _UNIFORMPARAMS,
+  __module__ = 'qpstest_pb2'
+  # @@protoc_insertion_point(class_scope:grpc.testing.UniformParams)
+  ))
+_sym_db.RegisterMessage(UniformParams)
+
+DeterministicParams = _reflection.GeneratedProtocolMessageType('DeterministicParams', (_message.Message,), dict(
+  DESCRIPTOR = _DETERMINISTICPARAMS,
+  __module__ = 'qpstest_pb2'
+  # @@protoc_insertion_point(class_scope:grpc.testing.DeterministicParams)
+  ))
+_sym_db.RegisterMessage(DeterministicParams)
+
+ParetoParams = _reflection.GeneratedProtocolMessageType('ParetoParams', (_message.Message,), dict(
+  DESCRIPTOR = _PARETOPARAMS,
+  __module__ = 'qpstest_pb2'
+  # @@protoc_insertion_point(class_scope:grpc.testing.ParetoParams)
+  ))
+_sym_db.RegisterMessage(ParetoParams)
+
+LoadParams = _reflection.GeneratedProtocolMessageType('LoadParams', (_message.Message,), dict(
+  DESCRIPTOR = _LOADPARAMS,
+  __module__ = 'qpstest_pb2'
+  # @@protoc_insertion_point(class_scope:grpc.testing.LoadParams)
+  ))
+_sym_db.RegisterMessage(LoadParams)
 
 ClientConfig = _reflection.GeneratedProtocolMessageType('ClientConfig', (_message.Message,), dict(
   DESCRIPTOR = _CLIENTCONFIG,
