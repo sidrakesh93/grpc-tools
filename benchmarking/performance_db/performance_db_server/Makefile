@@ -76,8 +76,8 @@ endif
 endif
 
 database_location:
-	sudo mkdir -p /usr/local/clientmetricsdb
-	sudo chmod a+rw /usr/local/clientmetricsdb
+	@sudo mkdir -p /usr/local/clientmetricsdb1
+	@sudo chmod 755 /usr/local/clientmetricsdb
 
 system-check:
 ifneq ($(HAS_VALID_PROTOC),true)
