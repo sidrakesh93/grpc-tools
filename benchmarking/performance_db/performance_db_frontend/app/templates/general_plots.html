@@ -119,7 +119,7 @@
       function drawChart(start, end) {
         var metricName;
         if( '{{ metric }}'.endsWith('Percentile Latency')) {
-          metricName = "{{ metric }} ";
+          metricName = "{{ metric }} (\xB5s)";
         }
         else {
           metricName = '{{ metric }}';

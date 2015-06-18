@@ -85,10 +85,10 @@
 
     <!-- Label containing name of the user -->
     <div class="container">
-      <div id="user-label"><h1 align="center">User: <a target="_blank" href="{{ user_link }}">{{ user_name }}</a></h1></div>
+      <div id="user-label"><h1 align="center"><img src="{{ user_info.picture }}" style="width:80px;height:80px;-webkit-filter: invert(100%)">  <a target="_blank" href="{{ user_info.link }}">{{ user_info.name }}</a></h1></div>
     </div>
     <!-- Date range selector -->
-    
+    <hr>
     
     <div class="container" style="width: 90%">
       <div class="container">
@@ -97,36 +97,44 @@
           <span></span> <b class="caret"></b>
         </div>
       </div>
+
       <!-- QPS chart -->
       <div id="chart-div-qps" style="height: 700px;"></div>
 
+      <hr>
       <div class="container">
         <div id="qps-per-core-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
           <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
           <span></span> <b class="caret"></b>
         </div>
       </div>
+
       <!-- QPS Per Core chart -->
       <div id="chart-div-qps-per-core" style="height: 700px;"></div>
-      
+
+      <hr>      
       <div class="container">
         <div id="perc-lat-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
           <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
           <span></span> <b class="caret"></b>
         </div>
       </div>
+
       <!-- Latency chart -->
       <div id="chart-div-percentile-latencies" style="height: 700px;"></div>
-      
+
+      <hr>     
       <div class="container">
         <div id="server-times-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
           <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
           <span></span> <b class="caret"></b>
         </div>
       </div>
+
       <!-- Server Times chart -->
       <div id="chart-div-server-times" style="height: 700px;"></div>
       
+      <hr>
       <div class="container">
         <div id="client-times-report-range" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
           <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
@@ -135,6 +143,7 @@
       </div>
       <!-- Client Times chart -->
       <div id="chart-div-client-times" style="height: 700px;"></div>
+      <hr>
     </div>
     <!-- Javascript functionality for charts and date range selector -->
     <script type="text/javascript">
