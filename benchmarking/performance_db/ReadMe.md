@@ -22,7 +22,7 @@ The user can pass the path or name of the test which he/she wishes to run, and h
 
 A typical command to send the data to the performance database server would be:
 
-    python run_perf_db_test.py qps_test username@gmail.com
+    ./run_perf_db_test.py qps_test username@gmail.com
 
 We now briefly describe the authentication process.
 
