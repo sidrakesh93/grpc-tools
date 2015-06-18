@@ -14,7 +14,7 @@ More formally, the objectives of the performance database tool can be represente
 
 ### Collecting the QPS test results from the users
 
-The results are collected from the users by the means of a derived reporting class, the _UserDatabaseReporter_,  in the [QPS test](https://github.com/grpc/grpc/tree/master/test/cpp/qps) reporter, which is responsible for sending data the the running backend server via RPC calls (implemented using gRPC). The implementation for this mechanism is in C++. The UserDatabaseReporter class makes use of a separate class, _UserDataClient_, which directly interacts with the server.
+The results are collected from the users by the means of a derived reporting class, the _PerfDbReporter_,  in the [QPS test](https://github.com/grpc/grpc/tree/master/test/cpp/qps) reporter, which is responsible for sending data the the running backend server via RPC calls (implemented using gRPC). The implementation for this mechanism is in C++. The UserDatabaseReporter class makes use of a separate class, _PerfDbClient_, which directly interacts with the server.
 
 The authenticated performance reporting tool is initiated using a Python wrapper which subsequently begins the actual test. Before the actual PQS test begins, the user is authenticated using the [OAuth 2.0 protocol](https://developers.google.com/identity/protocols/OAuth2), and system and network information is collected.
 
@@ -52,4 +52,4 @@ The access and refresh tokens for the user are stored on his/her system. When th
 
 Following the authentication, the system information of the user is collected using the Python script. The specs include CPU(s), Socket(s), CPU Family, Cache information, etc., as well as network information including NIC speeds and Inet addresses, as well as the TCP_RR transmission rate per second. This information is passed as an argument to the test, as it needs to be sent alongwith the test results.
 
-In addition to the already present _LogReporter_, the _UserDataReporter_ corresponding to the tool records information in parallel to the _LogReporter_, and upon completion sends the access token, system information and test results to the listening server.
+In addition to the already present _LogReporter_, the _PerfDbReporter_ corresponding to the tool records information in parallel to the _LogReporter_, and upon completion sends the access token, system information and test results to the listening server.
