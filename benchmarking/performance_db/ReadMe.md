@@ -18,11 +18,11 @@ The results are collected from the users by the means of a derived reporting cla
 
 The authenticated performance reporting tool is initiated using a Python wrapper which subsequently begins the actual test. Before the actual PQS test begins, the user is authenticated using the [OAuth 2.0 protocol](https://developers.google.com/identity/protocols/OAuth2), and system and network information is collected.
 
-The user can pass the path or name of the test which he/she wishes to run, and his/her gmail id as command-line arguments, else the user will be prompted to enter the same.
+Commandline arguments are handled using [python_gflags](https://code.google.com/p/python-gflags/). The user _must_ pass the path or name of the test which he/she wishes to run, and his/her gmail id as command-line arguments, and may optionally pass the address of the performance database server and location of the access tokens' directory. Superuser access could be required.
 
-A typical command to send the data to the performance database server would be:
+A typical command to send the data to the performance database server could look like:
 
-    ./run_perf_db_test.py qps_test username@gmail.com
+    sudo ./run_perf_db_test.py --test=qps_test --email=username@gmail.com --tokens_dir=/usr/local/access_tokens --server_address=server_host
 
 We now briefly describe the authentication process.
 
