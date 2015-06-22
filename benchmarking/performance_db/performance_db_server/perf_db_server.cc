@@ -47,7 +47,7 @@
 #include <gflags/gflags.h>
 
 DEFINE_string(address, "", "Address of server in Hostname:Port format");
-DEFINE_string(database, "/usr/local/clientmetricsdb", "Location of the database");
+DEFINE_string(database, "", "Location of the database");
 
 // In some distros, gflags is in the namespace google, and in some others,
 // in gflags. This hack is enabling us to find both.

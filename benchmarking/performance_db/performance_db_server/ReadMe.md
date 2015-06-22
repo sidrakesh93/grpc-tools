@@ -14,6 +14,6 @@ The server timestamps the received data, and stores it to the database along wit
 
 The frontend makes two types of calls to the server: to obtain the data either for one user or for all the users. The server sends data to the frontend accordingly.
 
-The server needs to be passed the address in _hostname:port_ format as a commandline argument, which are handled using [gflags](https://github.com/gflags/gflags). The server is run as:
+The server is started using a Python wrapper, _run_perf_db_server.py_, needs to be passed the address in _hostname:port_ format and the location of the database as commandline arguments. The command to run the server will typically look like:
 
-    ./user_data_server --address=hostname:port
+    ./run_perf_db_server --address=hostname:port --database=path_to_database
