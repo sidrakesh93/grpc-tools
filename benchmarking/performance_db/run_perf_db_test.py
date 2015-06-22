@@ -198,22 +198,6 @@ def getAccessToken(email, tokensDir):
 
   return accessToken
 
-# If user has not entered full path to test, recursively searches for given test in parent folders
-def findTestPath(test):
-  # If user entered full path to test, return it
-  if(os.path.isfile(test)):
-    return test
-
-  testName = test.split('/')[-1] # Extract just test name
-  testPath = ''
-
-  # Search for test
-  for root, dirnames, filenames in os.walk('../../../'):
-    for fileName in fnmatch.filter(filenames, testName):
-      testPath = os.path.join(root, fileName)
-
-  return testPath
-
 def getSysInfo():
   # Fetch system information
   sysInfo = os.popen('lscpu').readlines()
@@ -266,14 +250,14 @@ def main(argv):
   serverAddress = args.server_address
 
   # Get path to test
-  try:
-    testPath = findTestPath(args.test)
-  except TypeError:
-    print '\nError: Please provide test name/path as argument\n'
-    sys.exit(1)
+  testPath = args.test
 
   # Get name of the test
-  testName = testPath.split('/')[-1]
+  try:
+    testName = testPath.split('/')[-1]
+  except AttributeError:
+    print '\nError: Please provide test name/path as argument\n'
+    sys.exit(1)
 
   # Get the system information
   sysInfo = getSysInfo()
