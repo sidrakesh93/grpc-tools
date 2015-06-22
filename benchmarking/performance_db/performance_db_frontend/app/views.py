@@ -4,8 +4,7 @@ from user_data import UserData
 # View for performance database table page
 def displayPerformanceDatabase(request):
   metricstable = allUsersData()
-  request.session['metricstable'] = metricstable
-  return render(request, 'data_table.html', {})
+  return render(request, 'data_table.html', {'metricstable': metricstable})
 
 # View for config page
 def displayConfigs(request):
@@ -23,7 +22,7 @@ def generalStatisticRenderer(request, metric):
 # View for user metrics page
 def displayUserMetrics(request, clientid):
   completeData = singleUserData(clientid)
-  return render(request, 'user_plots.html', {'user_info': completeData[0], 'userdata':completeData[1]})
+  return render(request, 'user_plots.html', {'user_info': completeData[0], 'userdata': completeData[1]})
 
 # Returns full metric name
 def getMetricFullDesc(metric):

@@ -53,7 +53,7 @@ perf_db_server: qpstest.pb.o perf_db.pb.o perf_db.grpc.pb.o pbjson/pbjson.o perf
 	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=. $<
 
 clean:
-	rm -f *.o *.pb.cc *.pb.h user_data_server
+	rm -f *.o *.pb.cc *.pb.h perf_db_server
 
 
 # The following is to test your system and ensure a smoother experience.

@@ -209,7 +209,7 @@
         var startDate = moment();  //earliest data date in given time range
         var endDate = moment().subtract(1000,'years');  //latest data date in given time range
 
-        {% for row in request.session.metricstable %}
+        {% for row in metricstable %}
           rowDate = new Date({{ row.timestamp.year }}, {{ row.timestamp.month }}-1, {{ row.timestamp.day }}, {{ row.timestamp.hour }}, {{ row.timestamp.min }}, {{ row.timestamp.sec }}, 0);
 
           //If in valid time range
