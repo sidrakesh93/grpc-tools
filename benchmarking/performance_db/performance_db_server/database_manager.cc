@@ -123,6 +123,7 @@ void DatabaseManager::recordSingleUserData(const SingleUserRecordRequest* reques
   dataDetails->set_timestamp(currentDateTime());
   dataDetails->set_test_name(request->test_name());
   dataDetails->set_sys_info(request->sys_info());
+  dataDetails->set_tag(request->tag());
   
   *(dataDetails->mutable_metrics()) = request->metrics();
   *(dataDetails->mutable_client_config()) = request->client_config();

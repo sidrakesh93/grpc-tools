@@ -57,13 +57,14 @@ class UserData(object):
     return parsed
 
   # Initialize a single metric record dictionary
-  def initSingleDataDict(self, testName, timestamp, clientConfig, serverConfig, sysInfo):
+  def initSingleDataDict(self, testName, timestamp, clientConfig, serverConfig, sysInfo, tag):
     singleDataDict = {}
     singleDataDict['test_name'] = testName;
     singleDataDict['timestamp'] = self.parseTimeString(timestamp)
     singleDataDict['client_config'] = self.getClientConfigDict(clientConfig)
     singleDataDict['server_config'] = self.getServerConfigDict(serverConfig)
     singleDataDict['sys_info'] = self.getSysInfoDict(sysInfo)
+    singleDataDict['tag'] = tag
 
     return singleDataDict
 
@@ -91,17 +92,17 @@ class UserData(object):
 
       for dataDetail in sortedClientData:
         if dataDetail.metrics.qps != 0.0: # qps present
-          singleDataDict = self.initSingleDataDict(dataDetail.test_name, dataDetail.timestamp, dataDetail.client_config, dataDetail.server_config, dataDetail.sys_info)
+          singleDataDict = self.initSingleDataDict(dataDetail.test_name, dataDetail.timestamp, dataDetail.client_config, dataDetail.server_config, dataDetail.sys_info, dataDetail.tag)
           singleDataDict['qps'] = round(dataDetail.metrics.qps,1)
           qpsList.append(singleDataDict)
 
         if dataDetail.metrics.qps_per_core != 0.0: # qps per core present
-          singleDataDict = self.initSingleDataDict(dataDetail.test_name, dataDetail.timestamp, dataDetail.client_config, dataDetail.server_config, dataDetail.sys_info)
+          singleDataDict = self.initSingleDataDict(dataDetail.test_name, dataDetail.timestamp, dataDetail.client_config, dataDetail.server_config, dataDetail.sys_info, dataDetail.tag)
           singleDataDict['qps_per_core'] = round(dataDetail.metrics.qps_per_core,1)
           qpsPerCoreList.append(singleDataDict)
         
         if dataDetail.metrics.perc_lat_50 != 0.0 and dataDetail.metrics.perc_lat_90 != 0.0 and dataDetail.metrics.perc_lat_95 != 0.0 and dataDetail.metrics.perc_lat_99 != 0.0 and dataDetail.metrics.perc_lat_99_point_9 != 0.0: # percentile latenices present
-          singleDataDict = self.initSingleDataDict(dataDetail.test_name, dataDetail.timestamp, dataDetail.client_config, dataDetail.server_config, dataDetail.sys_info)
+          singleDataDict = self.initSingleDataDict(dataDetail.test_name, dataDetail.timestamp, dataDetail.client_config, dataDetail.server_config, dataDetail.sys_info, dataDetail.tag)
           
           latDict = {}
           latDict['perc_lat_50'] = round(dataDetail.metrics.perc_lat_50,1)
@@ -114,7 +115,7 @@ class UserData(object):
           latList.append(singleDataDict)
         
         if dataDetail.metrics.server_system_time != 0.0 and dataDetail.metrics.server_user_time != 0.0 and dataDetail.metrics.client_system_time != 0.0 and dataDetail.metrics.client_user_time != 0.0: # Server and client times present
-          singleDataDict = self.initSingleDataDict(dataDetail.test_name, dataDetail.timestamp, dataDetail.client_config, dataDetail.server_config, dataDetail.sys_info)
+          singleDataDict = self.initSingleDataDict(dataDetail.test_name, dataDetail.timestamp, dataDetail.client_config, dataDetail.server_config, dataDetail.sys_info, dataDetail.tag)
 
           timesDict = {}
           timesDict['server_system_time'] = round(dataDetail.metrics.server_system_time,1)
@@ -195,7 +196,7 @@ class UserData(object):
 
     return sysInfoDict
 
-  # Returs all the user's data for database table
+  # Returns all the user's data for database table
   def getAllUsersData(self):
     metricsTable = []
 
@@ -230,6 +231,7 @@ class UserData(object):
           userMetricsDict['server_config'] = self.getServerConfigDict(dataDetail.server_config)
           userMetricsDict['client_config'] = self.getClientConfigDict(dataDetail.client_config)
           userMetricsDict['sys_info'] = self.getSysInfoDict(dataDetail.sys_info)
+          userMetricsDict['tag'] = str(dataDetail.tag)
 
           metricsTable.append(userMetricsDict)
 

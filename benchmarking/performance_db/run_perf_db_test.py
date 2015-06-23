@@ -53,6 +53,7 @@ parser.add_argument('--test', type=str, help='Name of the test to be executed')
 parser.add_argument('--email', type=str, help='Gmail address of the user')
 parser.add_argument('--server_address', type=str, default='localhost:50052', help='Address of the performance database server')
 parser.add_argument('--tokens_dir', type=str, default=os.path.expanduser('~')+'/.grpc/access_tokens', help='Path to the access tokens directory')
+parser.add_argument('--tag', type=str, default='', help='Tag for the test')
 
 # Fetches JSON reply object, given a url and parameters
 def fetchJSON(url, paramDict):
@@ -262,10 +263,13 @@ def main(argv):
   # Get the system information
   sysInfo = getSysInfo()
 
+  tag = args.tag
+
   try:
     print '\nBeginning test:\n'
     # Run the test
-    subprocess.call([testPath, '--report_metrics_db=true', '--access_token='+accessToken, '--test_name='+testName, '--sys_info='+str(sysInfo).strip('[]'), '--server_address='+serverAddress])
+    subprocess.call([testPath, '--report_metrics_db=true', '--access_token='+accessToken, '--test_name='+testName, 
+      '--sys_info='+str(sysInfo).strip('[]'), '--server_address='+serverAddress, '--tag='+tag])
   except OSError:
     print 'Could not execute the test'
 

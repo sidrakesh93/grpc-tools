@@ -195,7 +195,7 @@
         chart.setSelection([]);
         var row = selection[0].row;
         if(row != null) {
-          window.open('/configs/'+configs[row][0]+'%'+configs[row][1].replace(/&#39;/g,'\'')+'%'+configs[row][2].replace(/&#39;/g,'\'')+'%'+configs[row][3].replace(/&#39;/g,'\''), '_blank');
+          window.open('/configs/'+configs[row][0]+'%'+configs[row][1]+'%'+configs[row][2].replace(/&#39;/g,'\'')+'%'+configs[row][3].replace(/&#39;/g,'\'')+'%'+configs[row][4].replace(/&#39;/g,'\''), '_blank');
         }
       }
 
@@ -214,7 +214,7 @@
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
             if(start <= metricDate && end >= metricDate) {
               qpsArgs.push([metricDate, {{ item.qps }}]);
-              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              configs.push(['{{item.test_name}}', '{{item.tag}}', '{{item.client_config}}', '{{item.server_config}}', '{{item.sys_info}}']);
               if(metricDate < startDate) {
                 startDate = metricDate;
               }
@@ -272,7 +272,7 @@
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
             if(start <= metricDate && end >= metricDate) {
               qpsPerCoreArgs.push([metricDate, {{ item.qps_per_core }}]);
-              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              configs.push(['{{item.test_name}}', '{{item.tag}}', '{{item.client_config}}', '{{item.server_config}}', '{{item.sys_info}}']);
               if(metricDate < startDate) {
                 startDate = metricDate;
               }
@@ -330,7 +330,7 @@
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
             if(start <= metricDate && end >= metricDate) {
               latArgs.push([metricDate, {{ item.lat.perc_lat_50 }}, {{ item.lat.perc_lat_90 }}, {{ item.lat.perc_lat_95 }}, {{ item.lat.perc_lat_99 }}, {{ item.lat.perc_lat_99_point_9 }}]);
-              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              configs.push(['{{item.test_name}}', '{{item.tag}}', '{{item.client_config}}', '{{item.server_config}}', '{{item.sys_info}}']);
               if(metricDate < startDate) {
                 startDate = metricDate;
               }
@@ -395,7 +395,7 @@
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
             if(start <= metricDate && end >= metricDate) {
               serverTimesArgs.push([metricDate, {{ item.times.server_system_time }}/100.0, {{ item.times.server_user_time }}/100.0]);
-              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              configs.push(['{{item.test_name}}', '{{item.tag}}', '{{item.client_config}}', '{{item.server_config}}', '{{item.sys_info}}']);
               if(metricDate < startDate) {
                 startDate = metricDate;
               }
@@ -456,7 +456,7 @@
             var metricDate = new Date({{ item.timestamp.year }}, {{ item.timestamp.month }}-1, {{ item.timestamp.day }}, {{ item.timestamp.hour }}, {{ item.timestamp.min }}, {{ item.timestamp.sec }}, 0);
             if(start <= metricDate && end >= metricDate) {
               clientTimesArgs.push([metricDate, {{ item.times.client_system_time }}/100.0, {{ item.times.client_user_time }}/100.0]);
-              configs.push(['{{item.test_name}}','{{item.client_config}}','{{item.server_config}}','{{item.sys_info}}']);
+              configs.push(['{{item.test_name}}', '{{item.tag}}', '{{item.client_config}}', '{{item.server_config}}', '{{item.sys_info}}']);
               if(metricDate < startDate) {
                 startDate = metricDate;
               }

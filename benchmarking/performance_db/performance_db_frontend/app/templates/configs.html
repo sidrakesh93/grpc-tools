@@ -69,6 +69,8 @@
     <div class="container">
       <h2 id='test-name' align="center"></h2>
       <hr>
+      <h2 id='test-tag' align="center"></h2>
+      <hr>
       <!-- Client configuration -->
       <h3 align="center">Client Configuration</h3>
       <hr>
@@ -137,17 +139,21 @@
       //first part of split url pathname is the test name
       testName.innerHTML = 'Test: ' + pathNameParts[0];
 
+      var testTag = document.getElementById("test-tag");
+      //second part of split url pathname is the test tag
+      testTag.innerHTML = 'Tag: ' + pathNameParts[1];
+
       var table = document.getElementById("client-configs-table");
-      //second part of split url pathname is client config
-      fillTable(table, pathNameParts[1]);
+      //third part of split url pathname is client config
+      fillTable(table, pathNameParts[2]);
 
       table = document.getElementById("server-configs-table");
-      //third part of split url pathname is server config
-      fillTable(table, pathNameParts[2]);
+      //fourth part of split url pathname is server config
+      fillTable(table, pathNameParts[3]);
       
       table = document.getElementById("sys-info-table");
-      //fourth part of split url pathname is sys info
-      fillTable(table, pathNameParts[3]);
+      //fifth part of split url pathname is sys info
+      fillTable(table, pathNameParts[4]);
 
       //function to fill table
       function fillTable(table, info) {

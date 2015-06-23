@@ -166,6 +166,11 @@
                   data-sortable="true"
                   data-align="center"
                   data-visible="false">Client User Time %</th>
+              <!-- Tag  -->
+              <th data-field="tag"
+                  data-sortable="true"
+                  data-align="center"
+                  data-visible="false">Tag</th>
             </tr>
           </thead>
           <tbody id="metrics-table-body">
@@ -217,7 +222,7 @@
             dataArr.push({
               userid: '<a href="/plotUser/{{ row.id }}">{{ row.name }}</a>',
               timestamp: '{{ row.timestamp.month }}/{{ row.timestamp.day }}/{{ row.timestamp.year }} {{ row.timestamp.hour }}:{{ row.timestamp.min }}:{{ row.timestamp.sec }}',
-              testName: '<a id="config" href="/configs/{{ row.test_name }}%{{ row.client_config }}%{{ row.server_config }}%{{ row.sys_info }}" target="_blank">{{ row.test_name }}</a>',
+              testName: '<a id="config" href="/configs/{{ row.test_name }}%{{ row.tag }}%{{ row.client_config }}%{{ row.server_config }}%{{ row.sys_info }}" target="_blank">{{ row.test_name }}</a>',
               QPS: '{{ row.qps }}',
               QPSPerCore: '{{ row.qps_per_core }}',
               p50: '{{ row.perc_lat_50 }}',
@@ -228,7 +233,8 @@
               serverSystemTime: '{{ row.server_system_time }}',
               serverUserTime: '{{ row.server_user_time }}',
               clientSystemTime: '{{ row.client_system_time }}',
-              clientUserTime: '{{ row.client_user_time }}'
+              clientUserTime: '{{ row.client_user_time }}',
+              tag: '{{ row.tag }}'
             });
             if(rowDate < startDate) {
               startDate = rowDate;
