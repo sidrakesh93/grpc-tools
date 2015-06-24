@@ -222,7 +222,7 @@
             dataArr.push({
               userid: '<a href="/plotUser/{{ row.id }}">{{ row.name }}</a>',
               timestamp: '{{ row.timestamp.month }}/{{ row.timestamp.day }}/{{ row.timestamp.year }} {{ row.timestamp.hour }}:{{ row.timestamp.min }}:{{ row.timestamp.sec }}',
-              testName: '<a id="config" href="/configs/{{ row.test_name }}%{{ row.tag }}%{{ row.client_config }}%{{ row.server_config }}%{{ row.sys_info }}" target="_blank">{{ row.test_name }}</a>',
+              testName: '<a id="config" href="/configs/'+btoa('{{ row.test_name }}%{{ row.tag }}%{{ row.client_config }}%{{ row.server_config }}%{{ row.sys_info }}')+'" target="_blank">{{ row.test_name }}</a>',
               QPS: '{{ row.qps }}',
               QPSPerCore: '{{ row.qps_per_core }}',
               p50: '{{ row.perc_lat_50 }}',

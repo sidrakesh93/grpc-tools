@@ -126,12 +126,12 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <script>
       var pathName = window.location.pathname;
-
       pathName = pathName.replace(/\/configs\//g, '');
+      pathName = atob(pathName);
+      pathName = pathName.replace(/&#39;/g, '"');
       pathName = pathName.replace(/%20/g, ' ');
       pathName = pathName.replace(/%7B/g, '{');
       pathName = pathName.replace(/%7D/g, '}');
-      pathName = pathName.replace(/\'/g, '"');
 
       var pathNameParts = pathName.split('%');
       
@@ -141,7 +141,12 @@
 
       var testTag = document.getElementById("test-tag");
       //second part of split url pathname is the test tag
-      testTag.innerHTML = 'Tag: ' + pathNameParts[1];
+      if(pathNameParts[1]) {
+        testTag.innerHTML = 'Tag: ' + pathNameParts[1];
+      }
+      else {
+        testTag.innerHTML = 'Tag: None';
+      }
 
       var table = document.getElementById("client-configs-table");
       //third part of split url pathname is client config

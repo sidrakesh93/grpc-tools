@@ -195,7 +195,7 @@
         chart.setSelection([]);
         var row = selection[0].row;
         if(row != null) {
-          window.open('/configs/'+configs[row][0]+'%'+configs[row][1]+'%'+configs[row][2].replace(/&#39;/g,'\'')+'%'+configs[row][3].replace(/&#39;/g,'\'')+'%'+configs[row][4].replace(/&#39;/g,'\''), '_blank');
+          window.open('/configs/'+btoa(configs[row][0]+'%'+configs[row][1]+'%'+configs[row][2]+'%'+configs[row][3]+'%'+configs[row][4]), '_blank');
         }
       }
 
