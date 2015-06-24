@@ -30,7 +30,7 @@ We now briefly describe the authentication process.
 
 The tool uses [OAuth 2.0 protocol](https://developers.google.com/identity/protocols/OAuth2) for authentication and authorization. If the user is is running the test for the first time on his/her system, or his/her refresh token has expired, he/she will be prompted to authorize the application using a code provided by the protocol, and his/her login credentials in a web browser. The authorization link will be displayed in the terminal.
 
-![alt tag](https://github.com/sidrakesh93/grpc-tools/blob/master/benchmarking/performance_db/images/Auth%20terminal.png)
+![alt tag](https://github.com/sidrakesh93/grpc-tools/blob/master/benchmarking/performance_db/images/Auth%20Terminal.png)
 
 Upon following the verification URL, the user needs to login (if not already logged in), and then sees the following:
 
