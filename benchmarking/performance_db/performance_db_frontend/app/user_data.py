@@ -281,5 +281,3 @@ class UserData(object):
           metricList.append(userMetricsDict)
 
     return metricList
-
-
