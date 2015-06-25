@@ -74,5 +74,5 @@ class DatabaseManager{
     void clearAddressFields(SingleUserDetails* singleUserDetails);
 };
 
-}
-}
+}  //testing
+}  //grpc
