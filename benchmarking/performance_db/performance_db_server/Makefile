@@ -43,7 +43,7 @@ vpath %.proto $(PROTOS_PATH)
 
 all: system-check qpstest.pb.cc perf_db.grpc.pb.cc perf_db.pb.cc perf_db_server
 
-perf_db_server: qpstest.pb.o perf_db.pb.o perf_db.grpc.pb.o pbjson/pbjson.o perf_db_server.o database_manager.o
+perf_db_server: qpstest.pb.o perf_db.pb.o perf_db.grpc.pb.o pbjson/src/pbjson.o perf_db_server.o database_manager.o
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 %.grpc.pb.cc: %.proto
