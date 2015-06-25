@@ -35,7 +35,7 @@
 #include "leveldb/db.h"
 #include "leveldb/cache.h"
 #include "perf_db.grpc.pb.h"
-#include "pbjson/pbjson.hpp"
+#include "pbjson/src/pbjson.hpp"
 #include <curl/curl.h>
 
 namespace grpc{
