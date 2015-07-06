@@ -63,14 +63,14 @@ class PerfDbTransferServiceImpl final : public PerfDbTransfer::Service {
 public:
   PerfDbTransferServiceImpl() {
     //Set and initialize database
-    dbManager.setDatabase(FLAGS_database);
-    dbManager.setAuthServerAddress(FLAGS_auth_server_address);
+    db_manager.setDatabase(FLAGS_database);
+    db_manager.setAuthServerAddress(FLAGS_auth_server_address);
   }
 
   Status RecordSingleClientData(ServerContext* context, const SingleUserRecordRequest* request,
                   SingleUserRecordReply* reply) override {
     //record single user's data to database
-    bool result = dbManager.recordSingleUserData(request);
+    bool result = db_manager.recordSingleUserData(request);
     
     if(result) {
       return Status::OK;
@@ -83,18 +83,18 @@ public:
   Status RetrieveSingleUserData(ServerContext* context, const SingleUserRetrieveRequest* request,
                   SingleUserRetrieveReply* reply) override {
     //retrieve single user's records from database                   
-    *reply = dbManager.retrieveSingleUserData(request);
+    *reply = db_manager.retrieveSingleUserData(request);
     return Status::OK;
   }
 
   Status RetrieveAllUsersData(ServerContext* context, const AllUsersRetrieveRequest* request,
                   AllUsersRetrieveReply* reply) override {
     //retrieve all users' records from database
-    *reply = dbManager.retrieveAllUsersData(request);
+    *reply = db_manager.retrieveAllUsersData(request);
     return Status::OK;
   }
 private:
-  DatabaseManager dbManager;
+  DatabaseManager db_manager;
 };
 
 void RunServer() {

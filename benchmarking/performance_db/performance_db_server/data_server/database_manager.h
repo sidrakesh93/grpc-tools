@@ -74,7 +74,7 @@ class DatabaseManager{
     const std::string currentDateTime();
     
     //Clears sensitive fields from stored data before sending
-    void clearAddressFields(SingleUserDetails* singleUserDetails);
+    void clearAddressFields(SingleUserDetails* single_user_details);
 };
 
 }  //testing
