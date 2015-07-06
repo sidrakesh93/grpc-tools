@@ -49,21 +49,31 @@ parser.add_argument('--username', type=str, help='Gmail address of the user')
 parser.add_argument('--data_server_address', type=str, default='0.0.0.0:50052', help='Address of the performance database server')
 parser.add_argument('--auth_server_address', type=str, default='0.0.0.0:2817', help='Address of the authentication server')
 parser.add_argument('--creds_dir', type=str, default=os.path.expanduser('~')+'/.grpc/credentials', help='Path to the access tokens directory')
-parser.add_argument('--client_secrets', type=str, default=os.path.expanduser('~')+'/.grpc/credentials/client_secrets.json')
+parser.add_argument('--client_secrets', type=str, default='client_secrets.json')
 parser.add_argument('--tag', type=str, default='', help='Tag for the test')
 
-def authenticateUser(username, creds_dir, server_address, client_secrets, args):
+REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
+SCOPE = 'email profile'
+
+# Performs authentication for the user
+def authenticateUser(username, creds_dir, auth_server_address, client_secrets, args):
+  if not os.path.exists(creds_dir):
+    os.makedirs(creds_dir)
+
   user_creds_file = creds_dir + '/' + username
   storage = Storage(user_creds_file)
 
+  # Acquire user credentials if not already stored, else re-use stored credentials
   if(not os.path.exists(user_creds_file)):
-    flow = client.flow_from_clientsecrets(client_secrets, scope='email profile', redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+    flow = client.flow_from_clientsecrets(client_secrets, scope=SCOPE, redirect_uri=REDIRECT_URI)
     credentials = tools.run_flow(flow, storage, args)
   else:
     credentials = storage.get()
 
-  address_port = server_address.split(':')
+  # Split the address and port
+  address_port = auth_server_address.split(':')
 
+  # Request authentication from authentication server
   with auth_user_pb2.early_adopter_create_Authentication_stub(address_port[0], int(address_port[1])) as stub:
     authenticate_user_request = auth_user_pb2.AuthenticateUserRequest()
     authenticate_user_request.credentials = open(user_creds_file, "rb").read()
@@ -71,9 +81,17 @@ def authenticateUser(username, creds_dir, server_address, client_secrets, args):
 
     _TIMEOUT_SECONDS = 10 # Max waiting time before timeout, in seconds
 
-    reply_future = stub.AuthenticateUser.async(authenticate_user_request, _TIMEOUT_SECONDS)
-    reply = reply_future.result()
+    authenticate_user_reply_future = stub.AuthenticateUser.async(authenticate_user_request, _TIMEOUT_SECONDS)
+    authenticate_user_reply = authenticate_user_reply_future.result()
 
+    # If requested username not unique, send request again with new username
+    while authenticate_user_reply.is_unique_username != True:
+      username = raw_input('\nUsername already taken, please enter a new one: ')
+      authenticate_user_request.username = username
+      authenticate_user_reply_future = stub.AuthenticateUser.async(authenticate_user_request, _TIMEOUT_SECONDS)
+      authenticate_user_reply = authenticate_user_reply_future.result()
+
+  # Return hashed user id
   http_auth = credentials.authorize(httplib2.Http())
   auth_service = build('oauth2', 'v2', http=http_auth)
 
@@ -102,7 +120,6 @@ def getSysInfo():
     for ethtoolString in ethtoolResultList:
       if ethtoolString.startswith('Speed'):
         ethtoolString = ethtoolString.split(':')[1]
-        ethtoolString = ethtoolString.replace('Mb/s',' Mbps')
         nicInfo.append('NIC ' + NIC + ' speed: ' + ethtoolString + '\n')
         nicInfo.append(NIC + ' inet address: ' + nicAddrs[i].split(':')[1])
 

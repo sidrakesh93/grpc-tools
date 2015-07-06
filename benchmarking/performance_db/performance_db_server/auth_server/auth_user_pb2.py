@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='auth_user.proto',
   package='grpc.testing',
   syntax='proto3',
-  serialized_pb=_b('\n\x0f\x61uth_user.proto\x12\x0cgrpc.testing\"@\n\x17\x41uthenticateUserRequest\x12\x13\n\x0b\x63redentials\x18\x01 \x01(\x0c\x12\x10\n\x08username\x18\x02 \x01(\t\"\x17\n\x15\x41uthenticateUserReply\"\'\n\x12\x43onfirmUserRequest\x12\x11\n\thashed_id\x18\x01 \x01(\t\">\n\x10\x43onfirmUserReply\x12\x18\n\x10is_authenticated\x18\x01 \x01(\x08\x12\x10\n\x08username\x18\x02 \x01(\t2\xc5\x01\n\x0e\x41uthentication\x12`\n\x10\x41uthenticateUser\x12%.grpc.testing.AuthenticateUserRequest\x1a#.grpc.testing.AuthenticateUserReply\"\x00\x12Q\n\x0b\x43onfirmUser\x12 .grpc.testing.ConfirmUserRequest\x1a\x1e.grpc.testing.ConfirmUserReply\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0f\x61uth_user.proto\x12\x0cgrpc.testing\"@\n\x17\x41uthenticateUserRequest\x12\x13\n\x0b\x63redentials\x18\x01 \x01(\x0c\x12\x10\n\x08username\x18\x02 \x01(\t\"3\n\x15\x41uthenticateUserReply\x12\x1a\n\x12is_unique_username\x18\x01 \x01(\x08\"\'\n\x12\x43onfirmUserRequest\x12\x11\n\thashed_id\x18\x01 \x01(\t\">\n\x10\x43onfirmUserReply\x12\x18\n\x10is_authenticated\x18\x01 \x01(\x08\x12\x10\n\x08username\x18\x02 \x01(\t2\xc5\x01\n\x0e\x41uthentication\x12`\n\x10\x41uthenticateUser\x12%.grpc.testing.AuthenticateUserRequest\x1a#.grpc.testing.AuthenticateUserReply\"\x00\x12Q\n\x0b\x43onfirmUser\x12 .grpc.testing.ConfirmUserRequest\x1a\x1e.grpc.testing.ConfirmUserReply\"\x00\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -71,6 +71,13 @@ _AUTHENTICATEUSERREPLY = _descriptor.Descriptor(
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
+    _descriptor.FieldDescriptor(
+      name='is_unique_username', full_name='grpc.testing.AuthenticateUserReply.is_unique_username', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -84,7 +91,7 @@ _AUTHENTICATEUSERREPLY = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=99,
-  serialized_end=122,
+  serialized_end=150,
 )
 
 
@@ -114,8 +121,8 @@ _CONFIRMUSERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=124,
-  serialized_end=163,
+  serialized_start=152,
+  serialized_end=191,
 )
 
 
@@ -152,8 +159,8 @@ _CONFIRMUSERREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=165,
-  serialized_end=227,
+  serialized_start=193,
+  serialized_end=255,
 )
 
 DESCRIPTOR.message_types_by_name['AuthenticateUserRequest'] = _AUTHENTICATEUSERREQUEST

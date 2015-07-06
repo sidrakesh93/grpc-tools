@@ -43,6 +43,7 @@ message AuthenticateUserRequest {
 }
 
 message AuthenticateUserReply {
+  bool is_unique_username = 1;
 }
 
 message ConfirmUserRequest {

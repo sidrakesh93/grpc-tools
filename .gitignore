@@ -32,3 +32,5 @@ node_modules
 *.pyc
 *.sqlite3
 *.prof
+gens
+bins

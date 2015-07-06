@@ -29,31 +29,41 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+PROTOS_PATH = ../../protos
+GENSDIR = ../../gens
+BINSDIR = ../../bins
+
 CXX = g++
-CPPFLAGS += -I/usr/local/include -pthread
+CPPFLAGS += -I/usr/local/include -I$(GENSDIR) -pthread
 CXXFLAGS += -std=c++11
 LDFLAGS += -L/usr/local/lib -lgrpc++_unsecure -lgrpc -lgpr -lprotobuf -lpthread -ldl -lleveldb -lcurl -lgflags
 PROTOC = protoc
 GRPC_CPP_PLUGIN = grpc_cpp_plugin
 GRPC_CPP_PLUGIN_PATH ?= `which $(GRPC_CPP_PLUGIN)`
 
-PROTOS_PATH = ../../protos
-
 vpath %.proto $(PROTOS_PATH)
 
 all: system-check qpstest.pb.cc perf_db.grpc.pb.cc auth_user.grpc.pb.cc perf_db.pb.cc auth_user.pb.cc perf_db_server
 
-perf_db_server: qpstest.pb.o perf_db.pb.o perf_db.grpc.pb.o auth_user.pb.o auth_user.grpc.pb.o perf_db_server.o database_manager.o
-	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+perf_db_server: $(GENSDIR)/qpstest.pb.o $(GENSDIR)/perf_db.pb.o $(GENSDIR)/perf_db.grpc.pb.o $(GENSDIR)/auth_user.pb.o $(GENSDIR)/auth_user.grpc.pb.o $(GENSDIR)/database_manager.o $(GENSDIR)/perf_db_server.o
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $(BINSDIR)/$@
 
 %.grpc.pb.cc: %.proto
-	$(PROTOC) -I $(PROTOS_PATH) --grpc_out=. --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<
+	$(PROTOC) -I $(PROTOS_PATH) --grpc_out=$(GENSDIR) --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<
 
 %.pb.cc: %.proto
-	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=. $<
+	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=$(GENSDIR) $<
+
+$(GENSDIR)/%.pb.o: %.pb.cc
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $(GENSDIR)/$<
+
+$(GENSDIR)/%.o: %.cc
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 clean:
-	rm -f *.o *.pb.cc *.pb.h perf_db_server
+	rm -f *.o perf_db_server
+	rm -r $(GENSDIR)
+	rm -r $(BINSDIR)
 
 
 # The following is to test your system and ensure a smoother experience.
@@ -76,6 +86,8 @@ endif
 endif
 
 system-check:
+	mkdir -p $(GENSDIR)
+	mkdir -p $(BINSDIR)
 ifneq ($(HAS_VALID_PROTOC),true)
 	@echo " DEPENDENCY ERROR"
 	@echo
