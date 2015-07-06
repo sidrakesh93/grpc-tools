@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='perf_db.proto',
   package='grpc.testing',
   syntax='proto3',
-  serialized_pb=_b('\n\rperf_db.proto\x12\x0cgrpc.testing\x1a\rqpstest.proto\"\x89\x02\n\x07Metrics\x12\x0b\n\x03qps\x18\x01 \x01(\x01\x12\x14\n\x0cqps_per_core\x18\x02 \x01(\x01\x12\x13\n\x0bperc_lat_50\x18\x03 \x01(\x01\x12\x13\n\x0bperc_lat_90\x18\x04 \x01(\x01\x12\x13\n\x0bperc_lat_95\x18\x05 \x01(\x01\x12\x13\n\x0bperc_lat_99\x18\x06 \x01(\x01\x12\x1b\n\x13perc_lat_99_point_9\x18\x07 \x01(\x01\x12\x1a\n\x12server_system_time\x18\x08 \x01(\x01\x12\x18\n\x10server_user_time\x18\t \x01(\x01\x12\x1a\n\x12\x63lient_system_time\x18\n \x01(\x01\x12\x18\n\x10\x63lient_user_time\x18\x0b \x01(\x01\"\xe0\x01\n\x0b\x44\x61taDetails\x12\x11\n\ttimestamp\x18\x01 \x01(\t\x12\x11\n\ttest_name\x18\x02 \x01(\t\x12\x10\n\x08sys_info\x18\x03 \x01(\t\x12\x0b\n\x03tag\x18\x04 \x01(\t\x12&\n\x07metrics\x18\x05 \x01(\x0b\x32\x15.grpc.testing.Metrics\x12\x31\n\rclient_config\x18\x06 \x01(\x0b\x32\x1a.grpc.testing.ClientConfig\x12\x31\n\rserver_config\x18\x07 \x01(\x0b\x32\x1a.grpc.testing.ServerConfig\"\xc2\x01\n\x0bUserDetails\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x16\n\x0everified_email\x18\x03 \x01(\x08\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x12\n\ngiven_name\x18\x05 \x01(\t\x12\x13\n\x0b\x66\x61mily_name\x18\x06 \x01(\t\x12\x0c\n\x04link\x18\x07 \x01(\t\x12\x0f\n\x07picture\x18\x08 \x01(\t\x12\x0e\n\x06gender\x18\t \x01(\t\x12\x0e\n\x06locale\x18\n \x01(\t\x12\n\n\x02hd\x18\x0b \x01(\t\"u\n\x11SingleUserDetails\x12/\n\x0c\x64\x61ta_details\x18\x01 \x03(\x0b\x32\x19.grpc.testing.DataDetails\x12/\n\x0cuser_details\x18\x02 \x01(\x0b\x32\x19.grpc.testing.UserDetails\"\xef\x01\n\x17SingleUserRecordRequest\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\t\x12\x11\n\ttest_name\x18\x02 \x01(\t\x12\x10\n\x08sys_info\x18\x03 \x01(\t\x12\x0b\n\x03tag\x18\x04 \x01(\t\x12&\n\x07metrics\x18\x05 \x01(\x0b\x32\x15.grpc.testing.Metrics\x12\x31\n\rclient_config\x18\x06 \x01(\x0b\x32\x1a.grpc.testing.ClientConfig\x12\x31\n\rserver_config\x18\x07 \x01(\x0b\x32\x1a.grpc.testing.ServerConfig\"\x17\n\x15SingleUserRecordReply\",\n\x19SingleUserRetrieveRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"K\n\x17SingleUserRetrieveReply\x12\x30\n\x07\x64\x65tails\x18\x01 \x01(\x0b\x32\x1f.grpc.testing.SingleUserDetails\"K\n\x15\x41llUsersRetrieveReply\x12\x32\n\tuser_data\x18\x01 \x03(\x0b\x32\x1f.grpc.testing.SingleUserDetails\"\x19\n\x17\x41llUsersRetrieveRequest2\xca\x02\n\x0ePerfDbTransfer\x12\x66\n\x16RecordSingleClientData\x12%.grpc.testing.SingleUserRecordRequest\x1a#.grpc.testing.SingleUserRecordReply\"\x00\x12j\n\x16RetrieveSingleUserData\x12\'.grpc.testing.SingleUserRetrieveRequest\x1a%.grpc.testing.SingleUserRetrieveReply\"\x00\x12\x64\n\x14RetrieveAllUsersData\x12%.grpc.testing.AllUsersRetrieveRequest\x1a#.grpc.testing.AllUsersRetrieveReply\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\rperf_db.proto\x12\x0cgrpc.testing\x1a\rqpstest.proto\"\x89\x02\n\x07Metrics\x12\x0b\n\x03qps\x18\x01 \x01(\x01\x12\x14\n\x0cqps_per_core\x18\x02 \x01(\x01\x12\x13\n\x0bperc_lat_50\x18\x03 \x01(\x01\x12\x13\n\x0bperc_lat_90\x18\x04 \x01(\x01\x12\x13\n\x0bperc_lat_95\x18\x05 \x01(\x01\x12\x13\n\x0bperc_lat_99\x18\x06 \x01(\x01\x12\x1b\n\x13perc_lat_99_point_9\x18\x07 \x01(\x01\x12\x1a\n\x12server_system_time\x18\x08 \x01(\x01\x12\x18\n\x10server_user_time\x18\t \x01(\x01\x12\x1a\n\x12\x63lient_system_time\x18\n \x01(\x01\x12\x18\n\x10\x63lient_user_time\x18\x0b \x01(\x01\"\xe0\x01\n\x0b\x44\x61taDetails\x12\x11\n\ttimestamp\x18\x01 \x01(\t\x12\x11\n\ttest_name\x18\x02 \x01(\t\x12\x10\n\x08sys_info\x18\x03 \x01(\t\x12\x0b\n\x03tag\x18\x04 \x01(\t\x12&\n\x07metrics\x18\x05 \x01(\x0b\x32\x15.grpc.testing.Metrics\x12\x31\n\rclient_config\x18\x06 \x01(\x0b\x32\x1a.grpc.testing.ClientConfig\x12\x31\n\rserver_config\x18\x07 \x01(\x0b\x32\x1a.grpc.testing.ServerConfig\"i\n\x11SingleUserDetails\x12/\n\x0c\x64\x61ta_details\x18\x01 \x03(\x0b\x32\x19.grpc.testing.DataDetails\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x11\n\thashed_id\x18\x03 \x01(\t\"\xec\x01\n\x17SingleUserRecordRequest\x12\x11\n\thashed_id\x18\x01 \x01(\t\x12\x11\n\ttest_name\x18\x02 \x01(\t\x12\x10\n\x08sys_info\x18\x03 \x01(\t\x12\x0b\n\x03tag\x18\x04 \x01(\t\x12&\n\x07metrics\x18\x05 \x01(\x0b\x32\x15.grpc.testing.Metrics\x12\x31\n\rclient_config\x18\x06 \x01(\x0b\x32\x1a.grpc.testing.ClientConfig\x12\x31\n\rserver_config\x18\x07 \x01(\x0b\x32\x1a.grpc.testing.ServerConfig\"\x17\n\x15SingleUserRecordReply\",\n\x19SingleUserRetrieveRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"T\n\x17SingleUserRetrieveReply\x12\x39\n\x10single_user_data\x18\x01 \x01(\x0b\x32\x1f.grpc.testing.SingleUserDetails\"P\n\x15\x41llUsersRetrieveReply\x12\x37\n\x0e\x61ll_users_data\x18\x01 \x03(\x0b\x32\x1f.grpc.testing.SingleUserDetails\"\x19\n\x17\x41llUsersRetrieveRequest2\xca\x02\n\x0ePerfDbTransfer\x12\x66\n\x16RecordSingleClientData\x12%.grpc.testing.SingleUserRecordRequest\x1a#.grpc.testing.SingleUserRecordReply\"\x00\x12j\n\x16RetrieveSingleUserData\x12\'.grpc.testing.SingleUserRetrieveRequest\x1a%.grpc.testing.SingleUserRetrieveReply\"\x00\x12\x64\n\x14RetrieveAllUsersData\x12%.grpc.testing.AllUsersRetrieveRequest\x1a#.grpc.testing.AllUsersRetrieveReply\"\x00\x62\x06proto3')
   ,
   dependencies=[qpstest__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -202,107 +202,6 @@ _DATADETAILS = _descriptor.Descriptor(
 )
 
 
-_USERDETAILS = _descriptor.Descriptor(
-  name='UserDetails',
-  full_name='grpc.testing.UserDetails',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='id', full_name='grpc.testing.UserDetails.id', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='email', full_name='grpc.testing.UserDetails.email', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='verified_email', full_name='grpc.testing.UserDetails.verified_email', index=2,
-      number=3, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='name', full_name='grpc.testing.UserDetails.name', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='given_name', full_name='grpc.testing.UserDetails.given_name', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='family_name', full_name='grpc.testing.UserDetails.family_name', index=5,
-      number=6, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='link', full_name='grpc.testing.UserDetails.link', index=6,
-      number=7, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='picture', full_name='grpc.testing.UserDetails.picture', index=7,
-      number=8, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='gender', full_name='grpc.testing.UserDetails.gender', index=8,
-      number=9, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='locale', full_name='grpc.testing.UserDetails.locale', index=9,
-      number=10, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='hd', full_name='grpc.testing.UserDetails.hd', index=10,
-      number=11, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=542,
-  serialized_end=736,
-)
-
-
 _SINGLEUSERDETAILS = _descriptor.Descriptor(
   name='SingleUserDetails',
   full_name='grpc.testing.SingleUserDetails',
@@ -318,9 +217,16 @@ _SINGLEUSERDETAILS = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='user_details', full_name='grpc.testing.SingleUserDetails.user_details', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='username', full_name='grpc.testing.SingleUserDetails.username', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='hashed_id', full_name='grpc.testing.SingleUserDetails.hashed_id', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -336,8 +242,8 @@ _SINGLEUSERDETAILS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=738,
-  serialized_end=855,
+  serialized_start=541,
+  serialized_end=646,
 )
 
 
@@ -349,7 +255,7 @@ _SINGLEUSERRECORDREQUEST = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='access_token', full_name='grpc.testing.SingleUserRecordRequest.access_token', index=0,
+      name='hashed_id', full_name='grpc.testing.SingleUserRecordRequest.hashed_id', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -409,8 +315,8 @@ _SINGLEUSERRECORDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=858,
-  serialized_end=1097,
+  serialized_start=649,
+  serialized_end=885,
 )
 
 
@@ -433,8 +339,8 @@ _SINGLEUSERRECORDREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1099,
-  serialized_end=1122,
+  serialized_start=887,
+  serialized_end=910,
 )
 
 
@@ -464,8 +370,8 @@ _SINGLEUSERRETRIEVEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1124,
-  serialized_end=1168,
+  serialized_start=912,
+  serialized_end=956,
 )
 
 
@@ -477,7 +383,7 @@ _SINGLEUSERRETRIEVEREPLY = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='details', full_name='grpc.testing.SingleUserRetrieveReply.details', index=0,
+      name='single_user_data', full_name='grpc.testing.SingleUserRetrieveReply.single_user_data', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -495,8 +401,8 @@ _SINGLEUSERRETRIEVEREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1170,
-  serialized_end=1245,
+  serialized_start=958,
+  serialized_end=1042,
 )
 
 
@@ -508,7 +414,7 @@ _ALLUSERSRETRIEVEREPLY = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='user_data', full_name='grpc.testing.AllUsersRetrieveReply.user_data', index=0,
+      name='all_users_data', full_name='grpc.testing.AllUsersRetrieveReply.all_users_data', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -526,8 +432,8 @@ _ALLUSERSRETRIEVEREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1247,
-  serialized_end=1322,
+  serialized_start=1044,
+  serialized_end=1124,
 )
 
 
@@ -550,23 +456,21 @@ _ALLUSERSRETRIEVEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1324,
-  serialized_end=1349,
+  serialized_start=1126,
+  serialized_end=1151,
 )
 
 _DATADETAILS.fields_by_name['metrics'].message_type = _METRICS
 _DATADETAILS.fields_by_name['client_config'].message_type = qpstest__pb2._CLIENTCONFIG
 _DATADETAILS.fields_by_name['server_config'].message_type = qpstest__pb2._SERVERCONFIG
 _SINGLEUSERDETAILS.fields_by_name['data_details'].message_type = _DATADETAILS
-_SINGLEUSERDETAILS.fields_by_name['user_details'].message_type = _USERDETAILS
 _SINGLEUSERRECORDREQUEST.fields_by_name['metrics'].message_type = _METRICS
 _SINGLEUSERRECORDREQUEST.fields_by_name['client_config'].message_type = qpstest__pb2._CLIENTCONFIG
 _SINGLEUSERRECORDREQUEST.fields_by_name['server_config'].message_type = qpstest__pb2._SERVERCONFIG
-_SINGLEUSERRETRIEVEREPLY.fields_by_name['details'].message_type = _SINGLEUSERDETAILS
-_ALLUSERSRETRIEVEREPLY.fields_by_name['user_data'].message_type = _SINGLEUSERDETAILS
+_SINGLEUSERRETRIEVEREPLY.fields_by_name['single_user_data'].message_type = _SINGLEUSERDETAILS
+_ALLUSERSRETRIEVEREPLY.fields_by_name['all_users_data'].message_type = _SINGLEUSERDETAILS
 DESCRIPTOR.message_types_by_name['Metrics'] = _METRICS
 DESCRIPTOR.message_types_by_name['DataDetails'] = _DATADETAILS
-DESCRIPTOR.message_types_by_name['UserDetails'] = _USERDETAILS
 DESCRIPTOR.message_types_by_name['SingleUserDetails'] = _SINGLEUSERDETAILS
 DESCRIPTOR.message_types_by_name['SingleUserRecordRequest'] = _SINGLEUSERRECORDREQUEST
 DESCRIPTOR.message_types_by_name['SingleUserRecordReply'] = _SINGLEUSERRECORDREPLY
@@ -588,13 +492,6 @@ DataDetails = _reflection.GeneratedProtocolMessageType('DataDetails', (_message.
   # @@protoc_insertion_point(class_scope:grpc.testing.DataDetails)
   ))
 _sym_db.RegisterMessage(DataDetails)
-
-UserDetails = _reflection.GeneratedProtocolMessageType('UserDetails', (_message.Message,), dict(
-  DESCRIPTOR = _USERDETAILS,
-  __module__ = 'perf_db_pb2'
-  # @@protoc_insertion_point(class_scope:grpc.testing.UserDetails)
-  ))
-_sym_db.RegisterMessage(UserDetails)
 
 SingleUserDetails = _reflection.GeneratedProtocolMessageType('SingleUserDetails', (_message.Message,), dict(
   DESCRIPTOR = _SINGLEUSERDETAILS,

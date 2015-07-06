@@ -1,3 +1,0 @@
-[submodule "benchmarking/performance_db/performance_db_server/pbjson"]
-	path = benchmarking/performance_db/performance_db_server/pbjson
-	url = https://github.com/yinqiwen/pbjson

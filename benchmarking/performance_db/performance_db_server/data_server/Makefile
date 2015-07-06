@@ -37,13 +37,13 @@ PROTOC = protoc
 GRPC_CPP_PLUGIN = grpc_cpp_plugin
 GRPC_CPP_PLUGIN_PATH ?= `which $(GRPC_CPP_PLUGIN)`
 
-PROTOS_PATH = ../protos
+PROTOS_PATH = ../../protos
 
 vpath %.proto $(PROTOS_PATH)
 
-all: system-check qpstest.pb.cc perf_db.grpc.pb.cc perf_db.pb.cc perf_db_server
+all: system-check qpstest.pb.cc perf_db.grpc.pb.cc auth_user.grpc.pb.cc perf_db.pb.cc auth_user.pb.cc perf_db_server
 
-perf_db_server: qpstest.pb.o perf_db.pb.o perf_db.grpc.pb.o pbjson/src/pbjson.o perf_db_server.o database_manager.o
+perf_db_server: qpstest.pb.o perf_db.pb.o perf_db.grpc.pb.o auth_user.pb.o auth_user.grpc.pb.o perf_db_server.o database_manager.o
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 %.grpc.pb.cc: %.proto

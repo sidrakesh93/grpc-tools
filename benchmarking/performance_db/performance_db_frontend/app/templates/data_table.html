@@ -214,13 +214,13 @@
         var startDate = moment();  //earliest data date in given time range
         var endDate = moment().subtract(1000,'years');  //latest data date in given time range
 
-        {% for row in metricstable %}
+        {% for row in all_users_data %}
           rowDate = new Date({{ row.timestamp.year }}, {{ row.timestamp.month }}-1, {{ row.timestamp.day }}, {{ row.timestamp.hour }}, {{ row.timestamp.min }}, {{ row.timestamp.sec }}, 0);
 
           //If in valid time range
           if(rowDate > start && rowDate < end) {
             dataArr.push({
-              userid: '<a href="/plotUser/{{ row.id }}">{{ row.name }}</a>',
+              userid: '<a href="/plotUser/{{ row.hashed_id }}">{{ row.username }}</a>',
               timestamp: '{{ row.timestamp.month }}/{{ row.timestamp.day }}/{{ row.timestamp.year }} {{ row.timestamp.hour }}:{{ row.timestamp.min }}:{{ row.timestamp.sec }}',
               testName: '<a id="config" href="/configs/'+btoa('{{ row.test_name }}%{{ row.tag }}%{{ row.client_config }}%{{ row.server_config }}%{{ row.sys_info }}')+'" target="_blank">{{ row.test_name }}</a>',
               QPS: '{{ row.qps }}',

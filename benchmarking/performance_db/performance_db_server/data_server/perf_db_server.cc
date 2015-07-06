@@ -47,8 +47,8 @@
 #include <gflags/gflags.h>
 
 DEFINE_string(address, "", "Address of server in Hostname:Port format");
-DEFINE_string(database, "", "Location of the database");
-
+DEFINE_string(database, "", "Location of the metrics database");
+DEFINE_string(auth_server_address, "", "Address of the authentication server");
 // In some distros, gflags is in the namespace google, and in some others,
 // in gflags. This hack is enabling us to find both.
 namespace google {}
@@ -64,13 +64,20 @@ public:
   PerfDbTransferServiceImpl() {
     //Set and initialize database
     dbManager.setDatabase(FLAGS_database);
+    dbManager.setAuthServerAddress(FLAGS_auth_server_address);
   }
 
   Status RecordSingleClientData(ServerContext* context, const SingleUserRecordRequest* request,
                   SingleUserRecordReply* reply) override {
     //record single user's data to database
-    dbManager.recordSingleUserData(request);
-    return Status::OK;
+    bool result = dbManager.recordSingleUserData(request);
+    
+    if(result) {
+      return Status::OK;
+    }
+    else {
+      return Status::Cancelled;
+    }
   }
 
   Status RetrieveSingleUserData(ServerContext* context, const SingleUserRetrieveRequest* request,

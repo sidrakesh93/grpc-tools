@@ -34,11 +34,13 @@ import "qpstest.proto";
 package grpc.testing;
 
 service PerfDbTransfer {
-  // Sends client info
+  // For recording a record for a single user
   rpc RecordSingleClientData (SingleUserRecordRequest) returns (SingleUserRecordReply) {}
 
+  // For retrieving a single user's records
   rpc RetrieveSingleUserData (SingleUserRetrieveRequest) returns (SingleUserRetrieveReply) {}
 
+  // For retrieving all the user's records
   rpc RetrieveAllUsersData (AllUsersRetrieveRequest) returns (AllUsersRetrieveReply) {}
 }
 
@@ -68,30 +70,16 @@ message DataDetails {
   ServerConfig server_config = 7;
 }
 
-//User details
-message UserDetails {
-  string id = 1;
-  string email = 2;
-  bool verified_email = 3;
-  string name = 4;
-  string given_name = 5;
-  string family_name = 6;
-  string link = 7;
-  string picture = 8;
-  string gender = 9;
-  string locale = 10;
-  string hd = 11;
-}
-
 //Stored to database
 message SingleUserDetails {
   repeated DataDetails data_details = 1;
-  UserDetails user_details = 2;
+  string username = 2;
+  string hashed_id = 3;
 }
 
 //Request for storing a single user's data
 message SingleUserRecordRequest {
-  string access_token = 1;
+  string hashed_id = 1;
   string test_name = 2;
   string sys_info = 3;
   string tag = 4;
@@ -111,12 +99,12 @@ message SingleUserRetrieveRequest {
 
 //Reply for request to retrieve single user's data
 message SingleUserRetrieveReply {
-  SingleUserDetails details = 1;
+  SingleUserDetails single_user_data = 1;
 }
 
 //Request for retrieving all users' data
 message AllUsersRetrieveReply {
-  repeated SingleUserDetails user_data = 1;
+  repeated SingleUserDetails all_users_data = 1;
 }
 
 //Reply to request for retrieving all users' data

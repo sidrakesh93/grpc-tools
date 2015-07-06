@@ -35,8 +35,11 @@
 #include "leveldb/db.h"
 #include "leveldb/cache.h"
 #include "perf_db.grpc.pb.h"
-#include "pbjson/src/pbjson.hpp"
+#include "auth_user.grpc.pb.h"
 #include <curl/curl.h>
+#include <grpc++/channel_arguments.h>
+#include <grpc++/client_context.h>
+#include <grpc++/create_channel.h>
 
 namespace grpc{
 namespace testing{
@@ -47,11 +50,13 @@ class DatabaseManager{
     DatabaseManager();
     ~DatabaseManager();
 
+    void setAuthServerAddress(std::string auth_server_address);
+
     //To set and initialize database
     void setDatabase(std::string database);
     
     //To record a single user's record
-    void recordSingleUserData(const SingleUserRecordRequest* request);
+    bool recordSingleUserData(const SingleUserRecordRequest* request);
     
     //To retrieve a single user's records
     SingleUserRetrieveReply retrieveSingleUserData(const SingleUserRetrieveRequest* request);
@@ -62,13 +67,11 @@ class DatabaseManager{
   private:
     leveldb::DB* db;  //database pointer
     std::string database_;  //database name
+    std::string auth_server_address_;
     std::unique_ptr<leveldb::Cache> memory_cache_;  //memory cache
     
     //Returns current datetime string
     const std::string currentDateTime();
-    
-    //Returns user details
-    UserDetails getUserData(std::string accessToken);
     
     //Clears sensitive fields from stored data before sending
     void clearAddressFields(SingleUserDetails* singleUserDetails);

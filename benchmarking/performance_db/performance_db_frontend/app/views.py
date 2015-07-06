@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from user_data import UserData
 
+user_data = UserData()
+
 # View for performance database table page
 def displayPerformanceDatabase(request):
-  metricstable = allUsersData()
-  return render(request, 'data_table.html', {'metricstable': metricstable})
+  all_users_data = allUsersData()
+  return render(request, 'data_table.html', {'all_users_data': all_users_data})
 
 # View for config page
 def displayConfigs(request):
@@ -21,47 +23,44 @@ def generalStatisticRenderer(request, metric):
 
 # View for user metrics page
 def displayUserMetrics(request, clientid):
-  completeData = singleUserData(clientid)
-  return render(request, 'user_plots.html', {'user_info': completeData[0], 'userdata': completeData[1]})
+  complete_data = singleUserData(clientid)
+  return render(request, 'user_plots.html', {'username': complete_data[0], 'userdata': complete_data[1]})
 
 # Returns full metric name
 def getMetricFullDesc(metric):
   if metric == 'QPS':
-    metricName = 'Queries Per Second'
+    metric_name = 'Queries Per Second'
   elif metric == 'qpsPerCore':
-    metricName = 'QPS Per Core'
+    metric_name = 'QPS Per Core'
   elif metric == 'p50':
-    metricName = '50th Percentile Latency'
+    metric_name = '50th Percentile Latency'
   elif metric == 'p90':
-    metricName = '90th Percentile Latency'
+    metric_name = '90th Percentile Latency'
   elif metric == 'p95':
-    metricName = '95th Percentile Latency'
+    metric_name = '95th Percentile Latency'
   elif metric == 'p99':
-    metricName = '99th Percentile Latency'
+    metric_name = '99th Percentile Latency'
   elif metric == 'p99point9':
-    metricName = '99.9th Percentile Latency'
+    metric_name = '99.9th Percentile Latency'
   elif metric == 'serverSysTime':
-    metricName = 'Server System Time'
+    metric_name = 'Server System Time'
   elif metric == 'serverUserTime':
-    metricName = 'Server User Time'
+    metric_name = 'Server User Time'
   elif metric == 'clientSysTime':
-    metricName = 'Client System Time'
+    metric_name = 'Client System Time'
   elif metric == 'clientUserTime':
-    metricName = 'Client User Time'
+    metric_name = 'Client User Time'
 
-  return metricName
+  return metric_name
 
 # Returns single user data
-def singleUserData(clientId):
-  userData = UserData('/tmp/clientmetricsdb')
-  return userData.getSingleUserData(clientId)
+def singleUserData(client_id):
+  return user_data.getSingleUserData(client_id)
 
 # Returns all users' data
 def allUsersData():
-  userData = UserData('/tmp/clientmetricsdb')
-  return userData.getAllUsersData()
+  return user_data.getAllUsersData()
 
 # Return all users' single metric data
 def allUsersSingleMetricData(metric):
-  userData = UserData('/tmp/clientmetricsdb')
-  return userData.getAllUsersSingleMetricData(metric)
+  return user_data.getAllUsersSingleMetricData(metric)
