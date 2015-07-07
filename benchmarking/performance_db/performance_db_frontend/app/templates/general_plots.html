@@ -64,8 +64,8 @@
           <ul class="nav navbar-nav navbar-right">
             <li id="contact_item" class=""><a id="about" onclick="$('#aboutModal').modal()" href="#">Contact</a></li>
           </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
+        </div><!-- navbar-collapse -->
+      </div><!-- container-fluid -->
     </nav>
 
     <!-- Modal -->
@@ -99,23 +99,23 @@
     </div>
 
     <script type="text/javascript">
-      //Draw chart on load
+      // Draw chart on load
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChartOnLoad);
 
       function drawChartOnLoad() {
-        //draw all data histogram
+        // Draw all data histogram
         drawChart(moment().subtract(1000, 'years'), moment());
       }
 
-      //String 'endswith' function
+      // String 'endswith' function
       if (typeof String.prototype.endsWith != 'function') {
         String.prototype.endsWith = function(suffix) {
           return this.indexOf(suffix, this.length - suffix.length) !== -1;
         };
       }
 
-      //Function to draw chart, gicen start and end time
+      // Function to draw chart, gicen start and end time
       function drawChart(start, end) {
         var metricName;
         if( '{{ metric }}'.endsWith('Percentile Latency')) {
@@ -130,7 +130,7 @@
         var startDate = moment();
         var endDate = moment().subtract(1000,'years');
 
-        //add data
+        // Add data
         {% if data %}
           {% for item in data %}
               var metricDate = new Date({{ item.year }}, {{ item.month }}-1, {{ item.day }}, {{ item.hour }}, {{ item.min }}, {{ item.sec }}, 0);
@@ -149,7 +149,7 @@
         {% endif %}
         
         if(args.length == 1) {
-          //No data available
+          // No data available
           var errorHeader = document.getElementById("error-header");
           errorHeader.innerHTML = "Sorry, no data is available for the given time range";
         }
@@ -158,7 +158,7 @@
             args
           );
 
-          //Options for chart
+          // Options for chart
           var options = {
             legend: { position: 'none' },
             hAxis: {
@@ -181,7 +181,7 @@
         }
       }
 
-      //Initializing date range picker
+      // Initializing date range picker
       $('#reportrange').daterangepicker({
         format: 'MM/DD/YYYY, HH:mm:ss',
         showDropdowns: true,

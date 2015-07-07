@@ -62,8 +62,8 @@
           <ul class="nav navbar-nav navbar-right">
           <li id="about_item" class=""><a id="about" onclick="$('#aboutModal').modal()" href="#">Contact</a></li>
           </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
+        </div><!-- navbar-collapse -->
+      </div><!-- container-fluid -->
     </nav>
 
     <!-- Modal -->
@@ -177,12 +177,12 @@
           </tbody>
         </table>
       </div>    
-    </div><!-- /.container -->
+    </div><!-- container -->
     <script type="text/javascript">
-      //Add data to table on load
+      // Add data to table on load
       addDataToTable(moment().subtract(1000,'years'), moment());
 
-      //Function to add data to table
+      // Function to add data to table
       function addDataToTable(start, end) {
         $('#metrics-table').bootstrapTable({});
 
@@ -190,7 +190,7 @@
         $('#metrics-table').bootstrapTable("load", data);
       }
 
-      //Custom sorter for time
+      // Custom sorter for time
       function timeSorter(a, b) {
         var timeArr1 = a.split(/[ :\/]+/);
         var timeArr2 = b.split(/[ :\/]+/);
@@ -207,7 +207,7 @@
         return 0;
       }
 
-      //Returns user records array
+      // Returns user records array
       function getData(start, end) {
         var dataArr = [];
 
@@ -245,13 +245,13 @@
           }
         {% endfor %}
 
-        //Update date range in date range picker
+        // Update date range in date range picker
         $('#report-range span').html(moment(startDate).format('MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format('MM/DD/YYYY, HH:mm:ss'));
 
         return dataArr;
       }
 
-      //Initializing date range picker
+      // Initializing date range picker
       $('#report-range').daterangepicker({
         format: 'MM/DD/YYYY, HH:mm:ss',
         showDropdowns: true,
