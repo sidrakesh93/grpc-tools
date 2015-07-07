@@ -30,6 +30,7 @@ build/Release
 node_modules
 
 *.pyc
+*.pyo
 *.sqlite3
 *.prof
 gens

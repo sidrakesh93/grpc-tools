@@ -34,8 +34,6 @@ import auth_user_pb2
 import argparse
 import sys
 import time
-from oauth2client import tools
-from oauth2client import client
 from oauth2client.file import Storage
 from apiclient.discovery import build
 import httplib2
@@ -46,28 +44,32 @@ import uuid
 
 parser = argparse.ArgumentParser(description='Report metrics to performance database')
 parser.add_argument('--port', type=int, default='2817', help='Port of authentication server')
-parser.add_argument('--id_name_database', type=str, default=os.path.expanduser('~')+'/.grpc/id_name', help='Location of id to username database')
-parser.add_argument('--name_id_database', type=str, default=os.path.expanduser('~')+'/.grpc/name_id', help='Location of username to id database')
+parser.add_argument('--id_name_db', type=str, default=os.path.expanduser('~')+'/.grpc/id_name', help='Location of id to username database')
+parser.add_argument('--name_id_db', type=str, default=os.path.expanduser('~')+'/.grpc/name_id', help='Location of username to id database')
 
 args = parser.parse_args()
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
+  """Defines the procedures for user authentication"""
+
   def __init__(self):
+    """Initializing databases"""
+
     # Setting hashed id to username database
-    if not os.path.exists(args.id_name_database):
-      os.makedirs(args.id_name_database)
-    self.id_name_db = leveldb.LevelDB(args.id_name_database)
+    if not os.path.exists(args.id_name_db):
+      os.makedirs(args.id_name_db)
+    self.id_name_db = leveldb.LevelDB(args.id_name_db)
     
     # Setting username to hashed id database
-    if not os.path.exists(args.name_id_database):
-      os.makedirs(args.name_id_database)
-    self.name_id_db = leveldb.LevelDB(args.name_id_database)
+    if not os.path.exists(args.name_id_db):
+      os.makedirs(args.name_id_db)
+    self.name_id_db = leveldb.LevelDB(args.name_id_db)
 
-  # Authenticate the user, creating entries in database as required
   def AuthenticateUser(self, request, context):
-    file_name = str(uuid.uuid4()) # generate random temporary file name to store credentials
+    """Authenticate the user, creating entries in database as required"""
+    file_name = str(uuid.uuid4())  # generate random temporary file name to store credentials
 
     # Write credentials to file
     with open(file_name, 'wb') as output:
@@ -77,7 +79,7 @@ class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
     storage = Storage(file_name)
     credentials = storage.get()
 
-    os.remove(file_name) # Remove temporary file
+    os.remove(file_name)  # Remove temporary file
 
     # Get hashed id from credentials
     http_auth = credentials.authorize(httplib2.Http())
@@ -113,8 +115,8 @@ class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
 
     return reply
 
-  # Return username based on hashed user id
   def ConfirmUser(self, request, context):
+    """Returns username based on hashed user id"""
     reply = auth_user_pb2.ConfirmUserReply()
 
     # Get username for given hashed id
@@ -130,7 +132,7 @@ class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
     return reply
 
 def serve(argv):
-  # Create and start server
+  """Creates and starts server"""
   server = auth_user_pb2.early_adopter_create_Authentication_server(AuthenticationServicer(), args.port, None, None)
   server.start()
 

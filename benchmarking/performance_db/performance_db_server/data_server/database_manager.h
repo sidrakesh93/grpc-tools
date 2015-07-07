@@ -65,7 +65,7 @@ class DatabaseManager{
     AllUsersRetrieveReply retrieveAllUsersData(const AllUsersRetrieveRequest* request);
     
   private:
-    leveldb::DB* db;  //database pointer
+    leveldb::DB* db = 0;  //database pointer
     std::string database_;  //database name
     std::string auth_server_address_;
     std::unique_ptr<leveldb::Cache> memory_cache_;  //memory cache

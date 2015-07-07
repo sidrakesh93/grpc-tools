@@ -36,49 +36,51 @@ import re
 from collections import defaultdict
 from django.conf import settings
 
-# Class to communicate with performance database server
 class UserData(object):
+  """Class to communicate with performance database server"""
 
   def __init__(self):
-    # Set hostname and port
+    """Initializes hostname and port of database server"""
     self.hostname = settings.PERF_DB_HOSTNAME
     self.port = settings.PERF_DB_PORT
 
-  # Returns a dictionary of parsed time
-  def parseTimeString(self, timeString):
-    parsed_time_list = re.split('\W+', timeString)
-    parsed = {}
-    parsed['month'] = parsed_time_list[0]
-    parsed['day'] = parsed_time_list[1]
-    parsed['year'] = parsed_time_list[2]
-    parsed['hour'] = parsed_time_list[3]
-    parsed['min'] = parsed_time_list[4]
-    parsed['sec'] = parsed_time_list[5]
+  def parseTimeString(self, time_string):
+    """Returns a dictionary of parsed time"""
+    parsed_time_list = re.split('\W+', time_string)
+    parsed = {
+        'month': parsed_time_list[0],
+        'day': parsed_time_list[1],
+        'year': parsed_time_list[2],
+        'hour': parsed_time_list[3],
+        'min': parsed_time_list[4],
+        'sec': parsed_time_list[5]
+    }
     return parsed
 
-  # Initialize a single metric record dictionary
-  def initSingleDataDict(self, testName, timestamp, client_config, server_config, sys_info, tag):
-    single_data_dict = {}
-    single_data_dict['test_name'] = testName;
-    single_data_dict['timestamp'] = self.parseTimeString(timestamp)
-    single_data_dict['client_config'] = self.getClientConfigDict(client_config)
-    single_data_dict['server_config'] = self.getServerConfigDict(server_config)
-    single_data_dict['sys_info'] = self.getSysInfoDict(sys_info)
-    single_data_dict['tag'] = tag
-
+  def initSingleDataDict(self, test_name, timestamp, client_config, server_config, sys_info, tag):
+    """Initialize a single metric record dictionary"""
+    single_data_dict = {
+        'test_name': test_name,
+        'timestamp': self.parseTimeString(timestamp),
+        'client_config': self.getClientConfigDict(client_config),
+        'server_config': self.getServerConfigDict(server_config),
+        'sys_info': self.getSysInfoDict(sys_info),
+        'tag': tag
+    }
     return single_data_dict
 
-  # Returns a single user's data
   def getSingleUserData(self, user_id):
+    """Returns a single user's data"""
+    
     # Create Stub to communicate with performance database server
     with perf_db_pb2.early_adopter_create_PerfDbTransfer_stub(self.hostname, self.port) as stub:
       single_user_retrieve_request = perf_db_pb2.SingleUserRetrieveRequest()
       single_user_retrieve_request.user_id = user_id
       
-      _TIMEOUT_SECONDS = 10 # Max waiting time before timeout, in seconds
+      TIMEOUT_SECONDS = 10  # Max waiting time before timeout, in seconds
 
       # Request data and receive data from performance database server asynchronously
-      user_data_future = stub.RetrieveSingleUserData.async(single_user_retrieve_request, _TIMEOUT_SECONDS)
+      user_data_future = stub.RetrieveSingleUserData.async(single_user_retrieve_request, TIMEOUT_SECONDS)
       user_data = user_data_future.result()
 
       # Sort the data
@@ -91,96 +93,99 @@ class UserData(object):
       times_list = []
 
       for data_detail in sorted_user_data:
-        if data_detail.metrics.qps != 0.0: # qps present
+        if data_detail.metrics.qps != 0.0:  # qps present
           single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
           single_data_dict['qps'] = round(data_detail.metrics.qps,1)
           qps_list.append(single_data_dict)
 
-        if data_detail.metrics.qps_per_core != 0.0: # qps per core present
+        if data_detail.metrics.qps_per_core != 0.0:  # qps per core present
           single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
           single_data_dict['qps_per_core'] = round(data_detail.metrics.qps_per_core,1)
           qps_per_core_list.append(single_data_dict)
         
-        if data_detail.metrics.perc_lat_50 != 0.0 and data_detail.metrics.perc_lat_90 != 0.0 and data_detail.metrics.perc_lat_95 != 0.0 and data_detail.metrics.perc_lat_99 != 0.0 and data_detail.metrics.perc_lat_99_point_9 != 0.0: # percentile latenices present
+        if data_detail.metrics.perc_lat_50 != 0.0 and data_detail.metrics.perc_lat_90 != 0.0 and data_detail.metrics.perc_lat_95 != 0.0 and data_detail.metrics.perc_lat_99 != 0.0 and data_detail.metrics.perc_lat_99_point_9 != 0.0:  # percentile latenices present
           single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
           
-          lat_dict = {}
-          lat_dict['perc_lat_50'] = round(data_detail.metrics.perc_lat_50,1)
-          lat_dict['perc_lat_90'] = round(data_detail.metrics.perc_lat_90,1)
-          lat_dict['perc_lat_95'] = round(data_detail.metrics.perc_lat_95,1)
-          lat_dict['perc_lat_99'] = round(data_detail.metrics.perc_lat_99,1)
-          lat_dict['perc_lat_99_point_9'] = round(data_detail.metrics.perc_lat_99_point_9,1)
+          lat_dict = {
+              'perc_lat_50': round(data_detail.metrics.perc_lat_50,1),
+              'perc_lat_90': round(data_detail.metrics.perc_lat_90,1),
+              'perc_lat_95': round(data_detail.metrics.perc_lat_95,1),
+              'perc_lat_99': round(data_detail.metrics.perc_lat_99,1),
+              'perc_lat_99_point_9': round(data_detail.metrics.perc_lat_99_point_9,1)
+          }
 
           single_data_dict['lat'] = lat_dict
           lat_list.append(single_data_dict)
         
-        if data_detail.metrics.server_system_time != 0.0 and data_detail.metrics.server_user_time != 0.0 and data_detail.metrics.client_system_time != 0.0 and data_detail.metrics.client_user_time != 0.0: # Server and client times present
+        if data_detail.metrics.server_system_time != 0.0 and data_detail.metrics.server_user_time != 0.0 and data_detail.metrics.client_system_time != 0.0 and data_detail.metrics.client_user_time != 0.0:  # Server and client times present
           single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
 
-          times_dict = {}
-          times_dict['server_system_time'] = round(data_detail.metrics.server_system_time,1)
-          times_dict['server_user_time'] = round(data_detail.metrics.server_user_time,1)
-          times_dict['client_system_time'] = round(data_detail.metrics.client_system_time,1)
-          times_dict['client_user_time'] = round(data_detail.metrics.client_user_time,1)
-          
+          times_dict = {
+              'server_system_time': round(data_detail.metrics.server_system_time,1)
+              'server_user_time': round(data_detail.metrics.server_user_time,1)
+              'client_system_time': round(data_detail.metrics.client_system_time,1)
+              'client_user_time': round(data_detail.metrics.client_user_time,1)
+          }
+
           single_data_dict['times'] = times_dict
           times_list.append(single_data_dict)
 
       data_dict = defaultdict(list)
-      data_dict['qpsData'] = qps_list
-      data_dict['qpsPerCoreData'] = qps_per_core_list
-      data_dict['latData'] = lat_list
-      data_dict['timesData'] = times_list
+      data_dict = {
+          'qpsData': qps_list,
+          'qpsPerCoreData': qps_per_core_list,
+          'latData': lat_list,
+          'timesData': times_list
+      }
 
       # Return user's personal details and user's data
       return [user_data.single_user_data.username, data_dict]
 
-  # If non-zero value present, returns it
   def validValue(self, val):
+    """Returns non-zero value if present."""
     if val != 0.0:
       return round(val,1)
     else:
       return '-'
 
-  # Returns server configuration dictionary
   def getServerConfigDict(self, server_config):
-    server_config_dict = {}
+    """Returns server configuration dictionary"""
+    server_config_dict = {
+        'Threads': str(server_config.threads),
+        'Enable SSL': str(server_config.enable_ssl)
+    }
 
     if server_config.server_type == qpstest_pb2.SYNCHRONOUS_SERVER:
       server_config_dict['Server Type'] = 'Synchronous'
     elif server_config.server_type == qpstest_pb2.ASYNC_SERVER:
       server_config_dict['Server Type'] = 'Asynchronous'
 
-    server_config_dict['Threads'] = str(server_config.threads)
-    server_config_dict['Enable SSL'] = str(server_config.enable_ssl)
-
     return server_config_dict
 
-  # Returns client configuration dictionary
   def getClientConfigDict(self, client_config):
-    client_config_dict = {}
+    """Returns client configuration dictionary"""
+    client_config_dict = {
+        'Outstanding RPCs Per Channel': str(client_config.outstanding_rpcs_per_channel),
+        'Client Channels': str(client_config.client_channels),
+        'Payload Size': str(client_config.payload_size),
+        'Enable SSL': str(client_config.enable_ssl)
+    }
 
     if client_config.client_type == qpstest_pb2.SYNCHRONOUS_CLIENT:
       client_config_dict['Client Type'] = 'Synchronous'
     elif client_config.client_type == qpstest_pb2.ASYNC_CLIENT:
       client_config_dict['Client Type'] = 'Asynchronous'
-      client_config_dict['Asynchronous Client Threads'] = str(client_config.async_client_threads)
+      client_config_dict['Asynchronous Client Threads'] = str(client_config.async_client_threads)  # Set number of async client threads only in case of async
 
-    client_config_dict['Outstanding RPCs Per Channel'] = str(client_config.outstanding_rpcs_per_channel)
-    client_config_dict['Client Channels'] = str(client_config.client_channels)
-    client_config_dict['Payload Size'] = str(client_config.payload_size)
-    
     if client_config.rpc_type == qpstest_pb2.UNARY:
       client_config_dict['RPC Type'] = 'Unary'
     elif client_config.rpc_type == qpstest_pb2.STREAMING:
       client_config_dict['RPC Type'] = 'Streaming'
 
-    client_config_dict['Enable SSL'] = str(client_config.enable_ssl)
-
     return client_config_dict
 
-  # Returns system information dictionary
   def getSysInfoDict(self, sys_info):
+    """Returns system information dictionary"""
     sys_info_dict = {}
 
     sys_info = sys_info.lstrip('\'')
@@ -196,88 +201,82 @@ class UserData(object):
 
     return sys_info_dict
 
-  # Returns all the user's data for database table
   def getAllUsersData(self):
+    """Returns all the user's data for database table"""
     metrics_table = []
 
     # Create Stub to communicate with performance database server
     with perf_db_pb2.early_adopter_create_PerfDbTransfer_stub(self.hostname, self.port) as stub:
       all_users_retrieve_request = perf_db_pb2.AllUsersRetrieveRequest()
 
-      _TIMEOUT_SECONDS = 10 # Max waiting time before timeout, in seconds
+      TIMEOUT_SECONDS = 10  # Max waiting time before timeout, in seconds
 
       # Request data and receive data from performance database server asynchronously
-      all_users_data_future = stub.RetrieveAllUsersData.async(all_users_retrieve_request, _TIMEOUT_SECONDS)
+      all_users_data_future = stub.RetrieveAllUsersData.async(all_users_retrieve_request, TIMEOUT_SECONDS)
       all_users_data = all_users_data_future.result()
 
       for user_data in all_users_data.all_users_data:
         for data_detail in user_data.data_details:
-          user_metrics_dict = {}
-          user_metrics_dict['hashed_id'] = str(user_data.hashed_id)
-          user_metrics_dict['username'] = str(user_data.username)
-          user_metrics_dict['timestamp'] = self.parseTimeString(data_detail.timestamp)
-          user_metrics_dict['test_name'] = str(data_detail.test_name)
-          user_metrics_dict['qps'] = str(self.validValue(data_detail.metrics.qps))
-          user_metrics_dict['qps_per_core'] = str(self.validValue(data_detail.metrics.qps_per_core))
-          user_metrics_dict['perc_lat_50'] = str(self.validValue(data_detail.metrics.perc_lat_50))
-          user_metrics_dict['perc_lat_90'] = str(self.validValue(data_detail.metrics.perc_lat_90))
-          user_metrics_dict['perc_lat_95'] = str(self.validValue(data_detail.metrics.perc_lat_95))
-          user_metrics_dict['perc_lat_99'] = str(self.validValue(data_detail.metrics.perc_lat_99))
-          user_metrics_dict['perc_lat_99_point_9'] = str(self.validValue(data_detail.metrics.perc_lat_99_point_9))
-          user_metrics_dict['server_system_time'] = str(self.validValue(data_detail.metrics.server_system_time))
-          user_metrics_dict['server_user_time'] = str(self.validValue(data_detail.metrics.server_user_time))
-          user_metrics_dict['client_system_time'] = str(self.validValue(data_detail.metrics.client_system_time))
-          user_metrics_dict['client_user_time'] = str(self.validValue(data_detail.metrics.client_user_time))
-          user_metrics_dict['server_config'] = self.getServerConfigDict(data_detail.server_config)
-          user_metrics_dict['client_config'] = self.getClientConfigDict(data_detail.client_config)
-          user_metrics_dict['sys_info'] = self.getSysInfoDict(data_detail.sys_info)
-          user_metrics_dict['tag'] = str(data_detail.tag)
-
+          user_metrics_dict = {
+              'hashed_id': str(user_data.hashed_id),
+              'username': str(user_data.username),
+              'timestamp': self.parseTimeString(data_detail.timestamp),
+              'test_name': str(data_detail.test_name),
+              'qps': str(self.validValue(data_detail.metrics.qps)),
+              'qps_per_core': str(self.validValue(data_detail.metrics.qps_per_core)),
+              'perc_lat_50': str(self.validValue(data_detail.metrics.perc_lat_50)),
+              'perc_lat_90': str(self.validValue(data_detail.metrics.perc_lat_90)),
+              'perc_lat_95': str(self.validValue(data_detail.metrics.perc_lat_95)),
+              'perc_lat_99': str(self.validValue(data_detail.metrics.perc_lat_99)),
+              'perc_lat_99_point_9': str(self.validValue(data_detail.metrics.perc_lat_99_point_9)),
+              'server_system_time': str(self.validValue(data_detail.metrics.server_system_time)),
+              'server_user_time': str(self.validValue(data_detail.metrics.server_user_time)),
+              'client_system_time': str(self.validValue(data_detail.metrics.client_system_time)),
+              'client_user_time': str(self.validValue(data_detail.metrics.client_user_time)),
+              'server_config': self.getServerConfigDict(data_detail.server_config),
+              'client_config': self.getClientConfigDict(data_detail.client_config),
+              'sys_info': self.getSysInfoDict(data_detail.sys_info),
+              'tag': str(data_detail.tag)
+          }
           metrics_table.append(user_metrics_dict)
 
     return metrics_table
 
-  # Returns a particular metric data for all the users
   def getAllUsersSingleMetricData(self, metric):
-    metricList = []
+    """Returns a particular metric data for all the users"""
+    metric_list = []
 
     # Create Stub to communicate with performance database server
     with perf_db_pb2.early_adopter_create_PerfDbTransfer_stub(self.hostname, self.port) as stub:
       all_users_retrieve_request = perf_db_pb2.AllUsersRetrieveRequest()
 
-      _TIMEOUT_SECONDS = 10 # Max waiting time before timeout, in seconds
+      TIMEOUT_SECONDS = 10  # Max waiting time before timeout, in seconds
 
       # Request data and receive data from performance database server asynchronously
-      all_users_data_future = stub.RetrieveAllUsersData.async(all_users_retrieve_request, _TIMEOUT_SECONDS)
+      all_users_data_future = stub.RetrieveAllUsersData.async(all_users_retrieve_request, TIMEOUT_SECONDS)
       all_users_data = all_users_data_future.result()
 
       for user_data in all_users_data.all_users_data:
         for data_detail in user_data.data_details:
           user_metrics_dict = self.parseTimeString(data_detail.timestamp)
 
-          if metric == 'QPS':
-            user_metrics_dict['value'] = round(data_detail.metrics.qps,1)
-          elif metric == 'qpsPerCore':
-            user_metrics_dict['value'] = round(data_detail.metrics.qps_per_core,1)
-          elif metric == 'p50':
-            user_metrics_dict['value'] = round(data_detail.metrics.perc_lat_50,1)
-          elif metric == 'p90':
-            user_metrics_dict['value'] = round(data_detail.metrics.perc_lat_90,1)
-          elif metric == 'p95':
-            user_metrics_dict['value'] = round(data_detail.metrics.perc_lat_95,1)
-          elif metric == 'p99':
-            user_metrics_dict['value'] = round(data_detail.metrics.perc_lat_99,1)
-          elif metric == 'p99point9':
-            user_metrics_dict['value'] = round(data_detail.metrics.perc_lat_99_point_9,1)
-          elif metric == 'serverSysTime':
-            user_metrics_dict['value'] = round(data_detail.metrics.server_system_time,1)
-          elif metric == 'serverUserTime':
-            user_metrics_dict['value'] = round(data_detail.metrics.server_user_time,1)
-          elif metric == 'clientSysTime':
-            user_metrics_dict['value'] = round(data_detail.metrics.client_system_time,1)
-          elif metric == 'clientUserTime':
-            user_metrics_dict['value'] = round(data_detail.metrics.client_user_time,1)
+          user_metrics_dict['value'] = {
+              'qps': round(data_detail.metrics.qps,1),
+              'qpspercore': round(data_detail.metrics.qps_per_core,1),
+              'perc50': round(data_detail.metrics.perc_lat_50,1),
+              'perc90': round(data_detail.metrics.perc_lat_90,1),
+              'perc95': round(data_detail.metrics.perc_lat_95,1),
+              'perc99': round(data_detail.metrics.perc_lat_99,1),
+              'perc99point9': round(data_detail.metrics.perc_lat_99_point_9,1),
+              'serversystime': round(data_detail.metrics.server_system_time,1),
+              'serverusertime': round(data_detail.metrics.server_user_time,1),
+              'clientsystime': round(data_detail.metrics.client_system_time,1),
+              'clientusertime': round(data_detail.metrics.client_user_time,1)
+          }.get(metric, 'error')
 
-          metricList.append(user_metrics_dict)
+          if metric == 'error':
+            raise Exception
 
-    return metricList
+          metric_list.append(user_metrics_dict)
+
+    return metric_list

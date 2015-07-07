@@ -39,8 +39,8 @@ parser = argparse.ArgumentParser(description='Run performance database server')
 
 parser.add_argument('--perf_db_server', type=str, default='../../bins/perf_db_server')
 parser.add_argument('--address', type=str, default='0.0.0.0:50052', help='Address for performance database server')
-parser.add_argument('--database', type=str, default=os.path.expanduser('~')+'/.grpc/perf_db', help='Location of performance database')
-parser.add_argument('--auth_server_address', type=str, default='0.0.0.0:2817', help='Address of authentication server')
+parser.add_argument('--database', type=str, default=os.path.expanduser('~/.grpc/perf_db'), help='Location of performance database')
+parser.add_argument('--auth_server_addr', type=str, default='0.0.0.0:2817', help='Address of authentication server')
 
 def main(argv):
   args = parser.parse_args()
@@ -50,7 +50,7 @@ def main(argv):
 
   try:
     # Run the test
-    subprocess.call([args.perf_db_server, '--address='+args.address, '--database='+args.database, '--auth_server_address='+args.auth_server_address])
+    subprocess.call([args.perf_db_server, '--address='+args.address, '--database='+args.database, '--auth_server_address='+args.auth_server_addr])
   except OSError, e:
     print e, 'Could not execute server'
 

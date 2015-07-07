@@ -45,18 +45,18 @@ import re
 
 parser = argparse.ArgumentParser(description='Report metrics to performance database', parents=[tools.argparser])
 parser.add_argument('--test', type=str, help='Name of the test to be executed')
-parser.add_argument('--username', type=str, help='Gmail address of the user')
-parser.add_argument('--data_server_address', type=str, default='0.0.0.0:50052', help='Address of the performance database server')
-parser.add_argument('--auth_server_address', type=str, default='0.0.0.0:2817', help='Address of the authentication server')
-parser.add_argument('--creds_dir', type=str, default=os.path.expanduser('~')+'/.grpc/credentials', help='Path to the access tokens directory')
-parser.add_argument('--client_secrets', type=str, default='client_secrets.json')
+parser.add_argument('--username', type=str, help='Username')
+parser.add_argument('--data_server_addr', type=str, default='0.0.0.0:50052', help='Address of the performance database server')
+parser.add_argument('--auth_server_addr', type=str, default='0.0.0.0:2817', help='Address of the authentication server')
+parser.add_argument('--creds_dir', type=str, default=os.path.expanduser('~/.grpc/credentials'), help='Path to the access tokens directory')
+parser.add_argument('--client_secrets', type=str, default='Path of the client_secrets.json file')
 parser.add_argument('--tag', type=str, default='', help='Tag for the test')
 
 REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
 SCOPE = 'email profile'
 
-# Performs authentication for the user
-def authenticateUser(username, creds_dir, auth_server_address, client_secrets, args):
+def authUser(username, creds_dir, auth_server_addr, client_secrets, args):
+  """Performs authentication for the user"""
   if not os.path.exists(creds_dir):
     os.makedirs(creds_dir)
 
@@ -70,26 +70,26 @@ def authenticateUser(username, creds_dir, auth_server_address, client_secrets, a
   else:
     credentials = storage.get()
 
-  # Split the address and port
-  address_port = auth_server_address.split(':')
+  # Split the addr and port
+  addr_port = auth_server_addr.split(':')
 
   # Request authentication from authentication server
-  with auth_user_pb2.early_adopter_create_Authentication_stub(address_port[0], int(address_port[1])) as stub:
-    authenticate_user_request = auth_user_pb2.AuthenticateUserRequest()
-    authenticate_user_request.credentials = open(user_creds_file, "rb").read()
-    authenticate_user_request.username = username
+  with auth_user_pb2.early_adopter_create_Authentication_stub(addr_port[0], int(addr_port[1])) as stub:
+    auth_user_request = auth_user_pb2.AuthenticateUserRequest()
+    auth_user_request.credentials = open(user_creds_file, "rb").read()
+    auth_user_request.username = username
 
-    _TIMEOUT_SECONDS = 10 # Max waiting time before timeout, in seconds
+    TIMEOUT_SECONDS = 10  # Max waiting time before timeout, in seconds
 
-    authenticate_user_reply_future = stub.AuthenticateUser.async(authenticate_user_request, _TIMEOUT_SECONDS)
-    authenticate_user_reply = authenticate_user_reply_future.result()
+    auth_user_reply_future = stub.AuthenticateUser.async(auth_user_request, TIMEOUT_SECONDS)
+    auth_user_reply = auth_user_reply_future.result()
 
     # If requested username not unique, send request again with new username
-    while authenticate_user_reply.is_unique_username != True:
+    while auth_user_reply.is_unique_username != True:
       username = raw_input('\nUsername already taken, please enter a new one: ')
-      authenticate_user_request.username = username
-      authenticate_user_reply_future = stub.AuthenticateUser.async(authenticate_user_request, _TIMEOUT_SECONDS)
-      authenticate_user_reply = authenticate_user_reply_future.result()
+      auth_user_request.username = username
+      auth_user_reply_future = stub.AuthenticateUser.async(auth_user_request, _TIMEOUT_SECONDS)
+      auth_user_reply = auth_user_reply_future.result()
 
   # Return hashed user id
   http_auth = credentials.authorize(httplib2.Http())
@@ -101,46 +101,46 @@ def authenticateUser(username, creds_dir, auth_server_address, client_secrets, a
   return hash_object.hexdigest()
 
 def getSysInfo():
-  # Fetch system information
-  sysInfo = os.popen('lscpu').readlines()
+  """Fetch system information"""
+  sys_info = os.popen('lscpu').readlines()
 
-  NICs = os.popen('ifconfig | cut -c1-8 | sed \'/^\s*$/d\' | sort -u').readlines()
-  nicAddrs = os.popen('ifconfig | grep -oE "inet addr:([0-9]{1,3}\.){3}[0-9]{1,3}"').readlines()
+  nics = os.popen('ifconfig | cut -c1-8 | sed \'/^\s*$/d\' | sort -u').readlines()
+  nic_addrs = os.popen('ifconfig | grep -oE "inet addr:([0-9]{1,3}\.){3}[0-9]{1,3}"').readlines()
 
-  nicInfo = []
+  nic_info = []
 
-  for i in range(0, len(NICs)):
-    NIC = NICs[i]
-    NIC = re.sub(r'[^\w]', '', NIC)
+  for i in range(0, len(nics)):
+    nic = nics[i]
+    nic = re.sub(r'[^\w]', '', nic)
 
-    ethtoolProcess = subprocess.Popen(["ethtool",NIC], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    ethtoolResult = ethtoolProcess.communicate()[0]
+    ethtool_process = subprocess.Popen(["ethtool",nic], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ethtool_result = ethtool_process.communicate()[0]
 
-    ethtoolResultList = ethtoolResult.split('\n\t')
-    for ethtoolString in ethtoolResultList:
-      if ethtoolString.startswith('Speed'):
-        ethtoolString = ethtoolString.split(':')[1]
-        nicInfo.append('NIC ' + NIC + ' speed: ' + ethtoolString + '\n')
-        nicInfo.append(NIC + ' inet address: ' + nicAddrs[i].split(':')[1])
+    ethtool_result_list = ethtool_result.split('\n\t')
+    for ethtool_str in ethtool_result_list:
+      if ethtool_str.startswith('Speed'):
+        ethtool_str = ethtool_str.split(':')[1]
+        nic_info.append('NIC ' + nic + ' speed: ' + ethtool_str + '\n')
+        nic_info.append(nic + ' inet addr: ' + nic_addrs[i].split(':')[1])
 
   print 'Obtaining network info....'
   tcp_rr_rate = str(os.popen('netperf -t TCP_RR -v 0').readlines()[1])
   print 'Network info obtained'
   
-  nicInfo.append('TCP RR transmission rate per sec: ' + tcp_rr_rate + '\n')
-  sysInfo = sysInfo + nicInfo
+  nic_info.append('TCP RR transmission rate per sec: ' + tcp_rr_rate + '\n')
+  sys_info = sys_info + nic_info
 
-  return sysInfo
+  return sys_info
 
 def main(argv):
   args = parser.parse_args()
 
   creds_dir = args.creds_dir
-  data_server_address = args.data_server_address
-  auth_server_address = args.auth_server_address
+  data_server_addr = args.data_server_addr
+  auth_server_addr = args.auth_server_addr
   client_secrets = args.client_secrets
   # Fetch working access token
-  hashed_id = authenticateUser(args.username, creds_dir, auth_server_address, client_secrets, args)
+  hashed_id = authUser(args.username, creds_dir, auth_server_addr, client_secrets, args)
 
   # Get path to test
   test_path = args.test
@@ -160,8 +160,15 @@ def main(argv):
   try:
     print '\nBeginning test:\n'
     # Run the test
-    subprocess.call([test_path, '--report_metrics_db=true', '--hashed_id='+hashed_id, '--test_name='+test_name, 
-      '--sys_info='+str(sys_info).strip('[]'), '--server_address='+data_server_address, '--tag='+tag])
+    subprocess.call([
+        test_path,
+        '--report_metrics_db=true',
+        '--hashed_id='+hashed_id,
+        '--test_name='+test_name,
+        '--sys_info='+str(sys_info).strip('[]'),
+        '--server_address='+data_server_addr,
+        '--tag='+tag
+    ])
   except OSError:
     print 'Could not execute the test'
 
