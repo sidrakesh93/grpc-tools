@@ -11,3 +11,11 @@ More formally, the objectives of the performance database tool can be represente
 * Collecting the QPS test results from the users and sending them to a server.
 * Providing a server to receive data from the users, and to provide data to the web front-end.
 * Displaying the data in a convenient web front end, with multiple options to analyze the data.
+
+[performance_db_script](performance_db_script/) contains the script required by the user who wishes to submit the test results to the performance database. [This](performance_db_script/ReadMe.md) contains information about the script and how to use it.
+
+[performance_db_server](performance_db_server/) contains the code and scripts for the Authentication server and the Database server. Information and instructions on how to use them can be found [here](performance_db_server/auth_server/ReadMe.md) and [here](performance_db_server/data_server/ReadMe.md) respectively.
+
+[performance_db_frontend](performance_db_frontend/) contains the code for the web frontend (implemented using [Django](https://www.djangoproject.com/)). Further information can be found [here](performance_db_frontend/ReadMe.md).
+
+Both the Authentication server and the Performance database server must be set running for the user to be able to submit his results using the script.
