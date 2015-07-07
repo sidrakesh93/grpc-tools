@@ -121,9 +121,9 @@ class UserData(object):
           single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
 
           times_dict = {
-              'server_system_time': round(data_detail.metrics.server_system_time,1)
-              'server_user_time': round(data_detail.metrics.server_user_time,1)
-              'client_system_time': round(data_detail.metrics.client_system_time,1)
+              'server_system_time': round(data_detail.metrics.server_system_time,1),
+              'server_user_time': round(data_detail.metrics.server_user_time,1),
+              'client_system_time': round(data_detail.metrics.client_system_time,1),
               'client_user_time': round(data_detail.metrics.client_user_time,1)
           }
 
