@@ -6,6 +6,7 @@ Broadly speaking, the tool collects and displays various performance metrics, in
 
 More formally, the objectives of the performance database tool can be represented as:
 
+* Authenticating the user based on his Google account credentials.
 * Collecting the QPS test results from the users and sending them to a server.
 * Providing a server to receive data from the users, and to provide data to the web front-end.
 * Displaying the data in a convenient web front end, with multiple options to analyze the data.
