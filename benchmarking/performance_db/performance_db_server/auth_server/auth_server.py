@@ -69,7 +69,7 @@ class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
 
   def AuthenticateUser(self, request, context):
     """Authenticate the user, creating entries in database as required"""
-    file_name = str(uuid.uuid4())  # generate random temporary file name to store credentials
+    file_name = '/tmp/' + str(uuid.uuid4())  # generate random temporary file name to store credentials
 
     # Write credentials to file
     with open(file_name, 'wb') as output:
