@@ -44,11 +44,11 @@ The tool uses [OAuth 2.0 protocol](https://developers.google.com/identity/protoc
 
 In the browser, the user needs to login (if not already logged in), and is asked to accept the terms of agreement as shown:
 
-![alt tag](https://github.com/grpc/grpc-tools/blob/master/benchmarking/performance_db/images/Auth%20agreement.png)
+![alt tag](../images/Auth%20agreement.png)
 
 followed by a confirmation message:
 
-![alt tag](https://github.com/grpc/grpc-tools/blob/master/benchmarking/performance_db/images/Auth%20completion.png)
+![alt tag](../images/Auth%20completion.png)
 
 The credentials of the user are stored in a file following this authentication. The file contents are then sent to the *Authentication Server* alongwith the username of the user to register the user as an authenticated one. The authentication serve ris described in detail in 'performance_db_server/auth_server/ReadMe'. The test resumes after this step.
 
