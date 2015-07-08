@@ -49,7 +49,7 @@ parser.add_argument('--username', type=str, help='Username')
 parser.add_argument('--data_server_addr', type=str, default='0.0.0.0:50052', help='Address of the performance database server')
 parser.add_argument('--auth_server_addr', type=str, default='0.0.0.0:2817', help='Address of the authentication server')
 parser.add_argument('--creds_dir', type=str, default=os.path.expanduser('~/.grpc/credentials'), help='Path to the access tokens directory')
-parser.add_argument('--client_secrets', type=str, default='client_secrets.json')
+parser.add_argument('--client_secrets', type=str, default='client_secrets.json', help='Location of the client_secrets.json file')
 parser.add_argument('--tag', type=str, default='', help='Tag for the test')
 
 REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'

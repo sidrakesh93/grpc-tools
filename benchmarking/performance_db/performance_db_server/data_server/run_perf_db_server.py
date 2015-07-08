@@ -37,8 +37,8 @@ import sys
 
 parser = argparse.ArgumentParser(description='Run performance database server')
 
-parser.add_argument('--perf_db_server', type=str, default='../../bins/perf_db_server')
-parser.add_argument('--address', type=str, default='0.0.0.0:50052', help='Address for performance database server')
+parser.add_argument('--bin', type=str, default='../../bins/perf_db_server', help='Location of the performance database server binary')
+parser.add_argument('--perf_server_addr', type=str, default='0.0.0.0:50052', help='Address for performance database server')
 parser.add_argument('--database', type=str, default=os.path.expanduser('~/.grpc/perf_db'), help='Location of performance database')
 parser.add_argument('--auth_server_addr', type=str, default='0.0.0.0:2817', help='Address of authentication server')
 
