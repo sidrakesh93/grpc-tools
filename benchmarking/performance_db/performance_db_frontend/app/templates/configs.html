@@ -155,59 +155,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <script type="text/javascript" src="../static/jQuery/jquery-1.11.3.min.js"></script>
     <!-- Bootstrap core JavaScript -->
     <script src="../static/js/bootstrap.min.js"></script>
-    <script>
-      var pathName = window.location.pathname;
-      pathName = pathName.replace(/\/configs\//g, '');
-      pathName = atob(pathName);
-
-      // Convert to appropriate JSON format
-      pathName = pathName.replace(/&#39;/g, '"');
-      pathName = pathName.replace(/%20/g, ' ');
-      pathName = pathName.replace(/%7B/g, '{');
-      pathName = pathName.replace(/%7D/g, '}');
-
-      var pathNameParts = pathName.split('%');
-      
-      var testName = document.getElementById("test-name");
-      // First part of split url pathname is the test name
-      testName.innerHTML = 'Test: ' + pathNameParts[0];
-
-      var testTag = document.getElementById("test-tag");
-      // Second part of split url pathname is the test tag
-      if(pathNameParts[1]) {
-        testTag.innerHTML = 'Tag: ' + pathNameParts[1];
-      }
-      else {
-        testTag.innerHTML = 'Tag: None';
-      }
-
-      var table = document.getElementById("client-configs-table");
-      // Third part of split url pathname is client config
-      fillTable(table, pathNameParts[2]);
-
-      table = document.getElementById("server-configs-table");
-      // Fourth part of split url pathname is server config
-      fillTable(table, pathNameParts[3]);
-      
-      table = document.getElementById("sys-info-table");
-      // Fifth part of split url pathname is sys info
-      fillTable(table, pathNameParts[4]);
-
-      // Function to fill table
-      function fillTable(table, info) {
-        JSON.parse(info, function(k, v) {
-          var row = table.insertRow(-1);
-          var keyCell = row.insertCell(-1);
-          var valCell = row.insertCell(-1);
-
-          keyCell.innerHTML = k;
-          valCell.innerHTML = v;
-
-          keyCell.style.textAlign = 'center';
-          valCell.style.textAlign = 'center';
-        });
-        table.deleteRow(-1);
-      }
-    </script>
+    <!-- Custom Javascript -->
+    <script src="../static/js/configs.js"></script>
   </body>
 </html>

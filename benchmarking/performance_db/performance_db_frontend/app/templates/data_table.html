@@ -66,6 +66,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <script type="text/javascript" src="../static/js/moment.min.js"></script>
     <!-- Date Range picker Javascript -->
     <script type="text/javascript" src="../static/js/daterangepicker.min.js"></script>
+    <!-- Custom Javascript -->
+    <script type="text/javascript" src="../static/js/data_table.js"></script>
   </head>
   <body>
     <!-- Navigation bar -->
@@ -134,7 +136,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <thead id='metrics-table-head'>
             <tr>
               <!-- User id -->
-              <th data-field="userid"
+              <th data-field="userId"
                   data-sortable="true"
                   data-align="center"
                   data-switchable="false">User</th>
@@ -150,11 +152,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   data-align="center"
                   data-switchable="false">Test</th>
               <!-- QPS -->
-              <th data-field="QPS"
+              <th data-field="qps"
                   data-sortable="true"
                   data-align="center">Queries Per Second</th>
               <!-- QPS per core -->
-              <th data-field="QPSPerCore"
+              <th data-field="qpsPerCore"
                   data-sortable="true"
                   data-align="center">QPS Per Core</th>
               <!-- 50th percentile latency  -->
@@ -210,104 +212,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </div>    
     </div><!-- container -->
     <script type="text/javascript">
-      // Add data to table on load
-      addDataToTable(moment().subtract(1000,'years'), moment());
+      var arr = []
 
-      // Function to add data to table
-      function addDataToTable(start, end) {
-        $('#metrics-table').bootstrapTable({});
+      {% for row in all_users_data %}
+        var rowStr = "{{ row|safe }}";
+        arr.push(rowStr);
+      {% endfor %}
 
-        data = getData(start, end);
-        $('#metrics-table').bootstrapTable("load", data);
-      }
-
-      // Custom sorter for time
-      function timeSorter(a, b) {
-        var timeArr1 = a.split(/[ :\/]+/);
-        var timeArr2 = b.split(/[ :\/]+/);
-
-        var time1 = new Date(timeArr1[2], timeArr1[0], timeArr1[1], timeArr1[3], timeArr1[4], timeArr1[5], 0);
-        var time2 = new Date(timeArr2[2], timeArr2[0], timeArr2[1], timeArr2[3], timeArr2[4], timeArr2[5], 0);
-
-        if(time1 > time2) {
-          return 1;
-        }
-        if(time1 < time2) {
-          return -1;
-        }
-        return 0;
-      }
-
-      // Returns user records array
-      function getData(start, end) {
-        var dataArr = [];
-
-        var startDate = moment();  //earliest data date in given time range
-        var endDate = moment().subtract(1000,'years');  //latest data date in given time range
-
-        {% for row in all_users_data %}
-          rowDate = new Date({{ row.timestamp.year }}, {{ row.timestamp.month }}-1, {{ row.timestamp.day }}, {{ row.timestamp.hour }}, {{ row.timestamp.min }}, {{ row.timestamp.sec }}, 0);
-
-          //If in valid time range
-          if(rowDate > start && rowDate < end) {
-            dataArr.push({
-              userid: '<a href="/plot-user/{{ row.hashed_id }}">{{ row.username }}</a>',
-              timestamp: '{{ row.timestamp.month }}/{{ row.timestamp.day }}/{{ row.timestamp.year }} {{ row.timestamp.hour }}:{{ row.timestamp.min }}:{{ row.timestamp.sec }}',
-              testName: '<a id="config" href="/configs/'+btoa('{{ row.test_name }}%{{ row.tag }}%{{ row.client_config }}%{{ row.server_config }}%{{ row.sys_info }}')+'" target="_blank">{{ row.test_name }}</a>',
-              QPS: '{{ row.qps }}',
-              QPSPerCore: '{{ row.qps_per_core }}',
-              p50: '{{ row.perc_lat_50 }}',
-              p90: '{{ row.perc_lat_90 }}',
-              p95: '{{ row.perc_lat_95 }}',
-              p99: '{{ row.perc_lat_99 }}',
-              p99point9: '{{ row.perc_lat_99_point_9 }}',
-              serverSystemTime: '{{ row.server_system_time }}',
-              serverUserTime: '{{ row.server_user_time }}',
-              clientSystemTime: '{{ row.client_system_time }}',
-              clientUserTime: '{{ row.client_user_time }}',
-              tag: '{{ row.tag }}'
-            });
-            if(rowDate < startDate) {
-              startDate = rowDate;
-            }
-            if(rowDate > endDate) {
-              endDate = rowDate;
-            }
-          }
-        {% endfor %}
-
-        // Update date range in date range picker
-        $('#report-range span').html(moment(startDate).format('MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format('MM/DD/YYYY, HH:mm:ss'));
-
-        return dataArr;
-      }
-
-      // Initializing date range picker
-      $('#report-range').daterangepicker({
-        format: 'MM/DD/YYYY, HH:mm:ss',
-        showDropdowns: true,
-        timePicker: true,
-        timePickerIncrement: 1,
-        timePicker12Hour: false,
-        timePickerSeconds: true,
-        ranges: {
-          'Today': [moment().startOf('day'), moment()],
-          'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-          'All Time': [moment().subtract(29, 'days'), moment()]
-        },
-        opens: 'left',
-        drops: 'down',
-        buttonClasses: ['btn', 'btn-sm'],
-        applyClass: 'btn-primary',
-        cancelClass: 'btn-default',
-        separator: ' to ',
-      }, function(start, end, label) {
-        addDataToTable(start, end);
-      });
+      populateInfo(arr);
     </script>
   </body>
 </html>

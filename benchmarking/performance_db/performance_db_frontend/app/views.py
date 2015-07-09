@@ -31,6 +31,7 @@
 
 from django.shortcuts import render
 from user_data import UserData
+import json
 
 user_data = UserData()
 
@@ -50,12 +51,12 @@ def displayGeneralStatistic(request, metric):
 def generalStatisticRenderer(request, metric):
   """General statistic page renderer"""
   data = allUsersSingleMetricData(metric)
-  return render(request, 'general_plots.html', {'metric': getMetricFullDesc(metric), 'data': data})
+  return render(request, 'general_plots.html', {'metric': getMetricFullDesc(metric), 'all_users_data': data})
 
 def displayUserMetrics(request, client_id):
   """View for user metrics page"""
   complete_data = singleUserData(client_id)
-  return render(request, 'user_plots.html', {'username': complete_data[0], 'userdata': complete_data[1]})
+  return render(request, 'user_plots.html', {'username': complete_data[0], 'user_data': complete_data[1]})
 
 def getMetricFullDesc(metric):
   """Returns full metric name"""
