@@ -38,6 +38,8 @@ pathName = atob(pathName);
 var pathNameParts = pathName.split('%');
 
 var testName = document.getElementById('test-name');
+
+
 /** Test name **/
 testName.innerHTML = 'Test: ' + pathNameParts[0];
 
@@ -64,6 +66,8 @@ fillTable(table, pathNameParts[3]);
 table = document.getElementById('sys-info-table');
 // Fifth part of split url pathname is sys info
 fillTable(table, pathNameParts[4]);
+
+
 
 /**
  * Function to fill table

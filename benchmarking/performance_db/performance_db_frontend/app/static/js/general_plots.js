@@ -31,6 +31,8 @@
  *
  */
 
+
+
 /**
  * Function to populate all users' information in the table
  * @constructor
@@ -116,8 +118,8 @@ function populateInfo(allUsersData) {
     }
     else {
       var data = google.visualization.arrayToDataTable(
-        args
-      );
+          args
+          );
 
       // Options for chart
       var options = {
@@ -147,29 +149,29 @@ function populateInfo(allUsersData) {
 
   /** Initializes date range picker **/
   $('#reportrange').daterangepicker({
-      format: 'MM/DD/YYYY, HH:mm:ss',
-      showDropdowns: true,
-      timePicker: true,
-      timePickerIncrement: 1,
-      timePicker12Hour: false,
-      timePickerSeconds: true,
-      ranges: {
-          'Today': [moment().startOf('day'), moment()],
-          'Yesterday': [moment().subtract(1, 'days').startOf('day'),
-              moment().subtract(1, 'days').endOf('day')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'),
-              moment().subtract(1, 'month').endOf('month')],
-          'All Time': [moment().subtract(1000, 'years'), moment()]
-      },
-      opens: 'left',
-      drops: 'down',
-      buttonClasses: ['btn', 'btn-sm'],
-      applyClass: 'btn-primary',
-      cancelClass: 'btn-default',
-      separator: ' to ',
+    format: 'MM/DD/YYYY, HH:mm:ss',
+    showDropdowns: true,
+    timePicker: true,
+    timePickerIncrement: 1,
+    timePicker12Hour: false,
+    timePickerSeconds: true,
+    ranges: {
+      'Today': [moment().startOf('day'), moment()],
+      'Yesterday': [moment().subtract(1, 'days').startOf('day'),
+        moment().subtract(1, 'days').endOf('day')],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'This Month': [moment().startOf('month'), moment().endOf('month')],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'),
+        moment().subtract(1, 'month').endOf('month')],
+      'All Time': [moment().subtract(1000, 'years'), moment()]
+    },
+    opens: 'left',
+    drops: 'down',
+    buttonClasses: ['btn', 'btn-sm'],
+    applyClass: 'btn-primary',
+    cancelClass: 'btn-default',
+    separator: ' to ',
   }, function(start, end, label) {
     drawChart(start, end);
   });
