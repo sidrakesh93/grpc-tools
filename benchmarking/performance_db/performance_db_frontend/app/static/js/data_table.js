@@ -111,8 +111,8 @@ function populateInfo(allUsersData) {
 
     // Update date range in date range picker
     $('#report-range span').html(moment(startDate).format(
-          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'YYYY/MM/DD, HH:mm:ss'));
+        'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
+        'YYYY/MM/DD, HH:mm:ss'));
 
     return dataArr;
   }
