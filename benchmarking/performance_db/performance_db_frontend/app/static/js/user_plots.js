@@ -185,8 +185,8 @@ function populateInfo(userDataStr) {
     if (qpsArgs.length != 1) {
       // Update date range field
       $('#qps-report-range span').html(moment(startDate).format(
-          'MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'MM/DD/YYYY, HH:mm:ss'));
+          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
+          'YYYY/MM/DD, HH:mm:ss'));
     }
   }
 
@@ -257,8 +257,8 @@ function populateInfo(userDataStr) {
     if (qpsPerCoreArgs.length != 1) {
       //Update date range field
       $('#qps-per-core-report-range span').html(moment(startDate).format(
-          'MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'MM/DD/YYYY, HH:mm:ss'));
+          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
+          'YYYY/MM/DD, HH:mm:ss'));
     }
   }
 
@@ -342,8 +342,8 @@ function populateInfo(userDataStr) {
     if (latArgs.length != 1) {
       // Update date range field
       $('#perc-lat-report-range span').html(moment(startDate).format(
-          'MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'MM/DD/YYYY, HH:mm:ss'));
+          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
+          'YYYY/MM/DD, HH:mm:ss'));
     }
   }
 
@@ -427,8 +427,8 @@ function populateInfo(userDataStr) {
     if (serverTimesArgs.length != 1) {
       // Update date range field
       $('#server-times-report-range span').html(moment(startDate).format(
-          'MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'MM/DD/YYYY, HH:mm:ss'));
+          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
+          'YYYY/MM/DD, HH:mm:ss'));
     }
   }
 
@@ -509,8 +509,8 @@ function populateInfo(userDataStr) {
     if (clientTimesArgs.length != 1) {
       // Update date range field
       $('#client-times-report-range span').html(moment(startDate).format(
-          'MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'MM/DD/YYYY, HH:mm:ss'));
+          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
+          'YYYY/MM/DD, HH:mm:ss'));
     }
   }
 

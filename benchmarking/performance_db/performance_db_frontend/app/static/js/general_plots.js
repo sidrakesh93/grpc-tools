@@ -128,8 +128,8 @@ function populateInfo(allUsersData, metricName) {
           document.getElementById('chart_div'));
       chart.draw(data, options);
       $('#reportrange span').html(moment(startDate).format(
-          'MM/DD/YYYY, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'MM/DD/YYYY, HH:mm:ss'));
+          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
+          'YYYY/MM/DD, HH:mm:ss'));
     }
   }
 
