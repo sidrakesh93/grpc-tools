@@ -50,7 +50,7 @@ def main(argv):
 
   try:
     # Run the test
-    subprocess.call([args.perf_db_server, '--address='+args.address, '--database='+args.database, '--auth_server_address='+args.auth_server_addr])
+    subprocess.call([args.bin, '--perf_server_addr='+args.perf_server_addr, '--database='+args.database, '--auth_server_addr='+args.auth_server_addr])
   except OSError, e:
     print e, 'Could not execute server'
 

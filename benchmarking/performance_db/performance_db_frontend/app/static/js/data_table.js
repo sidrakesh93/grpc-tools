@@ -32,10 +32,8 @@
  */
 
 
-
 /**
  * Function to populate all users' information in the table
- * @constructor
  * @param {Array} allUsersData - All user's data
 */
 function populateInfo(allUsersData) {
@@ -44,7 +42,6 @@ function populateInfo(allUsersData) {
 
   /**
    * Function to add data to table
-   * @constructor
    * @param {Array} allUsersData - All user's data
    * @param {Date} start - Start date of range of requested data
    * @param {Date} end - End date of range of requested data
@@ -57,35 +54,11 @@ function populateInfo(allUsersData) {
   }
 
   /**
-   * Custom sorter for time
-   * @constructor
-   * @param {string} a - First time string
-   * @param {string} b - Second time string
-  */
-  function timeSorter(a, b) {
-    var timeArr1 = a.split(/[ :\/]+/);
-    var timeArr2 = b.split(/[ :\/]+/);
-
-    var time1 = new Date(timeArr1[2], timeArr1[0], timeArr1[1],
-                         timeArr1[3], timeArr1[4], timeArr1[5], 0);
-    var time2 = new Date(timeArr2[2], timeArr2[0], timeArr2[1],
-                         timeArr2[3], timeArr2[4], timeArr2[5], 0);
-
-    if (time1 > time2) {
-      return 1;
-    }
-    if (time1 < time2) {
-      return -1;
-    }
-    return 0;
-  }
-
-  /**
    * Returns user records array
-   * @constructor
    * @param {Array} allUsersData - All users' data
    * @param {Date} start - The start date of data in the range
    * @param {Date} end - The end date of data in the range
+   * @return {Array} dataArr - Formatted data to populate the table with
   */
   function getData(allUsersData, start, end) {
     var dataArr = [];
@@ -98,25 +71,16 @@ function populateInfo(allUsersData) {
     for (i = 0; i < allUsersData.length; i++) {
       allUsersData[i] = allUsersData[i].replace(/'/g, '\"');
       allUsersData[i] = allUsersData[i].replace(/u"(?=[^:]+")/g, '\"');
-      row = jQuery.parseJSON(allUsersData[i]);
+      var row = jQuery.parseJSON(allUsersData[i]);
 
-      var rowDate = new Date(
-          row.timestamp.year,
-          row.timestamp.month - 1,
-          row.timestamp.day,
-          row.timestamp.hour,
-          row.timestamp.min,
-          row.timestamp.sec,
-          0);
+      var rowDate = new Date(row.timestamp);
 
       // If in valid time range
       if (rowDate > start && rowDate < end) {
         dataArr.push({
           userId: '<a href="/plot-user/' + row.hashed_id + '">' +
               row.username + '</a>',
-          timestamp: row.timestamp.month + '/' + row.timestamp.day + '/' +
-              row.timestamp.year + ' ' + row.timestamp.hour + ':' +
-              row.timestamp.min + ':' + row.timestamp.sec,
+          timestamp: moment(rowDate).format('MM/DD/YYYY, HH:mm:ss'),
           testName: '<a id="config" href="/configs/' +
               btoa(row.test_name + '%' + row.tag + '%' +
                    JSON.stringify(row.client_config) + '%' +

@@ -32,24 +32,21 @@
  */
 
 
-
 /**
  * Function to populate all users' information in the table
- * @constructor
  * @param {Array} allUsersData - All user's data
+ * @param {string} metricName - Name of the data metric
 */
-function populateInfo(allUsersData) {
+function populateInfo(allUsersData, metricName) {
   // Draw chart on load
   google.load('visualization', '1', {packages: ['corechart']});
   google.setOnLoadCallback(drawChartOnLoad);
 
-  /**
-   * Function to draw charts on page load
-   * @constructor
-  */
+  /** Function to draw charts on page load **/
   function drawChartOnLoad() {
     // Draw all data histogram
-    drawChart(allUsersData, moment().subtract(1000, 'years'), moment());
+    drawChart(allUsersData, metricName, moment().subtract(1000, 'years'),
+        moment());
   }
 
   /** String 'endswith' function **/
@@ -61,18 +58,14 @@ function populateInfo(allUsersData) {
 
   /**
    * Function to draw chart, gicen start and end time
-   * @constructor
    * @param {Array} allUsersData - All user's data
+   * @param {string} metricName - Name of the data metric
    * @param {Date} start - The start date of data in the range
    * @param {Date} end - The end date of data in the range
   */
-  function drawChart(allUsersData, start, end) {
-    var metricName;
-    if ('{{ metric }}'.endsWith('Percentile Latency')) {
-      metricName = '{{ metric }} (\xB5s)';
-    }
-    else {
-      metricName = '{{ metric }}';
+  function drawChart(allUsersData, metricName, start, end) {
+    if (metricName.endsWith('Percentile Latency')) {
+      metricName = metricName + ' (\xB5s)';
     }
 
     var args = [[metricName]];
@@ -87,14 +80,7 @@ function populateInfo(allUsersData) {
       allUsersData[i] = allUsersData[i].replace(/u"(?=[^:]+")/g, '\"');
       item = jQuery.parseJSON(allUsersData[i]);
 
-      var metricDate = new Date(
-          item.year,
-          item.month - 1,
-          item.day,
-          item.hour,
-          item.min,
-          item.sec,
-          0);
+      var metricDate = new Date(item.timestamp);
 
       if (start <= metricDate && end >= metricDate) {
         if (item.value != 0.0)

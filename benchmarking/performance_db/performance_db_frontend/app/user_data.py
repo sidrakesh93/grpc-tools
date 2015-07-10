@@ -44,24 +44,11 @@ class UserData(object):
     self.hostname = settings.PERF_DB_HOSTNAME
     self.port = settings.PERF_DB_PORT
 
-  def parseTimeString(self, time_string):
-    """Returns a dictionary of parsed time"""
-    parsed_time_list = re.split('\W+', time_string)
-    parsed = {
-        'month': parsed_time_list[0],
-        'day': parsed_time_list[1],
-        'year': parsed_time_list[2],
-        'hour': parsed_time_list[3],
-        'min': parsed_time_list[4],
-        'sec': parsed_time_list[5]
-    }
-    return parsed
-
   def initSingleDataDict(self, test_name, timestamp, client_config, server_config, sys_info, tag):
     """Initialize a single metric record dictionary"""
     single_data_dict = {
         'test_name': test_name,
-        'timestamp': self.parseTimeString(timestamp),
+        'timestamp': timestamp,
         'client_config': self.getClientConfigDict(client_config),
         'server_config': self.getServerConfigDict(server_config),
         'sys_info': self.getSysInfoDict(sys_info),
@@ -94,17 +81,17 @@ class UserData(object):
 
       for data_detail in sorted_user_data:
         if data_detail.metrics.qps != 0.0:  # qps present
-          single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
+          single_data_dict = self.initSingleDataDict(str(data_detail.test_name), str(data_detail.timestamp), data_detail.client_config, data_detail.server_config, data_detail.sys_info, str(data_detail.tag))
           single_data_dict['qps'] = round(data_detail.metrics.qps,1)
           qps_list.append(single_data_dict)
 
         if data_detail.metrics.qps_per_core != 0.0:  # qps per core present
-          single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
+          single_data_dict = self.initSingleDataDict(str(data_detail.test_name), str(data_detail.timestamp), data_detail.client_config, data_detail.server_config, data_detail.sys_info, str(data_detail.tag))
           single_data_dict['qps_per_core'] = round(data_detail.metrics.qps_per_core,1)
           qps_per_core_list.append(single_data_dict)
         
         if data_detail.metrics.perc_lat_50 != 0.0 and data_detail.metrics.perc_lat_90 != 0.0 and data_detail.metrics.perc_lat_95 != 0.0 and data_detail.metrics.perc_lat_99 != 0.0 and data_detail.metrics.perc_lat_99_point_9 != 0.0:  # percentile latenices present
-          single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
+          single_data_dict = self.initSingleDataDict(str(data_detail.test_name), str(data_detail.timestamp), data_detail.client_config, data_detail.server_config, data_detail.sys_info, str(data_detail.tag))
           
           lat_dict = {
               'perc_lat_50': round(data_detail.metrics.perc_lat_50,1),
@@ -118,7 +105,7 @@ class UserData(object):
           lat_list.append(single_data_dict)
         
         if data_detail.metrics.server_system_time != 0.0 and data_detail.metrics.server_user_time != 0.0 and data_detail.metrics.client_system_time != 0.0 and data_detail.metrics.client_user_time != 0.0:  # Server and client times present
-          single_data_dict = self.initSingleDataDict(data_detail.test_name, data_detail.timestamp, data_detail.client_config, data_detail.server_config, data_detail.sys_info, data_detail.tag)
+          single_data_dict = self.initSingleDataDict(str(data_detail.test_name), str(data_detail.timestamp), data_detail.client_config, data_detail.server_config, data_detail.sys_info, str(data_detail.tag))
 
           times_dict = {
               'server_system_time': round(data_detail.metrics.server_system_time,1),
@@ -220,7 +207,7 @@ class UserData(object):
           user_metrics_dict = {
               'hashed_id': str(user_data.hashed_id),
               'username': str(user_data.username),
-              'timestamp': self.parseTimeString(data_detail.timestamp),
+              'timestamp': str(data_detail.timestamp),
               'test_name': str(data_detail.test_name),
               'qps': str(self.validValue(data_detail.metrics.qps)),
               'qps_per_core': str(self.validValue(data_detail.metrics.qps_per_core)),
@@ -258,24 +245,27 @@ class UserData(object):
 
       for user_data in all_users_data.all_users_data:
         for data_detail in user_data.data_details:
-          user_metrics_dict = self.parseTimeString(data_detail.timestamp)
-
-          user_metrics_dict['value'] = {
-              'qps': round(data_detail.metrics.qps,1),
-              'qpspercore': round(data_detail.metrics.qps_per_core,1),
-              'perc50': round(data_detail.metrics.perc_lat_50,1),
-              'perc90': round(data_detail.metrics.perc_lat_90,1),
-              'perc95': round(data_detail.metrics.perc_lat_95,1),
-              'perc99': round(data_detail.metrics.perc_lat_99,1),
-              'perc99point9': round(data_detail.metrics.perc_lat_99_point_9,1),
-              'serversystime': round(data_detail.metrics.server_system_time,1),
-              'serverusertime': round(data_detail.metrics.server_user_time,1),
-              'clientsystime': round(data_detail.metrics.client_system_time,1),
-              'clientusertime': round(data_detail.metrics.client_user_time,1)
+          value = {
+            'qps': round(data_detail.metrics.qps,1),
+            'qpspercore': round(data_detail.metrics.qps_per_core,1),
+            'perc50': round(data_detail.metrics.perc_lat_50,1),
+            'perc90': round(data_detail.metrics.perc_lat_90,1),
+            'perc95': round(data_detail.metrics.perc_lat_95,1),
+            'perc99': round(data_detail.metrics.perc_lat_99,1),
+            'perc99point9': round(data_detail.metrics.perc_lat_99_point_9,1),
+            'serversystime': round(data_detail.metrics.server_system_time,1),
+            'serverusertime': round(data_detail.metrics.server_user_time,1),
+            'clientsystime': round(data_detail.metrics.client_system_time,1),
+            'clientusertime': round(data_detail.metrics.client_user_time,1)
           }.get(metric, 'error')
 
-          if metric == 'error':
+          if value == 'error':
             raise Exception
+
+          user_metrics_dict = {
+            'timestamp': str(data_detail.timestamp),
+            'value': value
+          }
 
           metric_list.append(user_metrics_dict)
 

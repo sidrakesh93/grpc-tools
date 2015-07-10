@@ -32,10 +32,8 @@
  */
 
 
-
 /**
  * Function to populate all users' information in the plots
- * @constructor
  * @param {string} userDataStr - user data in string format
 */
 function populateInfo(userDataStr) {
@@ -49,7 +47,6 @@ function populateInfo(userDataStr) {
 
   /**
    * Function to draw charts on page load
-   * @constructor
   */
   function drawChartsOnLoad() {
     drawQpsChart(userData, moment().subtract(1000, 'years'), moment());
@@ -91,7 +88,6 @@ function populateInfo(userDataStr) {
 
   /**
    * Function to open the configuration information page
-   * @constructor
    * @param {Object} chart - Chart in which element has been selected
    * @param {Array} configs - Contains configuration information
   */
@@ -114,9 +110,20 @@ function populateInfo(userDataStr) {
     }
   }
 
+  function getConfigArr(item) {
+    var configArr = [
+      item.test_name,
+      item.tag,
+      item.client_config,
+      item.server_config,
+      item.sys_info
+    ];
+
+    return configArr;
+  }
+
   /**
    * Function for rendering the QPS chart
-   * @constructor
    * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
@@ -133,19 +140,11 @@ function populateInfo(userDataStr) {
     for (i = 0; i < (userData.qpsData).length; i++) {
       item = (userData.qpsData)[i];
 
-      var metricDate = new Date(
-          item.timestamp.year,
-          item.timestamp.month - 1,
-          item.timestamp.day,
-          item.timestamp.hour,
-          item.timestamp.min,
-          item.timestamp.sec,
-          0);
+      var metricDate = new Date(item.timestamp);
 
       if (start <= metricDate && end >= metricDate) {
         qpsArgs.push([metricDate, item.qps]);
-        configs.push([item.test_name, item.tag, item.client_config,
-          item.server_config, item.sys_info]);
+        configs.push(getConfigArr(item));
 
         if (metricDate < startDate) {
           startDate = metricDate;
@@ -192,15 +191,16 @@ function populateInfo(userDataStr) {
   }
 
   /**
-   * Function for rendering the QPS chart
-   * @constructor
+   * Function for rendering the QPS Per Core chart
    * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
   */
   function drawQpsPerCoreChart(userData, start, end) {
-    var qpsPerCoreArgs = [[{label: 'Time'},
-            {type: 'number', label: 'QPS Per Core'}]];
+    var qpsPerCoreArgs = [[
+      {label: 'Time'},
+      {type: 'number', label: 'QPS Per Core'}
+    ]];
 
     var startDate = moment();
     var endDate = moment().subtract(1000, 'years');
@@ -212,19 +212,11 @@ function populateInfo(userDataStr) {
     for (i = 0; i < (userData.qpsPerCoreData).length; i++) {
       item = (userData.qpsPerCoreData)[i];
 
-      var metricDate = new Date(
-          item.timestamp.year,
-          item.timestamp.month - 1,
-          item.timestamp.day,
-          item.timestamp.hour,
-          item.timestamp.min,
-          item.timestamp.sec,
-          0);
+      var metricDate = new Date(item.timestamp);
 
       if (start <= metricDate && end >= metricDate) {
         qpsPerCoreArgs.push([metricDate, item.qps_per_core]);
-        configs.push([item.test_name, item.tag, item.client_config,
-          item.server_config, item.sys_info]);
+        configs.push(getConfigArr(item));
 
         if (metricDate < startDate) {
           startDate = metricDate;
@@ -271,19 +263,20 @@ function populateInfo(userDataStr) {
   }
 
   /**
-   * Function for rendering the QPS chart
-   * @constructor
+   * Function for rendering the Latencies chart
    * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
   */
   function drawLatChart(userData, start, end) {
-    var latArgs = [[{label: 'Time'},
-            {type: 'number', label: '50th Percentile Latency'},
-            {type: 'number', label: '90th Percentile Latency'},
-            {type: 'number', label: '95th Percentile Latency'},
-            {type: 'number', label: '99th Percentile Latency'},
-            {type: 'number', label: '99.9th Percentile Latency'}]];
+    var latArgs = [[
+      {label: 'Time'},
+      {type: 'number', label: '50th Percentile Latency'},
+      {type: 'number', label: '90th Percentile Latency'},
+      {type: 'number', label: '95th Percentile Latency'},
+      {type: 'number', label: '99th Percentile Latency'},
+      {type: 'number', label: '99.9th Percentile Latency'}
+    ]];
 
     var startDate = moment();
     var endDate = moment().subtract(1000, 'years');
@@ -295,24 +288,18 @@ function populateInfo(userDataStr) {
     for (i = 0; i < (userData.latData).length; i++) {
       item = (userData.latData)[i];
 
-      var metricDate = new Date(
-          item.timestamp.year,
-          item.timestamp.month - 1,
-          item.timestamp.day,
-          item.timestamp.hour,
-          item.timestamp.min,
-          item.timestamp.sec,
-          0);
+      var metricDate = new Date(item.timestamp);
 
       if (start <= metricDate && end >= metricDate) {
-        latArgs.push([metricDate,
+        latArgs.push([
+          metricDate,
           item.lat.perc_lat_50,
           item.lat.perc_lat_90,
           item.lat.perc_lat_95,
           item.lat.perc_lat_99,
-          item.lat.perc_lat_99_point_9]);
-        configs.push([item.test_name, item.tag, item.client_config,
-          item.server_config, item.sys_info]);
+          item.lat.perc_lat_99_point_9
+        ]);
+        configs.push(getConfigArr(item));
 
         if (metricDate < startDate) {
           startDate = metricDate;
@@ -368,8 +355,7 @@ function populateInfo(userDataStr) {
   var configs = [];
 
   /**
-   * Function for rendering the QPS chart
-   * @constructor
+   * Function for rendering the Server times chart
    * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
@@ -389,21 +375,15 @@ function populateInfo(userDataStr) {
     for (i = 0; i < (userData.timesData).length; i++) {
       item = (userData.timesData)[i];
 
-      var metricDate = new Date(
-          item.timestamp.year,
-          item.timestamp.month - 1,
-          item.timestamp.day,
-          item.timestamp.hour,
-          item.timestamp.min,
-          item.timestamp.sec,
-          0);
+      var metricDate = new Date(item.timestamp);
 
       if (start <= metricDate && end >= metricDate) {
-        serverTimesArgs.push([metricDate,
+        serverTimesArgs.push([
+          metricDate,
           item.times.server_system_time / 100.0,
-          item.times.server_user_time / 100.0]);
-        configs.push([item.test_name, item.tag, item.client_config,
-          item.server_config, item.sys_info]);
+          item.times.server_user_time / 100.0
+        ]);
+        configs.push(getConfigArr(item));
 
         if (metricDate < startDate) {
           startDate = metricDate;
@@ -453,8 +433,7 @@ function populateInfo(userDataStr) {
   }
 
   /**
-   * Function for rendering the QPS chart
-   * @constructor
+   * Function for rendering the Client times chart
    * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
@@ -472,21 +451,21 @@ function populateInfo(userDataStr) {
     for (i = 0; i < (userData.timesData).length; i++) {
       item = (userData.timesData)[i];
 
-      var metricDate = new Date(
-          item.timestamp.year,
-          item.timestamp.month - 1,
-          item.timestamp.day,
-          item.timestamp.hour,
-          item.timestamp.min,
-          item.timestamp.sec,
-          0);
+      var metricDate = new Date(item.timestamp);
 
       if (start <= metricDate && end >= metricDate) {
-        clientTimesArgs.push([metricDate,
+        clientTimesArgs.push([
+          metricDate,
           item.times.client_system_time / 100.0,
-          item.times.client_user_time / 100.0]);
-        configs.push([item.test_name, item.tag, item.client_config,
-          item.server_config, item.sys_info]);
+          item.times.client_user_time / 100.0
+        ]);
+        configs.push([
+          item.test_name,
+          item.tag,
+          item.client_config,
+          item.server_config,
+          item.sys_info
+        ]);
 
         if (metricDate < startDate) {
           startDate = metricDate;

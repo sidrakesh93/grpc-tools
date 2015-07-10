@@ -46,9 +46,9 @@
 #include <cstdlib>
 #include <gflags/gflags.h>
 
-DEFINE_string(address, "", "Address of server in Hostname:Port format");
+DEFINE_string(perf_server_addr, "", "Address of server in Hostname:Port format");
 DEFINE_string(database, "", "Location of the metrics database");
-DEFINE_string(auth_server_address, "", "Address of the authentication server");
+DEFINE_string(auth_server_addr, "", "Address of the authentication server");
 // In some distros, gflags is in the namespace google, and in some others,
 // in gflags. This hack is enabling us to find both.
 namespace google {}
@@ -64,7 +64,7 @@ public:
   PerfDbTransferServiceImpl() {
     //Set and initialize database
     db_manager.setDatabase(FLAGS_database);
-    db_manager.setAuthServerAddress(FLAGS_auth_server_address);
+    db_manager.setAuthServerAddress(FLAGS_auth_server_addr);
   }
 
   Status RecordSingleClientData(ServerContext* context, const SingleUserRecordRequest* request,
@@ -102,15 +102,15 @@ void RunServer() {
   ServerBuilder builder;
 
   //Terminate if address not provided
-  if(FLAGS_address.empty()) {
+  if(FLAGS_perf_server_addr.empty()) {
     std::cout << "No address provided. Terminating.\n";
     exit(1);
   }
 
-  builder.AddListeningPort(FLAGS_address, grpc::InsecureServerCredentials());
+  builder.AddListeningPort(FLAGS_perf_server_addr, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
   std::unique_ptr<Server> server(builder.BuildAndStart());
-  std::cout << "Server listening on " << FLAGS_address << std::endl;
+  std::cout << "Server listening on " << FLAGS_perf_server_addr << std::endl;
   server->Wait();
 }
 

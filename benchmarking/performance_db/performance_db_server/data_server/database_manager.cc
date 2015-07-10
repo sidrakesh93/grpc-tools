@@ -69,7 +69,7 @@ const std::string DatabaseManager::currentDateTime() {
   char buf[80];
   tstruct = *localtime(&now);
 
-  strftime(buf, sizeof(buf), "%m/%d/%Y, %X", &tstruct);
+  strftime(buf, sizeof(buf), "%FT%XZ", &tstruct);
   return buf;
 }
 
