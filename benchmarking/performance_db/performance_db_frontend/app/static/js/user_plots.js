@@ -104,10 +104,8 @@ function populateInfo(userDataStr) {
               configs[row][1] + '%' +
               JSON.stringify(configs[row][2]) + '%' +
               JSON.stringify(configs[row][3]) + '%' +
-              JSON.stringify(configs[row][4])
-          ),
-          '_blank'
-      );
+              JSON.stringify(configs[row][4])),
+          '_blank');
     }
   }
 
@@ -552,26 +550,21 @@ function populateInfo(userDataStr) {
   $('#qps-report-range').daterangepicker(dateRangePickerSettings,
       function(start, end, label) {
         drawQpsChart(start, end);
-      }
-  );
+      });
   $('#qps-per-core-report-range').daterangepicker(dateRangePickerSettings,
       function(start, end, label) {
         drawQpsPerCoreChart(start, end);
-      }
-  );
+      });
   $('#perc-lat-report-range').daterangepicker(dateRangePickerSettings,
       function(start, end, label) {
         drawLatChart(start, end);
-      }
-  );
+      });
   $('#server-times-report-range').daterangepicker(dateRangePickerSettings,
       function(start, end, label) {
         drawServerTimesChart(start, end);
-      }
-  );
+      });
   $('#client-times-report-range').daterangepicker(dateRangePickerSettings,
       function(start, end, label) {
         drawClientTimesChart(start, end);
-      }
-  );
+      });
 }
