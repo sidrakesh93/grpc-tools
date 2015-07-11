@@ -31,6 +31,7 @@
  *
  */
 
+
 /**
  * Function to populate all users' information in the table
  * @param {Array} allUsersData - All user's data
