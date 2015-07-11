@@ -31,7 +31,6 @@
  *
  */
 
-
 /**
  * Function to populate the user's config information in the tables
 */
@@ -70,8 +69,6 @@ function populateInfo() {
   table = document.getElementById('sys-info-table');
   // Fifth part of split url pathname is sys info
   fillTable(table, pathNameParts[4]);
-
-
 
   /**
    * Function to fill table

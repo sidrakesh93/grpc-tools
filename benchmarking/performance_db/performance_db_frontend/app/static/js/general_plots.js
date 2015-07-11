@@ -38,6 +38,10 @@
  * @param {string} metricName - Name of the data metric
 */
 function populateInfo(allUsersData, metricName) {
+  window.allUsersData = allUsersData;
+  window.metricName = metricName;
+  window.dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
   // Draw chart on load
   google.load('visualization', '1', {packages: ['corechart']});
   google.setOnLoadCallback(drawChartOnLoad);
@@ -45,8 +49,7 @@ function populateInfo(allUsersData, metricName) {
   /** Function to draw charts on page load **/
   function drawChartOnLoad() {
     // Draw all data histogram
-    drawChart(allUsersData, metricName, moment().subtract(1000, 'years'),
-        moment());
+    drawChart(moment().subtract(1000, 'years'), moment());
   }
 
   /** String 'endswith' function **/
@@ -57,15 +60,23 @@ function populateInfo(allUsersData, metricName) {
   }
 
   /**
+   * Function to format the date to ISO standard
+   * @param {Date} date - Date object to format
+   * @return {Date} formattedDate - Formatted date object
+  */
+  function formatDate(date) {
+    formattedDate = moment(date).format(dateFormat);
+    return formattedDate;
+  }
+
+  /**
    * Function to draw chart, gicen start and end time
-   * @param {Array} allUsersData - All user's data
-   * @param {string} metricName - Name of the data metric
    * @param {Date} start - The start date of data in the range
    * @param {Date} end - The end date of data in the range
   */
-  function drawChart(allUsersData, metricName, start, end) {
+  function drawChart(start, end) {
     if (metricName.endsWith('Percentile Latency')) {
-      metricName = metricName + ' (\xB5s)';
+      metricName = metricName + ' (\u03BCs)';
     }
 
     var args = [[metricName]];
@@ -75,7 +86,7 @@ function populateInfo(allUsersData, metricName) {
 
     // Add data
 
-    for (i = 0; i < allUsersData.length; i++) {
+    for (var i = 0; i < allUsersData.length; i++) {
       allUsersData[i] = allUsersData[i].replace(/'/g, '\"');
       allUsersData[i] = allUsersData[i].replace(/u"(?=[^:]+")/g, '\"');
       item = jQuery.parseJSON(allUsersData[i]);
@@ -83,8 +94,9 @@ function populateInfo(allUsersData, metricName) {
       var metricDate = new Date(item.timestamp);
 
       if (start <= metricDate && end >= metricDate) {
-        if (item.value != 0.0)
+        if (item.value != 0.0) {
           args.push([item.value]);
+        }
 
         if (metricDate < startDate) {
           startDate = metricDate;
@@ -95,21 +107,21 @@ function populateInfo(allUsersData, metricName) {
       }
     }
 
+    var errorHeader = document.getElementById('error-header');
+    var chartDiv = document.getElementById('chart_div');
 
     if (args.length == 1) {
       // No data available
-      var errorHeader = document.getElementById('error-header');
-      errorHeader.innerHTML = 'Sorry, no data is available for the' +
+      errorHeader.innerHTML = 'Sorry, no data is available for the ' +
           'given time range';
-    }
-    else {
-      var data = google.visualization.arrayToDataTable(
-          args
-          );
+      chartDiv.innerHTML = null;
+    } else {
+      errorHeader.innerHTML = null;
+      var data = google.visualization.arrayToDataTable(args);
 
       // Options for chart
       var options = {
-        legend: { position: 'none' },
+        legend: {position: 'none'},
         hAxis: {
           title: metricName,
           titleTextStyle: {
@@ -124,18 +136,18 @@ function populateInfo(allUsersData, metricName) {
         }
       };
 
-      var chart = new google.visualization.Histogram(
-          document.getElementById('chart_div'));
+      var chart = new google.visualization.Histogram(chartDiv);
       chart.draw(data, options);
-      $('#reportrange span').html(moment(startDate).format(
-          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'YYYY/MM/DD, HH:mm:ss'));
+
+      // Update date range in date range picker
+      $('#report-range span').html(formatDate(startDate) + ' - ' +
+          formatDate(endDate));
     }
   }
 
   /** Initializes date range picker **/
-  $('#reportrange').daterangepicker({
-    format: 'MM/DD/YYYY, HH:mm:ss',
+  $('#report-range').daterangepicker({
+    format: dateFormat,
     showDropdowns: true,
     timePicker: true,
     timePickerIncrement: 1,
@@ -143,13 +155,17 @@ function populateInfo(allUsersData, metricName) {
     timePickerSeconds: true,
     ranges: {
       'Today': [moment().startOf('day'), moment()],
-      'Yesterday': [moment().subtract(1, 'days').startOf('day'),
-        moment().subtract(1, 'days').endOf('day')],
+      'Yesterday': [
+        moment().subtract(1, 'days').startOf('day'),
+        moment().subtract(1, 'days').endOf('day')
+      ],
       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
       'This Month': [moment().startOf('month'), moment().endOf('month')],
-      'Last Month': [moment().subtract(1, 'month').startOf('month'),
-        moment().subtract(1, 'month').endOf('month')],
+      'Last Month': [
+        moment().subtract(1, 'month').startOf('month'),
+        moment().subtract(1, 'month').endOf('month')
+      ],
       'All Time': [moment().subtract(1000, 'years'), moment()]
     },
     opens: 'left',

@@ -31,36 +31,46 @@
  *
  */
 
-
 /**
  * Function to populate all users' information in the table
  * @param {Array} allUsersData - All user's data
 */
 function populateInfo(allUsersData) {
+  window.allUsersData = allUsersData;
+  window.dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
   // Add data to table on load
-  addDataToTable(allUsersData, moment().subtract(1000, 'years'), moment());
+  addDataToTable(moment().subtract(1000, 'years'), moment());
 
   /**
    * Function to add data to table
-   * @param {Array} allUsersData - All user's data
    * @param {Date} start - Start date of range of requested data
    * @param {Date} end - End date of range of requested data
   */
-  function addDataToTable(allUsersData, start, end) {
+  function addDataToTable(start, end) {
     $('#metrics-table').bootstrapTable({});
 
-    data = getData(allUsersData, start, end);
+    data = getData(start, end);
     $('#metrics-table').bootstrapTable('load', data);
   }
 
   /**
+   * Function to format the date to ISO standard
+   * @param {Date} date - Date object to format
+   * @return {Date} formattedDate - Formatted date object
+  */
+  function formatDate(date) {
+    formattedDate = moment(date).format(dateFormat);
+    return formattedDate;
+  }
+
+  /**
    * Returns user records array
-   * @param {Array} allUsersData - All users' data
    * @param {Date} start - The start date of data in the range
    * @param {Date} end - The end date of data in the range
    * @return {Array} dataArr - Formatted data to populate the table with
   */
-  function getData(allUsersData, start, end) {
+  function getData(start, end) {
     var dataArr = [];
 
     // Earliest data date in given time range
@@ -68,7 +78,7 @@ function populateInfo(allUsersData) {
     // Latest data date in given time range
     var endDate = moment().subtract(1000, 'years');
 
-    for (i = 0; i < allUsersData.length; i++) {
+    for (var i = 0; i < allUsersData.length; i++) {
       allUsersData[i] = allUsersData[i].replace(/'/g, '\"');
       allUsersData[i] = allUsersData[i].replace(/u"(?=[^:]+")/g, '\"');
       var row = jQuery.parseJSON(allUsersData[i]);
@@ -110,16 +120,15 @@ function populateInfo(allUsersData) {
     }
 
     // Update date range in date range picker
-    $('#report-range span').html(moment(startDate).format(
-        'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
-        'YYYY/MM/DD, HH:mm:ss'));
+    $('#report-range span').html(formatDate(startDate) + ' - ' +
+        formatDate(endDate));
 
     return dataArr;
   }
 
   // Initializing date range picker
   $('#report-range').daterangepicker({
-    format: 'MM/DD/YYYY, HH:mm:ss',
+    format: dateFormat,
     showDropdowns: true,
     timePicker: true,
     timePickerIncrement: 1,
@@ -127,13 +136,17 @@ function populateInfo(allUsersData) {
     timePickerSeconds: true,
     ranges: {
       'Today': [moment().startOf('day'), moment()],
-      'Yesterday': [moment().subtract(1, 'days').startOf('day'),
-        moment().subtract(1, 'days').endOf('day')],
+      'Yesterday': [
+        moment().subtract(1, 'days').startOf('day'),
+        moment().subtract(1, 'days').endOf('day')
+      ],
       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
       'This Month': [moment().startOf('month'), moment().endOf('month')],
-      'Last Month': [moment().subtract(1, 'month').startOf('month'),
-        moment().subtract(1, 'month').endOf('month')],
+      'Last Month': [
+        moment().subtract(1, 'month').startOf('month'),
+        moment().subtract(1, 'month').endOf('month')
+      ],
       'All Time': [moment().subtract(29, 'days'), moment()]
     },
     opens: 'left',

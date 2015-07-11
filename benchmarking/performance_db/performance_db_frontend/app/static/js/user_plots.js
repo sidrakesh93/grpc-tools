@@ -40,7 +40,8 @@ function populateInfo(userDataStr) {
   userDataStr = userDataStr.replace(/'/g, '\"');
   userDataStr = userDataStr.replace(/u"(?=[^:]+")/g, '\"');
 
-  userData = jQuery.parseJSON(userDataStr);
+  window.userData = jQuery.parseJSON(userDataStr);
+  window.dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
   google.load('visualization', '1', {packages: ['corechart']});
   google.setOnLoadCallback(drawChartsOnLoad);
@@ -49,11 +50,11 @@ function populateInfo(userDataStr) {
    * Function to draw charts on page load
   */
   function drawChartsOnLoad() {
-    drawQpsChart(userData, moment().subtract(1000, 'years'), moment());
-    drawQpsPerCoreChart(userData, moment().subtract(1000, 'years'), moment());
-    drawLatChart(userData, moment().subtract(1000, 'years'), moment());
-    drawServerTimesChart(userData, moment().subtract(1000, 'years'), moment());
-    drawClientTimesChart(userData, moment().subtract(1000, 'years'), moment());
+    drawQpsChart(moment().subtract(1000, 'years'), moment());
+    drawQpsPerCoreChart(moment().subtract(1000, 'years'), moment());
+    drawLatChart(moment().subtract(1000, 'years'), moment());
+    drawServerTimesChart(moment().subtract(1000, 'years'), moment());
+    drawClientTimesChart(moment().subtract(1000, 'years'), moment());
   }
 
   /* Base options for charts */
@@ -62,7 +63,7 @@ function populateInfo(userDataStr) {
     titleTextStyle: {
       fontSize: 30,
     },
-    legend: { position: 'none' },
+    legend: {position: 'none'},
     curveType: 'function',
     hAxis: {
       title: 'Time',
@@ -110,6 +111,11 @@ function populateInfo(userDataStr) {
     }
   }
 
+  /**
+   * Function to get configuration array
+   * @param {Array} item - Object containing config information
+   * @return {Array} configArr - Array of config information
+  */
   function getConfigArr(item) {
     var configArr = [
       item.test_name,
@@ -123,12 +129,32 @@ function populateInfo(userDataStr) {
   }
 
   /**
+   * Function to format the date to ISO standard
+   * @param {Date} date - Date object to format
+   * @return {Date} formattedDate - Formatted date object
+  */
+  function formatDate(date) {
+    formattedDate = moment(date).format(dateFormat);
+    return formattedDate;
+  }
+
+  /**
+   * Function to update date range in specified element
+   * @param {string} element - Name of element to update the date range in
+   * @param {Date} startDate - Start date in the range
+   * @param {Date} endDate - End date in the range
+  */
+  function updateDateRange(element, startDate, endDate) {
+    $('#' + element).html(formatDate(startDate) + ' - ' +
+        formatDate(endDate));
+  }
+
+  /**
    * Function for rendering the QPS chart
-   * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
   */
-  function drawQpsChart(userData, start, end) {
+  function drawQpsChart(start, end) {
     var qpsArgs = [[{label: 'Time'}, {type: 'number', label: 'QPS'}]];
 
     var startDate = moment();
@@ -137,7 +163,7 @@ function populateInfo(userDataStr) {
     var configs = [];
 
     // Add data
-    for (i = 0; i < (userData.qpsData).length; i++) {
+    for (var i = 0; i < (userData.qpsData).length; i++) {
       item = (userData.qpsData)[i];
 
       var metricDate = new Date(item.timestamp);
@@ -156,9 +182,7 @@ function populateInfo(userDataStr) {
     }
 
     // Data for the QPS chart
-    var qpsData = google.visualization.arrayToDataTable(
-        qpsArgs
-        );
+    var qpsData = google.visualization.arrayToDataTable(qpsArgs);
 
     var qpsOptions = jQuery.extend(true, {}, baseOptions);
     qpsOptions.title = 'Queries Per Second';
@@ -183,20 +207,16 @@ function populateInfo(userDataStr) {
     });
 
     if (qpsArgs.length != 1) {
-      // Update date range field
-      $('#qps-report-range span').html(moment(startDate).format(
-          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'YYYY/MM/DD, HH:mm:ss'));
+      updateDateRange('qps-report-range span', startDate, endDate);
     }
   }
 
   /**
    * Function for rendering the QPS Per Core chart
-   * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
   */
-  function drawQpsPerCoreChart(userData, start, end) {
+  function drawQpsPerCoreChart(start, end) {
     var qpsPerCoreArgs = [[
       {label: 'Time'},
       {type: 'number', label: 'QPS Per Core'}
@@ -209,7 +229,7 @@ function populateInfo(userDataStr) {
 
     // Add data
 
-    for (i = 0; i < (userData.qpsPerCoreData).length; i++) {
+    for (var i = 0; i < (userData.qpsPerCoreData).length; i++) {
       item = (userData.qpsPerCoreData)[i];
 
       var metricDate = new Date(item.timestamp);
@@ -228,9 +248,7 @@ function populateInfo(userDataStr) {
     }
 
     // Data for QPS per core chart
-    var qpsPerCoreData = google.visualization.arrayToDataTable(
-        qpsPerCoreArgs
-        );
+    var qpsPerCoreData = google.visualization.arrayToDataTable(qpsPerCoreArgs);
 
     var qpsPerCoreOptions = jQuery.extend(true, {}, baseOptions);
     qpsPerCoreOptions.title = 'QPS Per Core';
@@ -255,20 +273,16 @@ function populateInfo(userDataStr) {
     });
 
     if (qpsPerCoreArgs.length != 1) {
-      //Update date range field
-      $('#qps-per-core-report-range span').html(moment(startDate).format(
-          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'YYYY/MM/DD, HH:mm:ss'));
+      updateDateRange('qps-per-core-report-range span', startDate, endDate);
     }
   }
 
   /**
    * Function for rendering the Latencies chart
-   * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
   */
-  function drawLatChart(userData, start, end) {
+  function drawLatChart(start, end) {
     var latArgs = [[
       {label: 'Time'},
       {type: 'number', label: '50th Percentile Latency'},
@@ -285,7 +299,7 @@ function populateInfo(userDataStr) {
 
     // Add data
 
-    for (i = 0; i < (userData.latData).length; i++) {
+    for (var i = 0; i < (userData.latData).length; i++) {
       item = (userData.latData)[i];
 
       var metricDate = new Date(item.timestamp);
@@ -311,9 +325,7 @@ function populateInfo(userDataStr) {
     }
 
     // Data for the latencies chart
-    var latData = google.visualization.arrayToDataTable(
-        latArgs
-        );
+    var latData = google.visualization.arrayToDataTable(latArgs);
 
     var latOptions = jQuery.extend(true, {}, baseOptions);
     latOptions.title = 'Percentile Latencies';
@@ -340,10 +352,7 @@ function populateInfo(userDataStr) {
     });
 
     if (latArgs.length != 1) {
-      // Update date range field
-      $('#perc-lat-report-range span').html(moment(startDate).format(
-          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'YYYY/MM/DD, HH:mm:ss'));
+      updateDateRange('perc-lat-report-range span', startDate, endDate);
     }
   }
 
@@ -356,14 +365,15 @@ function populateInfo(userDataStr) {
 
   /**
    * Function for rendering the Server times chart
-   * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
   */
-  function drawServerTimesChart(userData, start, end) {
-    var serverTimesArgs = [[{label: 'Time'},
-            {type: 'number', label: 'Server System Time'},
-            {type: 'number', label: 'Server User Time'}]];
+  function drawServerTimesChart(start, end) {
+    var serverTimesArgs = [[
+      {label: 'Time'},
+      {type: 'number', label: 'Server System Time'},
+      {type: 'number', label: 'Server User Time'}
+    ]];
 
     var startDate = moment();
     var endDate = moment().subtract(1000, 'years');
@@ -372,7 +382,7 @@ function populateInfo(userDataStr) {
 
     // Add data
 
-    for (i = 0; i < (userData.timesData).length; i++) {
+    for (var i = 0; i < (userData.timesData).length; i++) {
       item = (userData.timesData)[i];
 
       var metricDate = new Date(item.timestamp);
@@ -396,8 +406,7 @@ function populateInfo(userDataStr) {
 
     // Data for server times chart
     var serverTimesData = google.visualization.arrayToDataTable(
-        serverTimesArgs
-        );
+        serverTimesArgs);
 
     var serverTimesOptions = jQuery.extend(true, {}, timesOptions);
     serverTimesOptions.title = 'Server Times';
@@ -425,30 +434,28 @@ function populateInfo(userDataStr) {
     });
 
     if (serverTimesArgs.length != 1) {
-      // Update date range field
-      $('#server-times-report-range span').html(moment(startDate).format(
-          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'YYYY/MM/DD, HH:mm:ss'));
+      updateDateRange('server-times-report-range span', startDate, endDate);
     }
   }
 
   /**
    * Function for rendering the Client times chart
-   * @param {Array} userData - User's data
    * @param {Date} start - Start date of data
    * @param {Date} end - End date of data
   */
-  function drawClientTimesChart(userData, start, end) {
-    var clientTimesArgs = [[{label: 'Time'},
-            {type: 'number', label: 'Client System Time'},
-            {type: 'number', label: 'Client User Time'}]];
+  function drawClientTimesChart(start, end) {
+    var clientTimesArgs = [[
+      {label: 'Time'},
+      {type: 'number', label: 'Client System Time'},
+      {type: 'number', label: 'Client User Time'}
+    ]];
 
     var startDate = moment();
     var endDate = moment().subtract(1000, 'years');
 
     var configs = [];
 
-    for (i = 0; i < (userData.timesData).length; i++) {
+    for (var i = 0; i < (userData.timesData).length; i++) {
       item = (userData.timesData)[i];
 
       var metricDate = new Date(item.timestamp);
@@ -478,8 +485,7 @@ function populateInfo(userDataStr) {
 
     // Data for client times chart
     var clientTimesData = google.visualization.arrayToDataTable(
-        clientTimesArgs
-        );
+        clientTimesArgs);
 
     var clientTimesOptions = jQuery.extend(true, {}, timesOptions);
     clientTimesOptions.title = 'Client Times';
@@ -507,16 +513,13 @@ function populateInfo(userDataStr) {
     });
 
     if (clientTimesArgs.length != 1) {
-      // Update date range field
-      $('#client-times-report-range span').html(moment(startDate).format(
-          'YYYY/MM/DD, HH:mm:ss') + ' - ' + moment(endDate).format(
-          'YYYY/MM/DD, HH:mm:ss'));
+      updateDateRange('client-times-report-range span', startDate, endDate);
     }
   }
 
   /* Date range picker settings */
   var dateRangePickerSettings = {
-    format: 'MM/DD/YYYY, HH:mm:ss',
+    format: dateFormat,
     showDropdowns: true,
     timePicker: true,
     timePickerIncrement: 1,
@@ -524,13 +527,17 @@ function populateInfo(userDataStr) {
     timePickerSeconds: true,
     ranges: {
       'Today': [moment().startOf('day'), moment()],
-      'Yesterday': [moment().subtract(1, 'days').startOf('day'),
-        moment().subtract(1, 'days').endOf('day')],
+      'Yesterday': [
+        moment().subtract(1, 'days').startOf('day'),
+        moment().subtract(1, 'days').endOf('day')
+      ],
       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
       'This Month': [moment().startOf('month'), moment().endOf('month')],
-      'Last Month': [moment().subtract(1, 'month').startOf('month'),
-        moment().subtract(1, 'month').endOf('month')],
+      'Last Month': [
+        moment().subtract(1, 'month').startOf('month'),
+        moment().subtract(1, 'month').endOf('month')
+      ],
       'All Time': [moment().subtract(29, 'days'), moment()]
     },
     opens: 'left',
