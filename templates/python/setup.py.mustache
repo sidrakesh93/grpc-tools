@@ -15,7 +15,7 @@ install_requires = [
 ]
 
 setuptools.setup(
-  name='{{api.name}}',
+  name='{{api.name}}-{{api.version}}',
   version='{{api.semantic_version}}',
 
   author='{{api.author}}',
@@ -26,7 +26,7 @@ setuptools.setup(
     'Topic :: Software Development :: APIs',
     'Programming Language :: Python :: 2.7'
   ],
-  description='GRPC library for service {{api.name}}',
+  description='GRPC library for service {{api.name}}-{{api.version}}',
   install_requires=install_requires,
   license='{{api.license}}',
   packages=find_packages(),
