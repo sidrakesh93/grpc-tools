@@ -1,0 +1,143 @@
+#!/usr/bin/env node
+'use strict';
+
+/**
+ * grpc-api-packager is a tool for generating language packages for gRPC
+ * services.
+ *
+ * Example usage:
+ *
+ * Create the pubsub v1 API.
+ * ```sh
+ * $ grpc-api-packager --api_name=pubsub/v1
+ * ```
+ *
+ * Print full usage
+ * ```sh
+ * $ grpc-api-packager -h
+ * ```
+ */
+
+var path = require('path');
+var version = require('../package.json').version;
+
+var ApiRepo = require('../lib/api_repo').ApiRepo;
+var ArgumentParser = require('argparse').ArgumentParser;
+
+/**
+ * parseArgs parses the command line options/arguments when this file is run as
+ * a script.
+ */
+var parseArgs = function parseArgs() {
+  var cli = new ArgumentParser({
+    prog: 'grpc-api-packager',
+    addHelp: true,
+    description: 'Creates packages for gRPC services',
+    version: version
+  });
+  cli.addArgument(
+    [ '-i', '--include_path' ],
+    {
+      help: 'Specifies an include path for additional protos\n' +
+        'This is a PATH-like value used to locate shared proto defintions' +
+        ' outside of an apis directory, but within services_root or repository'
+    }
+  );
+  cli.addArgument(
+    [ '-o', '--out_path' ],
+    {
+      help: 'The directory in which the generated packages will be saved.'
+    }
+  );
+  cli.addArgument(
+    [ '-n', '--api_name' ],
+    {
+      help: 'Specifies the name of the api to generate\n' +
+        'The name should include the version component; e.g. use "pubsub/v1"' +
+        ' to specify the protos in pubsub/v1 sub-directory of the services_root'
+    }
+  );
+  cli.addArgument(
+    [ '-l', '--languages' ],
+    {
+      help: 'Specifies the language packages to be generated\n',
+      nargs: '*'
+    }
+  );
+  cli.addArgument(
+    [ '-r', '--services_root' ],
+    {
+      help: 'The directory containing the rpc service proto definitions.'
+          + '\nShould not be specified with -r/--protobuf, which clobbers this.'
+    }
+  );
+  cli.addArgument(
+    [ '-u', '--zip_uri' ],
+    {
+      help: 'The URI of a repository containing the rpc proto definitions.\n'
+          + 'Should not be specified with -r/--protobuf_root, which will be'
+          + ' ignored'
+    }
+  );
+  cli.addArgument(
+    [ '--api_defaults_file' ],
+    {
+      help: 'Specifies an alternate location for the api_defaults config' +
+        ' file\n api_defaults configures shared metadata that is may be' +
+        ' included in all the package files'
+    }
+  );
+  cli.addArgument(
+    [ '--dependencies_file' ],
+    {
+      help: 'Specifies an alternate location for the deps config file\n' +
+        'dependencies configures the package dependencies to include in the ' +
+        ' generated package file'
+    }
+  );
+  cli.addArgument(
+    [ '-g', '--is_google_api' ],
+    {
+      defaultValue: true,
+      action: 'storeTrue',
+      help: 'When set indicates that the API is an official google API.\n'
+            + ' This means that there is a top-level google dir beneath the root'
+    }
+  );
+  return cli.parseArgs();
+}
+
+/**
+ * main is the command line entry point when this file is run as a script.
+ */
+var main = function main() {
+  var cmd_opts = parseArgs();
+  var opts = {
+    isGoogleApi: cmd_opts.is_google_api,
+    languages: cmd_opts.languages,
+    outDir: cmd_opts.out_path,
+    repoDir: cmd_opts.services_root,
+    zipUrl: cmd_opts.zip_url
+  };
+  if (opts.outDir) {
+    opts.outDir = path.resolve(opts.outDir);
+  }
+  if (opts.repoDir) {
+    opts.repoDir = path.resolve(opts.repoDir);
+  }
+  var repo = new ApiRepo(opts);
+  var parts = cmd_opts.api_name.split('/');
+  var api_name = parts[0];
+  var api_version = parts[1];
+  repo.on('ready', function() {
+    repo.buildPackages(api_name, api_version);
+  });
+  repo.on('err', function(err) {
+    console.error('Could not build packages:', err);
+  });
+  repo.setUp();
+}
+
+if (require.main === module) {
+  main();
+}

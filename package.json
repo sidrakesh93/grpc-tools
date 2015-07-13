@@ -1,18 +1,20 @@
 {
   "name": "grpc-tools",
   "version": "0.1.0",
+  "bin": {
+    "grpc-api-packager": "bin/grpc-api-packager"
+  },
   "description": "Creates google api packages",
   "main": "lib/api_repo.js",
   "devDependencies": {
-    "bunyan": "*",
-    "chai": "*",
+    "chai": "~3.0.0",
     "diff": "~1.4.0",
-    "docco": "*",
-    "istanbul": "*",
-    "nock": "~2.3.0",
-    "mocha": "*"
+    "istanbul": "~0.3.15",
+    "mocha": "~2.2.5",
+    "nock": "~2.3.0"
   },
   "dependencies": {
+    "argparse": "~1.0.2",
     "async": "~1.2.0",
     "fs-extra": "~0.18.4",
     "js-yaml": "~3.3.1",
@@ -24,7 +26,8 @@
     "tmp": "~0.0.26"
   },
   "scripts": {
-    "test": "istanbul test _mocha -- --reporter spec --slow 500 --timeout 5000"
+    "test": "istanbul test _mocha -- --reporter spec --slow 500 --timeout 5000",
+    "env": "env"
   },
   "author": "Timothy Emiola",
   "license": "BSD"

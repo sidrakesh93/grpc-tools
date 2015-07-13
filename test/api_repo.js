@@ -275,12 +275,14 @@ describe('ApiRepo', function() {
         expect(err).to.be.null;
         // The test uses the fake protoc, so it just echoes its args
         var want = '--python_out=' + path.join(repo.outDir, 'python');
+        want += ' -I.';
         want += ' --grpc_out=' + path.join(repo.outDir, 'python');
-        want += ' --plugin=protoc-gen-grpc=`which grpc_python_plugin`'
+        want += ' --plugin=protoc-gen-grpc=/testing/bin/my_python_plugin'
         want += ' ' + fakeProto + '\n';
         expect(got).to.eql(want);
         done();
       };
+      repo.depBins = {'grpc_python_plugin': '/testing/bin/my_python_plugin'};
       var protoc = repo._makeProtocFunc({
         env: {'PATH': fakes.path}
       }, 'python');
