@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 Pod::Spec.new do |s|
-  s.name     = 'packager-unittest'
+  s.name     = 'packager-unittest-v2'
   s.version  = '1.0.0'
 
   s.authors  = { 'Google Inc' => 'googleapis-packages@google.com' }

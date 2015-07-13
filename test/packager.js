@@ -69,6 +69,7 @@ var testPackageInfo = {
     'homepage': 'https://github.com/google/googleapis',
     'license': 'Apache',
     'name': 'packager-unittest',
+    'version': 'v2',
     'semantic_version': '1.0.0'
   },
   dependencies: {
@@ -154,7 +155,7 @@ describe('the objective c package builder', function() {
       async.parallel(copyTasks, next);
     }
     var expanded = [
-      'packager-unittest.podspec'
+      'packager-unittest-v2.podspec'
     ];
     var compareWithFixture = genFixtureCompareFunc(top);
     var checkExpanded = function checkExpanded(next) {
@@ -227,7 +228,7 @@ describe('the ruby package builder', function() {
       async.parallel(copyTasks, next);
     }
     var expanded = [
-      'packager-unittest.gemspec'
+      'packager-unittest-v2.gemspec'
     ];
     var compareWithFixture = genFixtureCompareFunc(top);
     var checkExpanded = function checkExpanded(next) {
