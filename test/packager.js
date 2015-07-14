@@ -203,10 +203,22 @@ describe('the python package builder', function() {
       var expandTasks = _.map(expanded, compareWithFixture);
       async.parallel(expandTasks, next);
     }
+    fs.mkdirpSync(path.join(top, 'pkgTop', 'pkgNext'))
+    var checkPkgDirs = function checkPkgDir(next) {
+      var checkTopPkg = genCopyCompareFunc(path.join(top, 'pkgTop'), 'python');
+      var checkNextPkg = genCopyCompareFunc(path.join(top, 'pkgTop', 'pkgNext'),
+                                            'python');
+      async.parallel([
+        checkTopPkg('__init__.py'),
+        checkNextPkg('__init__.py')
+      ], next);
+    }
+
     async.series([
       packager.python.bind(null, opts),
       checkCopies,
-      checkExpanded
+      checkExpanded,
+      checkPkgDirs
     ], done);
   });
 });
