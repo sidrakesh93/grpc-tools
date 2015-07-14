@@ -22,6 +22,7 @@
     "mustache": "~2.1.0",
     "node-find-files": "~0.0.4",
     "node-stream-zip": "~1.2.1",
+    "protobufjs": "^4.0.0",
     "request": "~2.12.0",
     "tmp": "~0.0.26"
   },

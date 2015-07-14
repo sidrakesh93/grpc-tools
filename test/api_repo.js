@@ -63,7 +63,46 @@ var getsGoodZipFrom = function getsGoodZipFrom(uri) {
 };
 
 describe('ApiRepo', function() {
-  describe('on the test fixture repo with ruby|python plugins', function() {
+  describe('on the test fixture repo with no plugins', function() {
+    var fakes, repo;
+    describe('configured for nodejs', function(){
+        beforeEach(function() {
+          fakes = addFakeBinsToPath.apply(null, []);
+          repo = new ApiRepo({
+            env: {'PATH': fakes.path},
+            isGoogleApi: true,
+            languages: ['nodejs']
+          });
+          getsGoodZipFrom(repo.zipUrl);
+        });
+      describe('method `buildPackages`', function() {
+        it('should fail on unrecognized apis', function(done) {
+          var shouldFail = function shouldFail(err) {
+            expect(err).to.not.be.null;
+            done();
+          };
+          repo.on('ready', function() {
+            repo.buildPackages('notpubsub', 'v1beta2', shouldFail)
+          })
+          repo.setUp();
+        });
+        it('should pass for known packages', function(done) {
+          repo.on('error', function(err) {
+            throw new Error('should not be reached');
+          })
+          var shouldPass = function shouldPass(err) {
+            expect(err).to.be.null;
+            done();
+          };
+          repo.on('ready', function() {
+            repo.buildPackages('pubsub', 'v1beta2', shouldPass)
+          })
+          repo.setUp();
+        });
+      });
+    });
+  });
+  describe('on the test fixture repo with python and ruby plugins', function() {
     var fakes, repo;
     before(function() {
       var testBins = ['protoc', 'grpc_python_plugin', 'grpc_ruby_plugin'];
@@ -85,7 +124,6 @@ describe('ApiRepo', function() {
           getsGoodZipFrom(repo.zipUrl);
         });
         it('should fire the ready event', function(done) {
-          console.log('what is repo', repo);
           repo.on('error', function(err) {
             throw new Error('should not be reached');
           })
@@ -105,7 +143,6 @@ describe('ApiRepo', function() {
           getsGoodZipFrom(repo.zipUrl);
         });
         it('should pass for known packages', function(done) {
-          console.log('what is repo', repo);
           repo.on('error', function(err) {
             throw new Error('should not be reached');
           })
@@ -119,11 +156,10 @@ describe('ApiRepo', function() {
           repo.setUp();
         });
         it('should fail on unrecognized apis', function(done) {
-          console.log('what is repo', repo);
           repo.on('error', function(err) {
             throw new Error('should not be reached');
           })
-          var shouldFail = function shouldPass(err) {
+          var shouldFail = function shouldFail(err) {
             expect(err).to.not.be.null;
             done();
           };
@@ -133,11 +169,10 @@ describe('ApiRepo', function() {
           repo.setUp();
         });
         it('should fail on unrecognized versions', function(done) {
-          console.log('what is repo', repo);
           repo.on('error', function(err) {
             throw new Error('should not be reached');
           })
-          var shouldFail = function shouldPass(err) {
+          var shouldFail = function shouldFail(err) {
             expect(err).to.not.be.null;
             done();
           };
@@ -186,7 +221,7 @@ describe('ApiRepo', function() {
       repo._checkRepo(thisTest);
     });
     it('should fail if the configured language is not present', function(done) {
-      var shouldFail = function(err) {
+      var shouldFail = function shouldFail(err) {
         expect(err).to.not.be.null;
         done();
       };
@@ -200,7 +235,7 @@ describe('ApiRepo', function() {
       repo._checkRepo(thisTest);
     });
     it('should fail if version is not present', function(done) {
-      var shouldFail = function(err) {
+      var shouldFail = function shouldFail(err) {
         expect(err).to.not.be.null;
         done();
       };
@@ -214,7 +249,7 @@ describe('ApiRepo', function() {
       repo._checkRepo(thisTest);
     });
     it('should fail if api is not present', function(done) {
-      var shouldFail = function(err) {
+      var shouldFail = function shouldFail(err) {
         expect(err).to.not.be.null;
         done();
       };
@@ -233,7 +268,7 @@ describe('ApiRepo', function() {
         env: {'PATH': fakes.badPath}
       });
       getsGoodZipFrom(badProtocRepo.zipUrl);
-      var shouldFail = function(err) {
+      var shouldFail = function shouldFail(err) {
         expect(err).to.not.be.null;
         done();
       };
@@ -261,7 +296,7 @@ describe('ApiRepo', function() {
       fs.unlinkSync(path.join(fakes.badDir, 'protoc'));
     });
     it('should fail if protoc fails', function(done) {
-      var shouldFail = function(err) {
+      var shouldFail = function shouldFail(err) {
         expect(err).to.not.be.null;
         done();
       };
@@ -313,7 +348,7 @@ describe('ApiRepo', function() {
       repo._checkRepo(done); // partially initialize the repo
     });
     it('should fail if no dir matches name and version', function(done) {
-      var shouldFail = function(err) {
+      var shouldFail = function shouldFail(err) {
         expect(err).to.not.be.null;
         done();
       };
