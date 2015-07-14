@@ -15,7 +15,7 @@ install_requires = [
 ]
 
 setuptools.setup(
-  name='packager-unittest',
+  name='packager-unittest-v2',
   version='1.0.0',
 
   author='Google Inc',
@@ -26,7 +26,7 @@ setuptools.setup(
     'Topic :: Software Development :: APIs',
     'Programming Language :: Python :: 2.7'
   ],
-  description='GRPC library for service packager-unittest',
+  description='GRPC library for service packager-unittest-v2',
   install_requires=install_requires,
   license='Apache',
   packages=find_packages(),

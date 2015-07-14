@@ -1,0 +1,17 @@
+{
+  "name": "{{{api.name}}}-{{{api.version}}}",
+  "version": "{{{api.semantic_version}}}",
+  "author": "Google Inc.",
+  "description": "GRPC library for service {{{api.name}}}-{{{api.version}}}",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "grpc": "^{{{dependencies.grpc.nodejs.version}}}",
+    "google-auth-library": "^{{{dependencies.auth.nodejs.version}}}"
+  },
+  "main": "index.js",
+  "files": [
+    "LICENSE",
+    "index.js",
+    "service.json"
+  ]
+}
