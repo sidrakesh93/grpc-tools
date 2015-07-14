@@ -33,7 +33,7 @@
 import re
 
 from collections import defaultdict
-from django.conf import settings
+from django import conf
 
 import perf_db_pb2
 import qpstest_pb2
@@ -44,8 +44,8 @@ class UserData(object):
 
   def __init__(self):
     """Initializes hostname and port of database server."""
-    self.hostname = settings.PERF_DB_HOSTNAME
-    self.port = settings.PERF_DB_PORT
+    self.hostname = conf.settings.PERF_DB_HOSTNAME
+    self.port = conf.settings.PERF_DB_PORT
 
   def init_single_data_dict(self, test_name, timestamp, client_config,
                             server_config, sys_info, tag):

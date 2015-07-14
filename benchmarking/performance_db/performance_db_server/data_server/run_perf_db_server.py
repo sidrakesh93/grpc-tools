@@ -31,7 +31,7 @@
 """This script runs the performance database server."""
 
 import argparse
-import os.path
+import os
 import subprocess
 
 parser = argparse.ArgumentParser(description='Run performance database server')

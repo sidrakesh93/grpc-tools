@@ -35,11 +35,11 @@ import os
 import re
 import subprocess
 import sys
-from apiclient.discovery import build
+from apiclient import discovery
 import httplib2
 from oauth2client import client
 from oauth2client import tools
-from oauth2client.file import Storage
+from oauth2client import file
 import auth_user_pb2
 
 parser = argparse.ArgumentParser(
@@ -75,7 +75,7 @@ def auth_user(username, creds_dir, auth_server_addr, client_secrets, args):
     os.makedirs(creds_dir)
 
   user_creds_file = creds_dir + '/' + username
-  storage = Storage(user_creds_file)
+  storage = file.Storage(user_creds_file)
 
   # Acquire user credentials if not already stored, else re-use
   if not os.path.exists(user_creds_file):
@@ -112,7 +112,7 @@ def auth_user(username, creds_dir, auth_server_addr, client_secrets, args):
 
   # Return hashed user id
   http_auth = credentials.authorize(httplib2.Http())
-  auth_service = build('oauth2', 'v2', http=http_auth)
+  auth_service = discovery.build('oauth2', 'v2', http=http_auth)
 
   user_info = auth_service.userinfo().get().execute()
   hash_object = hashlib.md5(user_info.get('id'))
@@ -171,12 +171,11 @@ def main():
   # Get path to test
   test_path = args.test
 
-  # Get name of the test
-  try:
-    test_name = test_path.split('/')[-1]
-  except AttributeError:
+  if test_path == None:
     print '\nError: Please provide test name/path as argument\n'
     sys.exit(1)
+
+  test_name = test_path.split('/')[-1]
 
   # Get the system information
   sys_info = get_sys_info()

@@ -36,10 +36,10 @@ import os
 import time
 import uuid
 
-from apiclient.discovery import build
+from apiclient import discovery
 import httplib2
 import leveldb
-from oauth2client.file import Storage
+from oauth2client import file
 
 import auth_user_pb2
 
@@ -90,14 +90,14 @@ class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
       output.write(request.credentials)
 
     # Extract credentials from file
-    storage = Storage(file_name)
+    storage = file.Storage(file_name)
     credentials = storage.get()
 
     os.remove(file_name)  # Remove temporary file
 
     # Get hashed id from credentials
     http_auth = credentials.authorize(httplib2.Http())
-    auth_service = build('oauth2', 'v2', http=http_auth)
+    auth_service = discovery.build('oauth2', 'v2', http=http_auth)
 
     user_info = auth_service.userinfo().get().execute()
     hash_object = hashlib.md5(user_info.get('id'))

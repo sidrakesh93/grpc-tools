@@ -29,7 +29,7 @@
 #
 """View for the front-end."""
 
-from django.shortcuts import render
+from django import shortcuts
 
 from user_data import UserData
 
@@ -39,12 +39,12 @@ user_data = UserData()
 def display_performance_database(request):
   """View for performance database table page."""
   data = all_users_data()
-  return render(request, 'data_table.html', {'all_users_data': data})
+  return shortcuts.render(request, 'data_table.html', {'all_users_data': data})
 
 
 def display_configs(request):
   """View for config page."""
-  return render(request, 'configs.html', {})
+  return shortcuts.render(request, 'configs.html', {})
 
 
 def display_general_statistic(request, metric):
@@ -55,7 +55,7 @@ def display_general_statistic(request, metric):
 def general_statistic_renderer(request, metric):
   """General statistic page renderer."""
   data = all_users_single_metric_data(metric)
-  return render(request, 'general_plots.html',
+  return shortcuts.render(request, 'general_plots.html',
                 {'metric': get_metric_full_desc(metric),
                  'all_users_data': data})
 
@@ -63,7 +63,7 @@ def general_statistic_renderer(request, metric):
 def display_user_metrics(request, client_id):
   """View for user metrics page."""
   complete_data = single_user_data(client_id)
-  return render(request, 'user_plots.html',
+  return shortcuts.render(request, 'user_plots.html',
                 {'username': complete_data[0],
                  'user_data': complete_data[1]})
 
