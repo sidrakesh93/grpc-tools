@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015, Google Inc.
-# All rights reserved.
+# Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -29,13 +28,15 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+"""Manages running django server."""
 
 import os
 import sys
 
+from django.core.management import execute_from_command_line
+
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "performance_db_frontend.settings")
+  os.environ.setdefault("DJANGO_SETTINGS_MODULE",
+                        "performance_db_frontend.settings")
 
-    from django.core.management import execute_from_command_line
-
-    execute_from_command_line(sys.argv)
+  execute_from_command_line(sys.argv)

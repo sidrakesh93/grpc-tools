@@ -1,7 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2015, Google Inc.
-# All rights reserved.
+# Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -30,42 +29,59 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import os
-import sys
 import argparse
-from oauth2client import tools
-from oauth2client import client
-from oauth2client.file import Storage
+import hashlib
+import os
+import re
+import subprocess
+import sys
 from apiclient.discovery import build
 import httplib2
-import subprocess
-import hashlib
+from oauth2client import client
+from oauth2client import tools
+from oauth2client.file import Storage
 import auth_user_pb2
-import re
 
-parser = argparse.ArgumentParser(description='Report metrics to performance database', parents=[tools.argparser])
+parser = argparse.ArgumentParser(
+    description='Report metrics to performance database',
+    parents=[tools.argparser])
 parser.add_argument('--test', type=str, help='Name of the test to be executed')
 parser.add_argument('--username', type=str, help='Username')
-parser.add_argument('--data_server_addr', type=str, default='0.0.0.0:50052', help='Address of the performance database server')
-parser.add_argument('--auth_server_addr', type=str, default='0.0.0.0:2817', help='Address of the authentication server')
-parser.add_argument('--creds_dir', type=str, default=os.path.expanduser('~/.grpc/credentials'), help='Path to the access tokens directory')
-parser.add_argument('--client_secrets', type=str, default='client_secrets.json', help='Location of the client_secrets.json file')
+parser.add_argument('--data_server_addr',
+                    type=str,
+                    default='0.0.0.0:50052',
+                    help='Address of the performance database server')
+parser.add_argument('--auth_server_addr',
+                    type=str,
+                    default='0.0.0.0:2817',
+                    help='Address of the authentication server')
+parser.add_argument('--creds_dir',
+                    type=str,
+                    default=os.path.expanduser('~/.grpc/credentials'),
+                    help='Path to the access tokens directory')
+parser.add_argument('--client_secrets',
+                    type=str,
+                    default='client_secrets.json',
+                    help='Location of the client_secrets.json file')
 parser.add_argument('--tag', type=str, default='', help='Tag for the test')
 
 REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
 SCOPE = 'email profile'
 
-def authUser(username, creds_dir, auth_server_addr, client_secrets, args):
-  """Performs authentication for the user"""
+
+def auth_user(username, creds_dir, auth_server_addr, client_secrets, args):
+  """Performs authentication for the user."""
   if not os.path.exists(creds_dir):
     os.makedirs(creds_dir)
 
   user_creds_file = creds_dir + '/' + username
   storage = Storage(user_creds_file)
 
-  # Acquire user credentials if not already stored, else re-use stored credentials
-  if(not os.path.exists(user_creds_file)):
-    flow = client.flow_from_clientsecrets(client_secrets, scope=SCOPE, redirect_uri=REDIRECT_URI)
+  # Acquire user credentials if not already stored, else re-use
+  if not os.path.exists(user_creds_file):
+    flow = client.flow_from_clientsecrets(client_secrets,
+                                          scope=SCOPE,
+                                          redirect_uri=REDIRECT_URI)
     credentials = tools.run_flow(flow, storage, args)
   else:
     credentials = storage.get()
@@ -74,21 +90,24 @@ def authUser(username, creds_dir, auth_server_addr, client_secrets, args):
   addr_port = auth_server_addr.split(':')
 
   # Request authentication from authentication server
-  with auth_user_pb2.early_adopter_create_Authentication_stub(addr_port[0], int(addr_port[1])) as stub:
+  with auth_user_pb2.early_adopter_create_Authentication_stub(
+      addr_port[0], int(addr_port[1])) as stub:
     auth_user_request = auth_user_pb2.AuthenticateUserRequest()
-    auth_user_request.credentials = open(user_creds_file, "rb").read()
+    auth_user_request.credentials = open(user_creds_file, 'rb').read()
     auth_user_request.username = username
 
-    TIMEOUT_SECONDS = 10  # Max waiting time before timeout, in seconds
+    timeout_secs = 10  # Max waiting time before timeout, in seconds
 
-    auth_user_reply_future = stub.AuthenticateUser.async(auth_user_request, TIMEOUT_SECONDS)
+    auth_user_reply_future = stub.AuthenticateUser.async(auth_user_request,
+                                                         timeout_secs)
     auth_user_reply = auth_user_reply_future.result()
 
     # If requested username not unique, send request again with new username
     while auth_user_reply.is_unique_username != True:
       username = raw_input('\nUsername already taken, please enter a new one: ')
       auth_user_request.username = username
-      auth_user_reply_future = stub.AuthenticateUser.async(auth_user_request, TIMEOUT_SECONDS)
+      auth_user_reply_future = stub.AuthenticateUser.async(auth_user_request,
+                                                           timeout_secs)
       auth_user_reply = auth_user_reply_future.result()
 
   # Return hashed user id
@@ -97,15 +116,18 @@ def authUser(username, creds_dir, auth_server_addr, client_secrets, args):
 
   user_info = auth_service.userinfo().get().execute()
   hash_object = hashlib.md5(user_info.get('id'))
-  
+
   return hash_object.hexdigest()
 
-def getSysInfo():
-  """Fetch system information"""
+
+def get_sys_info():
+  """Fetches system information."""
   sys_info = os.popen('lscpu').readlines()
 
-  nics = os.popen('ifconfig | cut -c1-8 | sed \'/^\s*$/d\' | sort -u').readlines()
-  nic_addrs = os.popen('ifconfig | grep -oE "inet addr:([0-9]{1,3}\.){3}[0-9]{1,3}"').readlines()
+  nics = os.popen(
+      'ifconfig | cut -c1-8 | sed \'/^\s*$/d\' | sort -u').readlines()
+  nic_addrs = os.popen(
+      'ifconfig | grep -oE "inet addr:([0-9]{1,3}\.){3}[0-9]{1,3}"').readlines()
 
   nic_info = []
 
@@ -113,7 +135,9 @@ def getSysInfo():
     nic = nics[i]
     nic = re.sub(r'[^\w]', '', nic)
 
-    ethtool_process = subprocess.Popen(["ethtool",nic], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ethtool_process = subprocess.Popen(['ethtool', nic],
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
     ethtool_result = ethtool_process.communicate()[0]
 
     ethtool_result_list = ethtool_result.split('\n\t')
@@ -126,13 +150,14 @@ def getSysInfo():
   print 'Obtaining network info....'
   tcp_rr_rate = str(os.popen('netperf -t TCP_RR -v 0').readlines()[1])
   print 'Network info obtained'
-  
+
   nic_info.append('TCP RR transmission rate per sec: ' + tcp_rr_rate + '\n')
-  sys_info = sys_info + nic_info
+  sys_info += nic_info
 
   return sys_info
 
-def main(argv):
+
+def main():
   args = parser.parse_args()
 
   creds_dir = args.creds_dir
@@ -140,7 +165,8 @@ def main(argv):
   auth_server_addr = args.auth_server_addr
   client_secrets = args.client_secrets
   # Fetch working access token
-  hashed_id = authUser(args.username, creds_dir, auth_server_addr, client_secrets, args)
+  hashed_id = auth_user(args.username, creds_dir, auth_server_addr,
+                        client_secrets, args)
 
   # Get path to test
   test_path = args.test
@@ -153,7 +179,7 @@ def main(argv):
     sys.exit(1)
 
   # Get the system information
-  sys_info = getSysInfo()
+  sys_info = get_sys_info()
 
   tag = args.tag
 
@@ -161,16 +187,13 @@ def main(argv):
     print '\nBeginning test:\n'
     # Run the test
     subprocess.call([
-        test_path,
-        '--report_metrics_db=true',
-        '--hashed_id='+hashed_id,
-        '--test_name='+test_name,
-        '--sys_info='+str(sys_info).strip('[]'),
-        '--server_address='+data_server_addr,
-        '--tag='+tag
+        test_path, '--report_metrics_db=true', '--hashed_id=' + hashed_id,
+        '--test_name=' + test_name, '--sys_info=' + str(sys_info).strip('[]'),
+        '--server_address=' + data_server_addr, '--tag=' + tag
     ])
   except OSError:
     print 'Could not execute the test'
 
-if __name__ == "__main__":
-  main(sys.argv)
+
+if __name__ == '__main__':
+  main()

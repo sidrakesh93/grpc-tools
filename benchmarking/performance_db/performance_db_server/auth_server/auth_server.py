@@ -1,7 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2015, Google Inc.
-# All rights reserved.
+# Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -29,47 +28,62 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+"""Script for the authentication server."""
 
-import auth_user_pb2
 import argparse
-import sys
+import hashlib
+import os
 import time
-from oauth2client.file import Storage
+import uuid
+
 from apiclient.discovery import build
 import httplib2
 import leveldb
-import os
-import hashlib
-import uuid
+from oauth2client.file import Storage
 
-parser = argparse.ArgumentParser(description='Report metrics to performance database')
-parser.add_argument('--port', type=int, default='2817', help='Port of authentication server')
-parser.add_argument('--id_name_db', type=str, default=os.path.expanduser('~')+'/.grpc/id_name', help='Location of id to username database')
-parser.add_argument('--name_id_db', type=str, default=os.path.expanduser('~')+'/.grpc/name_id', help='Location of username to id database')
+import auth_user_pb2
+
+parser = argparse.ArgumentParser(
+    description='Report metrics to performance database')
+parser.add_argument('--port',
+                    type=int,
+                    default='2817',
+                    help='Port of authentication server')
+parser.add_argument('--id_name_db',
+                    type=str,
+                    default=os.path.expanduser('~') + '/.grpc/id_name',
+                    help='Location of id to username database')
+parser.add_argument('--name_id_db',
+                    type=str,
+                    default=os.path.expanduser('~') + '/.grpc/name_id',
+                    help='Location of username to id database')
 
 args = parser.parse_args()
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
+
 class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
-  """Defines the procedures for user authentication"""
+  """Defines the procedures for user authentication."""
 
   def __init__(self):
-    """Initializing databases"""
+    """Initializing databases."""
 
     # Setting hashed id to username database
     if not os.path.exists(args.id_name_db):
       os.makedirs(args.id_name_db)
     self.id_name_db = leveldb.LevelDB(args.id_name_db)
-    
+
     # Setting username to hashed id database
     if not os.path.exists(args.name_id_db):
       os.makedirs(args.name_id_db)
     self.name_id_db = leveldb.LevelDB(args.name_id_db)
 
   def AuthenticateUser(self, request, context):
-    """Authenticate the user, creating entries in database as required"""
-    file_name = '/tmp/' + str(uuid.uuid4())  # generate random temporary file name to store credentials
+    """Authenticates the user, creating entries in database as required."""
+    file_name = '/tmp/' + str(
+        uuid.uuid4()
+    )  # generate random temporary file name to store credentials
 
     # Write credentials to file
     with open(file_name, 'wb') as output:
@@ -99,12 +113,12 @@ class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
       else:
         reply.is_unique_username = True
     # If username is unique
-    except KeyError, e:
+    except KeyError:
       # Free the previous username assigned to this user, if applicable
       try:
         existing_username = self.id_name_db.Get(hashed_id)
         self.name_id_db.Delete(existing_username)
-      except KeyError, e:
+      except KeyError:
         pass
 
       # create required entries in both databases
@@ -116,7 +130,7 @@ class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
     return reply
 
   def ConfirmUser(self, request, context):
-    """Returns username based on hashed user id"""
+    """Returns username based on hashed user id."""
     reply = auth_user_pb2.ConfirmUserReply()
 
     # Get username for given hashed id
@@ -126,14 +140,16 @@ class AuthenticationServicer(auth_user_pb2.EarlyAdopterAuthenticationServicer):
       reply.is_authenticated = True
       reply.username = username
     # If hashed is not present in database
-    except KeyError, e:
+    except KeyError:
       reply.is_authenticated = False
 
     return reply
 
-def serve(argv):
-  """Creates and starts server"""
-  server = auth_user_pb2.early_adopter_create_Authentication_server(AuthenticationServicer(), args.port, None, None)
+
+def serve():
+  """Creates and starts server."""
+  server = auth_user_pb2.early_adopter_create_Authentication_server(
+      AuthenticationServicer(), args.port, None, None)
   server.start()
 
   try:
@@ -142,5 +158,6 @@ def serve(argv):
   except KeyboardInterrupt:
     server.stop()
 
+
 if __name__ == '__main__':
-  serve(sys.argv)
+  serve()

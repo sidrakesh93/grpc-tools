@@ -1,6 +1,5 @@
 #
-# Copyright 2015, Google Inc.
-# All rights reserved.
+# Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -28,15 +27,19 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+"""Urls for frontend."""
 
-from django.conf.urls import patterns, url
 from app import views
+from django.conf.urls import patterns
+from django.conf.urls import url
 
 urlpatterns = patterns(
-    '',
-    url(r'^$', views.displayPerformanceDatabase, name='data table'),
-    url(r'data-table', views.displayPerformanceDatabase, name='data table'),
-    url(r'plot-general/(?P<metric>\w+)', views.displayGeneralStatistic, name='plot general statistic'),
-    url(r'plot-user/(?P<client_id>\w+)', views.displayUserMetrics, name='plot user metrics'),
-    url(r'configs', views.displayConfigs, name='configs')
-)
+    '', url(r'^$', views.display_performance_database,
+            name='data table'),
+    url(r'data-table', views.display_performance_database,
+        name='data table'), url(r'plot-general/(?P<metric>\w+)',
+                                views.display_general_statistic,
+                                name='plot general statistic'),
+    url(r'plot-user/(?P<client_id>\w+)', views.display_user_metrics,
+        name='plot user metrics'), url(r'configs', views.display_configs,
+                                       name='configs'))
