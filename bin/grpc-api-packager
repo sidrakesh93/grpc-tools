@@ -7,9 +7,24 @@
  *
  * Example usage:
  *
- * Create the pubsub v1 API.
+ * Create the pubsub v1 API for all the default languages directly from the
+ * googleapis github project.
+ *
  * ```sh
  * $ grpc-api-packager --api_name=pubsub/v1
+ * ```
+ *
+ * Create the pubsub v1 API for ruby and python from a local copy of the
+ * googleapis github project.
+ *
+ * ```sh
+ * $ # clone the googleapis locally
+ * $ pushd ..
+ * $ git clone git@github.com:google/googleapis.git
+ * $ # do some work in it, e.g, to test a change
+ * $ ...
+ * $ popd  # back to the original wd
+ * $ grpc-api-packager --api_name=pubsub/v1  -r ../googleapis -l python ruby
  * ```
  *
  * Print full usage
@@ -96,6 +111,15 @@ var parseArgs = function parseArgs() {
     }
   );
   cli.addArgument(
+    [ '--package_prefix' ],
+    {
+      defaultValue: "",
+      help: 'Specifies a prefix to use when constructing package names\n' +
+        'if is_google_api is set, this defaults to "grpc-google-" otherwise ' +
+        ' the default is ""'
+    }
+  );
+  cli.addArgument(
     [ '-g', '--is_google_api' ],
     {
       defaultValue: true,
@@ -116,9 +140,13 @@ var main = function main() {
     isGoogleApi: cmdOpts.is_google_api,
     languages: cmdOpts.languages,
     outDir: cmdOpts.out_path,
+    pkgPrefix: cmdOpts.package_prefix,
     repoDir: cmdOpts.services_root,
     zipUrl: cmdOpts.zip_url
   };
+  if (opts.isGoogleApi && !opts.pkgPrefix) {
+    opts.pkgPrefix = 'grpc-google-';
+  }
   if (opts.outDir) {
     opts.outDir = path.resolve(opts.outDir);
   }
