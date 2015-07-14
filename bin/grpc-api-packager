@@ -111,13 +111,13 @@ var parseArgs = function parseArgs() {
  * main is the command line entry point when this file is run as a script.
  */
 var main = function main() {
-  var cmd_opts = parseArgs();
+  var cmdOpts = parseArgs();
   var opts = {
-    isGoogleApi: cmd_opts.is_google_api,
-    languages: cmd_opts.languages,
-    outDir: cmd_opts.out_path,
-    repoDir: cmd_opts.services_root,
-    zipUrl: cmd_opts.zip_url
+    isGoogleApi: cmdOpts.is_google_api,
+    languages: cmdOpts.languages,
+    outDir: cmdOpts.out_path,
+    repoDir: cmdOpts.services_root,
+    zipUrl: cmdOpts.zip_url
   };
   if (opts.outDir) {
     opts.outDir = path.resolve(opts.outDir);
@@ -126,11 +126,11 @@ var main = function main() {
     opts.repoDir = path.resolve(opts.repoDir);
   }
   var repo = new ApiRepo(opts);
-  var parts = cmd_opts.api_name.split('/');
-  var api_name = parts[0];
-  var api_version = parts[1];
+  var parts = cmdOpts.api_name.split('/');
+  var apiName = parts[0];
+  var apiVersion = parts[1];
   repo.on('ready', function() {
-    repo.buildPackages(api_name, api_version);
+    repo.buildPackages(apiName, apiVersion);
   });
   repo.on('err', function(err) {
     console.error('Could not build packages:', err);
