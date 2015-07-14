@@ -6,7 +6,7 @@ This folder contains the script required for authenticating the user, collecting
 
 The results are collected from the users by the means of a derived reporting class, the _PerfDbReporter_,  in the [QPS test](https://github.com/grpc/grpc/tree/master/test/cpp/qps) reporter, which is responsible for sending data the the running backend server via RPC calls (implemented using gRPC). The implementation for this mechanism is in C++. The UserDatabaseReporter class makes use of a separate class, _PerfDbClient_, which directly interacts with the server.
 
-The authenticated performance reporting tool is initiated using the Python wrapper, _run_perf_db_test.py_, which subsequently begins the actual test. Before the actual PQS test begins, the user is authenticated using the [OAuth 2.0 protocol](https://developers.google.com/identity/protocols/OAuth2), and system and network information is collected.
+The authenticated performance reporting tool is initiated using the Python wrapper, _run_perf_db_test.py_, which subsequently begins the actual test. Before the actual QPS test begins, the user is authenticated using the [OAuth 2.0 protocol](https://developers.google.com/identity/protocols/OAuth2), and system and network information is collected.
 
 The user must pass the following as commandline arguments to the script:
 - The path of the test which the user wishes to run (`--test`).
@@ -50,7 +50,7 @@ followed by a confirmation message:
 
 ![alt tag](../images/Auth%20completion.png)
 
-The credentials of the user are stored in a file following this authentication. The file contents are then sent to the *Authentication Server* alongwith the username of the user to register the user as an authenticated one. The authentication serve ris described in detail in 'performance_db_server/auth_server/ReadMe'. The test resumes after this step.
+The credentials of the user are stored in a file following this authentication. The file contents are then sent to the *Authentication Server* alongwith the username of the user to register the user as an authenticated one. The authentication server is described in detail in 'performance_db_server/auth_server/ReadMe'. The test resumes after this step.
 
 #### Sending data
 

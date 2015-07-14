@@ -17,4 +17,4 @@ More formally, the objectives of the performance database tool can be represente
 
 [performance_db_frontend](performance_db_frontend/) contains the code for the web frontend (implemented using [Django](https://www.djangoproject.com/)). Further information can be found [here](performance_db_frontend/ReadMe.md).
 
-Both the Authentication server and the Performance database server must be set running for the user to be able to submit his results using the script.
+Both the Authentication server and the Performance database server must be set running for the user to be able to submit his results using the script. Currently, the users must run their own servers. Public servers to collect data from the users shall be available shortly.
