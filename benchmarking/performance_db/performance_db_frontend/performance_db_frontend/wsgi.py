@@ -1,6 +1,5 @@
 #
-# Copyright 2015, Google Inc.
-# All rights reserved.
+# Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -28,9 +27,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-
-"""
-WSGI config for performance_db_frontend project.
+"""WSGI config for performance_db_frontend project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -42,6 +39,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "performance_db_frontend.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE",
+                      "performance_db_frontend.settings")
 
 application = get_wsgi_application()

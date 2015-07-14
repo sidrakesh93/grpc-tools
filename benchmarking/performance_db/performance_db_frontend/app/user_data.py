@@ -311,10 +311,7 @@ class UserData(object):
               'serverusertime': round(data_detail.metrics.server_user_time, 1),
               'clientsystime': round(data_detail.metrics.client_system_time, 1),
               'clientusertime': round(data_detail.metrics.client_user_time, 1)
-          }.get(metric, 'error')
-
-          if value == 'error':
-            raise Exception
+          }[metric]
 
           user_metrics_dict = {
               'timestamp': str(data_detail.timestamp),

@@ -27,7 +27,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-"""View for the fronted."""
+"""View for the front-end."""
 
 from django.shortcuts import render
 
@@ -83,10 +83,7 @@ def get_metric_full_desc(metric):
       'serverusertime': 'Server User Time',
       'clientsystime': 'Client System Time',
       'clientusertime': 'Client User Time'
-  }.get(metric, 'error')
-
-  if metric_name == 'error':
-    raise Exception
+  }[metric]
 
   return metric_name
 
