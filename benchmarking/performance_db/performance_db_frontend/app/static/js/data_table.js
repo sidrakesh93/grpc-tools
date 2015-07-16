@@ -65,9 +65,9 @@ function populateInfo(allUsersData) {
     var dataArr = [];
 
     // Earliest data date in given time range
-    var startDate = moment();
+    var startDate = new Date();
     // Latest data date in given time range
-    var endDate = moment().subtract(1000, 'years');
+    var endDate = new Date(2000, 0, 1);
 
     for (var i = 0; i < allUsersData.length; i++) {
       allUsersData[i] = allUsersData[i].replace(/'/g, '\"');
@@ -110,9 +110,13 @@ function populateInfo(allUsersData) {
       }
     }
 
-    // Update date range in date range picker
-    $('#report-range span').html(startDate.toLocaleString() + ' - ' +
-        endDate.toLocaleString());
+    if (dataArr.length > 0) {
+      // Update date range in date range picker
+      $('#report-range span').html(startDate.toLocaleString() + ' - ' +
+          endDate.toLocaleString());
+    } else {
+      $('#report-range span').html('');
+    }
 
     return dataArr;
   }

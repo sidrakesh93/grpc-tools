@@ -42,6 +42,7 @@ function populateInfo(userDataStr) {
 
   window.userData = jQuery.parseJSON(userDataStr);
   window.dateFormat = 'YYYY-MM-DD HH:mm:ss';
+  window.earliestTime = new Date(2000, 0, 1);
 
   google.load('visualization', '1', {packages: ['corechart']});
   google.setOnLoadCallback(drawChartsOnLoad);
@@ -131,10 +132,15 @@ function populateInfo(userDataStr) {
    * @param {string} element - Name of element to update the date range in
    * @param {Date} startDate - Start date in the range
    * @param {Date} endDate - End date in the range
+   * @param {int} argsLen - Length of the arguments array
   */
-  function updateDateRange(element, startDate, endDate) {
-    $('#' + element).html(startDate.toLocaleString() + ' - ' +
-        endDate.toLocaleString());
+  function updateRange(element, startDate, endDate, argsLen) {
+    if (argsLen == 1) {
+      $('#' + element).html('');
+    } else {
+      $('#' + element).html(startDate.toLocaleString() + ' - ' +
+          endDate.toLocaleString());
+    }
   }
 
   /**
@@ -145,8 +151,10 @@ function populateInfo(userDataStr) {
   function drawQpsChart(start, end) {
     var qpsArgs = [[{label: 'Time'}, {type: 'number', label: 'QPS'}]];
 
-    var startDate = moment();
-    var endDate = moment().subtract(1000, 'years');
+    // Earliest data date in given time range
+    var startDate = new Date();
+    // Latest data date in given time range
+    var endDate = earliestTime;
 
     var configs = [];
 
@@ -194,9 +202,7 @@ function populateInfo(userDataStr) {
       $('#chart-div-qps').css('cursor', 'auto');
     });
 
-    if (qpsArgs.length != 1) {
-      updateDateRange('qps-report-range span', startDate, endDate);
-    }
+    updateRange('qps-report-range span', startDate, endDate, qpsArgs.length);
   }
 
   /**
@@ -210,8 +216,10 @@ function populateInfo(userDataStr) {
       {type: 'number', label: 'QPS Per Core'}
     ]];
 
-    var startDate = moment();
-    var endDate = moment().subtract(1000, 'years');
+    // Earliest data date in given time range
+    var startDate = new Date();
+    // Latest data date in given time range
+    var endDate = earliestTime;
 
     var configs = [];
 
@@ -260,9 +268,8 @@ function populateInfo(userDataStr) {
       $('#chart-div-qps-per-core').css('cursor', 'auto');
     });
 
-    if (qpsPerCoreArgs.length != 1) {
-      updateDateRange('qps-per-core-report-range span', startDate, endDate);
-    }
+    updateRange('qps-per-core-report-range span', startDate, endDate,
+        qpsPerCoreArgs.length);
   }
 
   /**
@@ -280,8 +287,10 @@ function populateInfo(userDataStr) {
       {type: 'number', label: '99.9th Percentile Latency'}
     ]];
 
-    var startDate = moment();
-    var endDate = moment().subtract(1000, 'years');
+    // Earliest data date in given time range
+    var startDate = new Date();
+    // Latest data date in given time range
+    var endDate = earliestTime;
 
     var configs = [];
 
@@ -339,9 +348,8 @@ function populateInfo(userDataStr) {
       $('#chart-div-percentile-latencies').css('cursor', 'auto');
     });
 
-    if (latArgs.length != 1) {
-      updateDateRange('perc-lat-report-range span', startDate, endDate);
-    }
+    updateRange('perc-lat-report-range span', startDate, endDate,
+        latArgs.length);
   }
 
   var timesOptions = jQuery.extend(true, {}, baseOptions);
@@ -363,8 +371,10 @@ function populateInfo(userDataStr) {
       {type: 'number', label: 'Server User Time'}
     ]];
 
-    var startDate = moment();
-    var endDate = moment().subtract(1000, 'years');
+    // Earliest data date in given time range
+    var startDate = new Date();
+    // Latest data date in given time range
+    var endDate = earliestTime;
 
     var configs = [];
 
@@ -421,9 +431,8 @@ function populateInfo(userDataStr) {
       $('#chart-div-server-times').css('cursor', 'auto');
     });
 
-    if (serverTimesArgs.length != 1) {
-      updateDateRange('server-times-report-range span', startDate, endDate);
-    }
+    updateRange('server-times-report-range span', startDate, endDate,
+        serverTimesArgs.length);
   }
 
   /**
@@ -438,8 +447,10 @@ function populateInfo(userDataStr) {
       {type: 'number', label: 'Client User Time'}
     ]];
 
-    var startDate = moment();
-    var endDate = moment().subtract(1000, 'years');
+    // Earliest data date in given time range
+    var startDate = new Date();
+    // Latest data date in given time range
+    var endDate = earliestTime;
 
     var configs = [];
 
@@ -500,9 +511,8 @@ function populateInfo(userDataStr) {
       $('#chart-div-client-times').css('cursor', 'auto');
     });
 
-    if (clientTimesArgs.length != 1) {
-      updateDateRange('client-times-report-range span', startDate, endDate);
-    }
+    updateRange('client-times-report-range span', startDate, endDate,
+        clientTimesArgs.length);
   }
 
   /* Date range picker settings */
