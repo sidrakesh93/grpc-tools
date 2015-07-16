@@ -74,7 +74,6 @@ message DataDetails {
 message SingleUserDetails {
   repeated DataDetails data_details = 1;
   string username = 2;
-  string hashed_id = 3;
 }
 
 //Request for storing a single user's data
@@ -94,7 +93,7 @@ message SingleUserRecordReply {
 
 //Request for retrieving single user's data
 message SingleUserRetrieveRequest {
-  string user_id = 1;
+  string username = 1;
 }
 
 //Reply for request to retrieve single user's data

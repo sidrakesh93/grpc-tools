@@ -67,9 +67,10 @@ const std::string DatabaseManager::currentDateTime() {
   time_t now = time(0);
   struct tm tstruct;
   char buf[80];
-  tstruct = *localtime(&now);
+  tstruct = *gmtime(&now);
 
-  strftime(buf, sizeof(buf), "%FT%XZ", &tstruct);
+  strftime(buf, sizeof(buf), "%FT%X", &tstruct);
+
   return buf;
 }
 
@@ -97,7 +98,7 @@ bool DatabaseManager::recordSingleUserData(
   string prev_value;
   // get existing user details from database, using user id as key
   leveldb::Status status =
-      db->Get(leveldb::ReadOptions(), request->hashed_id(), &prev_value);
+      db->Get(leveldb::ReadOptions(), confirm_user_reply.username(), &prev_value);
 
   SingleUserDetails single_user_details;
 
@@ -106,7 +107,6 @@ bool DatabaseManager::recordSingleUserData(
   }
 
   single_user_details.set_username(confirm_user_reply.username());
-  single_user_details.set_hashed_id(request->hashed_id());
 
   // Add new record details
   DataDetails* data_details = single_user_details.add_data_details();
@@ -124,7 +124,7 @@ bool DatabaseManager::recordSingleUserData(
   single_user_details.SerializeToString(&new_value);
 
   // write back to database
-  status = db->Put(leveldb::WriteOptions(), request->hashed_id(), new_value);
+  status = db->Put(leveldb::WriteOptions(), confirm_user_reply.username(), new_value);
   assert(status.ok());
 
   return true;
@@ -136,7 +136,7 @@ SingleUserRetrieveReply DatabaseManager::retrieveSingleUserData(
   // Get stored data
   string value;
   leveldb::Status status =
-      db->Get(leveldb::ReadOptions(), request->user_id(), &value);
+      db->Get(leveldb::ReadOptions(), request->username(), &value);
 
   SingleUserRetrieveReply single_user_retrieve_reply;
   SingleUserDetails* single_user_details =

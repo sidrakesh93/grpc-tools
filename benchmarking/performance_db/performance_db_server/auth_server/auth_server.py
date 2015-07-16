@@ -37,11 +37,10 @@ import time
 import uuid
 
 from apiclient import discovery
+import auth_user_pb2
 import httplib2
 import leveldb
 from oauth2client import file
-
-import auth_user_pb2
 
 parser = argparse.ArgumentParser(
     description='Report metrics to performance database')
@@ -51,11 +50,11 @@ parser.add_argument('--port',
                     help='Port of authentication server')
 parser.add_argument('--id_name_db',
                     type=str,
-                    default=os.path.expanduser('~') + '/.grpc/id_name',
+                    default=os.path.expanduser('~/.grpc/id_name'),
                     help='Location of id to username database')
 parser.add_argument('--name_id_db',
                     type=str,
-                    default=os.path.expanduser('~') + '/.grpc/name_id',
+                    default=os.path.expanduser('~/.grpc/name_id'),
                     help='Location of username to id database')
 
 args = parser.parse_args()

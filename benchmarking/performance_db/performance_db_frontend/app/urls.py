@@ -40,6 +40,6 @@ urlpatterns = patterns(
         name='data table'), url(r'plot-general/(?P<metric>\w+)',
                                 views.display_general_statistic,
                                 name='plot general statistic'),
-    url(r'plot-user/(?P<client_id>\w+)', views.display_user_metrics,
+    url(r'plot-user/(?P<username>\w+)', views.display_user_metrics,
         name='plot user metrics'), url(r'configs', views.display_configs,
                                        name='configs'))

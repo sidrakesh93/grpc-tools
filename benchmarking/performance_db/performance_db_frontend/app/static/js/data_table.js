@@ -56,16 +56,6 @@ function populateInfo(allUsersData) {
   }
 
   /**
-   * Function to format the date to ISO standard
-   * @param {Date} date - Date object to format
-   * @return {Date} formattedDate - Formatted date object
-  */
-  function formatDate(date) {
-    formattedDate = moment(date).format(dateFormat);
-    return formattedDate;
-  }
-
-  /**
    * Returns user records array
    * @param {Date} start - The start date of data in the range
    * @param {Date} end - The end date of data in the range
@@ -89,9 +79,9 @@ function populateInfo(allUsersData) {
       // If in valid time range
       if (rowDate > start && rowDate < end) {
         dataArr.push({
-          userId: '<a href="/plot-user/' + row.hashed_id + '">' +
+          userId: '<a href="/plot-user/' + row.username + '">' +
               row.username + '</a>',
-          timestamp: moment(rowDate).format('MM/DD/YYYY, HH:mm:ss'),
+          timestamp: rowDate.toLocaleString(),
           testName: '<a id="config" href="/configs/' +
               btoa(row.test_name + '%' + row.tag + '%' +
                    JSON.stringify(row.client_config) + '%' +
@@ -121,8 +111,8 @@ function populateInfo(allUsersData) {
     }
 
     // Update date range in date range picker
-    $('#report-range span').html(formatDate(startDate) + ' - ' +
-        formatDate(endDate));
+    $('#report-range span').html(startDate.toLocaleString() + ' - ' +
+        endDate.toLocaleString());
 
     return dataArr;
   }

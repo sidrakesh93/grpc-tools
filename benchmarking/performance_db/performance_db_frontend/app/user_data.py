@@ -30,11 +30,10 @@
 #
 """Fetches user data from performance database server."""
 
+from collections import defaultdict
 import re
 
-from collections import defaultdict
 from django import conf
-
 import perf_db_pb2
 import qpstest_pb2
 
@@ -47,27 +46,27 @@ class UserData(object):
     self.hostname = conf.settings.PERF_DB_HOSTNAME
     self.port = conf.settings.PERF_DB_PORT
 
-  def init_single_data_dict(self, test_name, timestamp, client_config,
-                            server_config, sys_info, tag):
+  def init_single_data_dict(self, data_detail):
     """Initialize a single metric record dictionary."""
+
     single_data_dict = {
-        'test_name': test_name,
-        'timestamp': timestamp,
-        'client_config': self.get_client_config_dict(client_config),
-        'server_config': self.get_server_config_dict(server_config),
-        'sys_info': self.get_sys_info_dict(sys_info),
-        'tag': tag
+        'test_name': str(data_detail.test_name),
+        'timestamp': str(data_detail.timestamp),
+        'client_config': self.get_client_config_dict(data_detail.client_config),
+        'server_config': self.get_server_config_dict(data_detail.server_config),
+        'sys_info': self.get_sys_info_dict(data_detail.sys_info),
+        'tag': str(data_detail.tag)
     }
     return single_data_dict
 
-  def get_single_user_data(self, user_id):
+  def get_single_user_data(self, username):
     """Returns a single user's data."""
 
     # Create Stub to communicate with performance database server
     with perf_db_pb2.early_adopter_create_PerfDbTransfer_stub(
         self.hostname, self.port) as stub:
       single_user_retrieve_request = perf_db_pb2.SingleUserRetrieveRequest()
-      single_user_retrieve_request.user_id = user_id
+      single_user_retrieve_request.username = username
 
       timeouts_secs = 10  # Max waiting time before timeout, in seconds
 
@@ -87,21 +86,19 @@ class UserData(object):
       times_list = []
 
       for data_detail in sorted_user_data:
-        if data_detail.metrics.qps != 0.0:  # qps present
-          single_data_dict = self.init_single_data_dict(
-              str(data_detail.test_name), str(data_detail.timestamp),
-              data_detail.client_config, data_detail.server_config,
-              data_detail.sys_info, str(data_detail.tag))
+        # qps present
+        if data_detail.metrics.qps != 0.0:
+          single_data_dict = self.init_single_data_dict(data_detail)
           single_data_dict['qps'] = round(data_detail.metrics.qps, 1)
+
           qps_list.append(single_data_dict)
 
-        if data_detail.metrics.qps_per_core != 0.0:  # qps per core present
-          single_data_dict = self.init_single_data_dict(
-              str(data_detail.test_name), str(data_detail.timestamp),
-              data_detail.client_config, data_detail.server_config,
-              data_detail.sys_info, str(data_detail.tag))
+        # qps per core present
+        if data_detail.metrics.qps_per_core != 0.0:
+          single_data_dict = self.init_single_data_dict(data_detail)
           single_data_dict['qps_per_core'] = round(
               data_detail.metrics.qps_per_core, 1)
+
           qps_per_core_list.append(single_data_dict)
 
         # percentile latenices present
@@ -110,10 +107,7 @@ class UserData(object):
             data_detail.metrics.perc_lat_95 != 0.0 and
             data_detail.metrics.perc_lat_99 != 0.0 and
             data_detail.metrics.perc_lat_99_point_9 != 0.0):
-          single_data_dict = self.init_single_data_dict(
-              str(data_detail.test_name), str(data_detail.timestamp),
-              data_detail.client_config, data_detail.server_config,
-              data_detail.sys_info, str(data_detail.tag))
+          single_data_dict = self.init_single_data_dict(data_detail)
 
           lat_dict = {
               'perc_lat_50': round(data_detail.metrics.perc_lat_50, 1),
@@ -132,10 +126,7 @@ class UserData(object):
             data_detail.metrics.server_user_time != 0.0 and
             data_detail.metrics.client_system_time != 0.0 and
             data_detail.metrics.client_user_time != 0.0):
-          single_data_dict = self.init_single_data_dict(
-              str(data_detail.test_name), str(data_detail.timestamp),
-              data_detail.client_config, data_detail.server_config,
-              data_detail.sys_info, str(data_detail.tag))
+          single_data_dict = self.init_single_data_dict(data_detail)
 
           times_dict = {
               'server_system_time': round(
@@ -244,7 +235,6 @@ class UserData(object):
       for user_data in all_users_data.all_users_data:
         for data_detail in user_data.data_details:
           user_metrics_dict = {
-              'hashed_id': str(user_data.hashed_id),
               'username': str(user_data.username),
               'timestamp': str(data_detail.timestamp),
               'test_name': str(data_detail.test_name),

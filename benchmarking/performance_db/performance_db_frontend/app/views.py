@@ -38,7 +38,7 @@ user_data = UserData()
 
 def display_performance_database(request):
   """View for performance database table page."""
-  data = all_users_data()
+  data = user_data.get_all_users_data()
   return shortcuts.render(request, 'data_table.html', {'all_users_data': data})
 
 
@@ -54,18 +54,20 @@ def display_general_statistic(request, metric):
 
 def general_statistic_renderer(request, metric):
   """General statistic page renderer."""
-  data = all_users_single_metric_data(metric)
-  return shortcuts.render(request, 'general_plots.html',
-                {'metric': get_metric_full_desc(metric),
-                 'all_users_data': data})
+  data = user_data.get_all_users_single_metric_data(metric)
+  return shortcuts.render(
+      request, 'general_plots.html',
+      {'metric': get_metric_full_desc(metric),
+       'all_users_data': data})
 
 
-def display_user_metrics(request, client_id):
+def display_user_metrics(request, username):
   """View for user metrics page."""
-  complete_data = single_user_data(client_id)
-  return shortcuts.render(request, 'user_plots.html',
-                {'username': complete_data[0],
-                 'user_data': complete_data[1]})
+  complete_data = user_data.get_single_user_data(username)
+  return shortcuts.render(
+      request, 'user_plots.html',
+      {'username': complete_data[0],
+       'user_data': complete_data[1]})
 
 
 def get_metric_full_desc(metric):
@@ -86,18 +88,3 @@ def get_metric_full_desc(metric):
   }[metric]
 
   return metric_name
-
-
-def single_user_data(client_id):
-  """Returns single user data."""
-  return user_data.get_single_user_data(client_id)
-
-
-def all_users_data():
-  """Returns all users' data."""
-  return user_data.get_all_users_data()
-
-
-def all_users_single_metric_data(metric):
-  """Return all users' single metric data."""
-  return user_data.get_all_users_single_metric_data(metric)

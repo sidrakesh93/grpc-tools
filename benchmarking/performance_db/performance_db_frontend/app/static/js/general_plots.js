@@ -60,16 +60,6 @@ function populateInfo(allUsersData, metricName) {
   }
 
   /**
-   * Function to format the date to ISO standard
-   * @param {Date} date - Date object to format
-   * @return {Date} formattedDate - Formatted date object
-  */
-  function formatDate(date) {
-    formattedDate = moment(date).format(dateFormat);
-    return formattedDate;
-  }
-
-  /**
    * Function to draw chart, gicen start and end time
    * @param {Date} start - The start date of data in the range
    * @param {Date} end - The end date of data in the range
@@ -140,8 +130,8 @@ function populateInfo(allUsersData, metricName) {
       chart.draw(data, options);
 
       // Update date range in date range picker
-      $('#report-range span').html(formatDate(startDate) + ' - ' +
-          formatDate(endDate));
+      $('#report-range span').html(startDate.toLocaleString() + ' - ' +
+          endDate.toLocaleString());
     }
   }
 

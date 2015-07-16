@@ -127,24 +127,14 @@ function populateInfo(userDataStr) {
   }
 
   /**
-   * Function to format the date to ISO standard
-   * @param {Date} date - Date object to format
-   * @return {Date} formattedDate - Formatted date object
-  */
-  function formatDate(date) {
-    formattedDate = moment(date).format(dateFormat);
-    return formattedDate;
-  }
-
-  /**
    * Function to update date range in specified element
    * @param {string} element - Name of element to update the date range in
    * @param {Date} startDate - Start date in the range
    * @param {Date} endDate - End date in the range
   */
   function updateDateRange(element, startDate, endDate) {
-    $('#' + element).html(formatDate(startDate) + ' - ' +
-        formatDate(endDate));
+    $('#' + element).html(startDate.toLocaleString() + ' - ' +
+        endDate.toLocaleString());
   }
 
   /**
